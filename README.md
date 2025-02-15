@@ -15,6 +15,8 @@ The `util` command takes a name argument, which corresponds to the script you wa
 
 This project have [default scripts](https://github.com/vncsmyrnk/shell-utils/tree/main/defaults) but it is possible to add custom scripts but just adding more to `$HOME/.config/util/scripts`.
 
+Adding completions is also possible, via `$HOME/.config/util/completions` files.
+
 ### A real world example
 
 [A use case in my dotfiles](https://github.com/vncsmyrnk/dotfiles).
