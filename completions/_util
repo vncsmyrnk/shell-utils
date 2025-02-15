@@ -2,8 +2,6 @@
 
 #compdef util
 
-compdef _util util
-
 _util() {
   if [ ! -d "$UTILS_SCRIPTS_PATH" ]; then
     return
