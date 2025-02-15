@@ -1,2 +1,3 @@
-# zsh-utils
-Common CLI operations grouped
+# shell-utils
+
+An attempt to be a shell-agnostic custom utilities tool.
