@@ -5,7 +5,7 @@
 
 BACKUP_ZIP_FILE_PATH=${BACKUP_ZIP_FILE_PATH:-/tmp/backup.zip}
 
-function main() {
+main() {
   if [ -z "$UTILS_BKP_PATHS" ]; then
     echo "Please define the environment variable \$UTILS_BKP_PATHS for properly creating the backup zip"
     exit 1
@@ -20,7 +20,7 @@ function main() {
   fi
 }
 
-function compress_files() {
+compress_files() {
   IFS=' '
   for file_path in $UTILS_BKP_PATHS; do
     if [ -d "$file_path" ]; then
