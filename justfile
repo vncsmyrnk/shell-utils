@@ -15,16 +15,16 @@ install: install-deps config
 config:
   #!/bin/sh
   \. ./config/setup
-  mkdir -p $UTILS_SCRIPTS_PATH {{local_bin_path}} $UTILS_COMPLETIONS_PATH
+  mkdir -p $SU_SCRIPTS_PATH {{local_bin_path}} $SU_COMPLETIONS_PATH
   stow -t {{local_bin_path}} bin
-  stow -t $UTILS_SCRIPTS_PATH defaults
-  stow -t $UTILS_COMPLETIONS_PATH completions
-  stow -t $UTILS_PATH config
+  stow -t $SU_SCRIPTS_PATH defaults
+  stow -t $SU_COMPLETIONS_PATH completions
+  stow -t $SU_PATH config
 
 unset-config:
   #!/bin/sh
   \. ./config/setup
   stow -D -t {{local_bin_path}} bin
-  stow -D -t $UTILS_SCRIPTS_PATH defaults
-  stow -D -t $UTILS_COMPLETIONS_PATH completions
-  stow -D -t $UTILS_PATH config
+  stow -D -t $SU_SCRIPTS_PATH defaults
+  stow -D -t $SU_COMPLETIONS_PATH completions
+  stow -D -t $SU_PATH config

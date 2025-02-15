@@ -18,7 +18,7 @@ main() {
     for app in "$MANUALLY_INSTALLED_LOCATION"/*; do
       echo "Checking $app..."
       app_name=$(basename "$app")
-      find $UTILS_SCRIPTS_PATH \
+      find $SU_SCRIPTS_PATH \
         -iname "${app_name}_update*" \
         -type f \
         -follow \

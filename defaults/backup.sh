@@ -6,8 +6,8 @@
 BACKUP_ZIP_FILE_PATH=${BACKUP_ZIP_FILE_PATH:-/tmp/backup.zip}
 
 main() {
-  if [ -z "$UTILS_BKP_PATHS" ]; then
-    echo "Please define the environment variable \$UTILS_BKP_PATHS for properly creating the backup zip"
+  if [ -z "$SU_BKP_PATHS" ]; then
+    echo "Please define the environment variable \$SU_BKP_PATHS for properly creating the backup zip"
     exit 1
   fi
 
@@ -22,7 +22,7 @@ main() {
 
 compress_files() {
   IFS=' '
-  for file_path in $UTILS_BKP_PATHS; do
+  for file_path in $SU_BKP_PATHS; do
     if [ -d "$file_path" ]; then
       dir_size=$(du -sh $file_path | awk '{ print $1 }')
       echo "Adding $file_path to be compressed [$dir_size]"

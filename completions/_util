@@ -3,7 +3,7 @@
 # vim: set ft=zsh:
 
 _util() {
-  if [ ! -d "$UTILS_SCRIPTS_PATH" ]; then
+  if [ ! -d "$SU_SCRIPTS_PATH" ]; then
     return
   fi
 
@@ -15,7 +15,7 @@ _util() {
 
   case $state in
   first)
-    local files=($(ls "$UTILS_SCRIPTS_PATH" | rev | cut -f2- -d "." | rev))
+    local files=($(ls "$SU_SCRIPTS_PATH" | rev | cut -f2- -d "." | rev))
     for f in $files; do compadd $f; done
     ;;
   args)
