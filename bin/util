@@ -1,0 +1,32 @@
+#!/bin/sh
+
+UTILS_SCRIPTS_PATH=${UTILS_SCRIPTS_PATH:-$HOME/.config/util/scripts}
+
+if ! command -v find >/dev/null; then
+  echo "find is necessary for util to work. Please install it before using this executable."
+  exit 1
+fi
+
+util_file=$(
+find $UTILS_SCRIPTS_PATH \
+  -iname "$1.*" \
+  -type f \
+  -follow \
+  -executable
+)
+
+if [ -z "$util_file" ]; then
+  echo -e "Util file not found. Check \033[1m$UTILS_SCRIPTS_PATH\033[0m for commands available."
+  echo -e "\033[2mTip: pass file without the extension and make it sure it is executable.\033[0m"
+  echo -e "\nutil is an attempt to be a shell-agnostic custom utilities tool. More at https://github.com/vncsmyrnk/shell-utils."
+  exit 1
+fi
+
+file_matches=$(echo "$util_file" | wc -l)
+if [ $file_matches -gt 1 ]; then
+  echo -e "Ambiguity detected. Make sure the scripts at $UTILS_SCRIPTS_PATH have no name conflict."
+  exit 1
+fi
+
+shift
+$util_file "$@"

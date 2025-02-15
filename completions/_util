@@ -1,0 +1,29 @@
+# vim: set ft=zsh:
+
+#compdef util
+
+compdef _util util
+
+_util() {
+  if [ ! -d "$UTILS_SCRIPTS_PATH" ]; then
+    return
+  fi
+
+  local state
+
+  _arguments \
+    '1: :->first' \
+    '*::arg:->args'
+
+  case $state in
+  first)
+    local files=($(ls "$UTILS_SCRIPTS_PATH" -I "*-rc" | rev | cut -f2- -d "." | rev))
+    for f in $files; do compadd $f; done
+    ;;
+  args)
+    _files
+    ;;
+  esac
+}
+
+_util "$@"

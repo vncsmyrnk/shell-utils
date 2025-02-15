@@ -1,0 +1,7 @@
+# vim: set ft=sh:
+
+export UTILS_BKP_PATHS="$HOME/.zshrc.private $HOME/.env $HOME/Documents"
+export UTILS_PATH=$HOME/.config/util
+export UTILS_BIN_PATH=/usr/local/bin
+export UTILS_SCRIPTS_PATH=$HOME/.config/util/scripts
+export UTILS_COMPLETIONS_PATH=$HOME/.config/util/completions
