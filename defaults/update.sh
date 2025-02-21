@@ -7,7 +7,7 @@ UPDATE_GLOBAL_SCRIPT=~/update.sh
 
 main() {
   # Updates package managers
-  if exists apt; then sudo apt-get update && sudo apt-get upgrade -y; fi
+  if exists apt; then sudo apt-get update && sudo apt-get upgrade; fi
   if exists brew; then brew update && brew upgrade; fi
   if exists yay; then yay; fi
   echo "[UTIL] Package managers OK"
