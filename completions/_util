@@ -10,7 +10,6 @@ _util() {
   local state
 
   _arguments \
-    '1: :->first' \
     '*::arg:->args'
 
   case $state in
@@ -19,7 +18,14 @@ _util() {
     for f in $files; do compadd $f; done
     ;;
   args)
-    _files
+    local all_arguments="${(j:/:)words}"
+    local scripts_path_with_arguments="$SU_SCRIPTS_PATH/$all_arguments"
+    if [ -f "$scripts_path_with_arguments" ]; then
+      _files
+    else
+      local files=($(ls -d "$scripts_path_with_arguments"* | rev | cut -f2- -d "." | rev))
+      for f in $files; do compadd $(basename $f); done
+    fi
     ;;
   esac
 }
