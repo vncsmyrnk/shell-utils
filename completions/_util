@@ -7,20 +7,32 @@ _util() {
     return
   fi
 
+  # Captures all arguments and suggests the files/folders in
+  # $SU_SCRIPTS_PATH. If a file is found, the files in the
+  # current folder are suggested
+  #
+  # util command subcommand -> tries to find $SU_SCRIPTS_PATH/command/subommand
+
   local state
 
   _arguments \
-    '1: :->first' \
     '*::arg:->args'
 
   case $state in
-  first)
-    local files=($(ls "$SU_SCRIPTS_PATH" | rev | cut -f2- -d "." | rev))
-    for f in $files; do compadd $f; done
-    ;;
   args)
-    _files
-    ;;
+    local all_arguments="${(j:/:)words}"
+    local scripts_path_with_arguments="$SU_SCRIPTS_PATH/$all_arguments"
+    local files=($(ls -d "$scripts_path_with_arguments"*))
+
+    if [[ "${files[@]}" = "." ]]; then
+      _files
+    else
+      for f in $files; do
+        [ -f $f ] && f=$(echo $f | rev | cut -f2- -d "." | rev)
+        compadd $(basename $f)
+      done
+    fi
+      ;;
   esac
 }
 
