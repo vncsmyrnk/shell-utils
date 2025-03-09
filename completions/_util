@@ -20,10 +20,11 @@ _util() {
   args)
     local all_arguments="${(j:/:)words}"
     local scripts_path_with_arguments="$SU_SCRIPTS_PATH/$all_arguments"
-    if [ -f "$scripts_path_with_arguments" ]; then
+    if [ -f "$scripts_path_with_arguments.*" ]; then
       _files
     else
-      local files=($(ls -d "$scripts_path_with_arguments"* | rev | cut -f2- -d "." | rev))
+      local files=($(ls "$scripts_path_with_arguments"* | rev | cut -f2- -d "." | rev))
+      echo $files
       for f in $files; do compadd $(basename $f); done
     fi
     ;;
