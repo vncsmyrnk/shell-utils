@@ -8,6 +8,14 @@ if ! command -v find >/dev/null; then
 fi
 
 arguments="$@"
+if [ -z "$arguments" ]; then
+  echo -e "util is an attempt to be a shell-agnostic custom utilities tool."
+  echo -e "It can find and execute your custom scripts like a CLI."
+  echo -e "\ne.g. \"\$ util folder script\" will look for a script at \$SU_SCRIPTS_PATH/folder/script.(*)"
+  echo -e "More at https://github.com/vncsmyrnk/shell-utils"
+  exit 0
+fi
+
 util_file_glob="*/${arguments// /\/}.*"
 
 util_file=$(
@@ -22,7 +30,6 @@ if [ -z "$util_file" ]; then
   echo -e "Util file not found. Check \033[1m$SU_SCRIPTS_PATH\033[0m for commands available."
   echo -e "File query: \"$util_file_glob\""
   echo -e "\033[2mTip: pass file without the extension and make it sure it is executable.\033[0m"
-  echo -e "\nutil is an attempt to be a shell-agnostic custom utilities tool. More at https://github.com/vncsmyrnk/shell-utils."
   exit 1
 fi
 
