@@ -16,7 +16,8 @@ if [ -z "$arguments" ]; then
   exit 0
 fi
 
-util_file_glob="*/${arguments// /\/}.*"
+path_to_util_file=$(echo "$arguments" | tr ' ' '/')
+util_file_glob="*/$path_to_util_file.*"
 
 util_file=$(
 find $SU_SCRIPTS_PATH \
