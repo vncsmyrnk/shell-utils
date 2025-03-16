@@ -3,40 +3,36 @@
 SU_SCRIPTS_PATH=${SU_SCRIPTS_PATH:-$HOME/.config/util/scripts}
 
 if ! command -v find >/dev/null; then
-  echo "find is necessary for util to work. Please install it before using this executable."
+  printf "find is necessary for util to work. Please install it before using this executable."
   exit 1
 fi
 
 arguments="$@"
 if [ -z "$arguments" ]; then
-  echo -e "util is an attempt to be a shell-agnostic custom utilities tool."
-  echo -e "It can find and execute your custom scripts like a CLI."
-  echo -e "\ne.g. \"\$ util folder script\" will look for a script at \$SU_SCRIPTS_PATH/folder/script.(*)"
-  echo -e "More at https://github.com/vncsmyrnk/shell-utils"
+  printf "util is an attempt to be a shell-agnostic custom utilities tool.\n"
+  printf "It can find and execute your custom scripts like a CLI.\n"
+  printf "\ne.g. \"\$ util folder script\" will look for a script at \$SU_SCRIPTS_PATH/folder/script.(*)\n"
+  printf "More at https://github.com/vncsmyrnk/shell-utils\n"
   exit 0
 fi
 
 path_to_util_file=$(echo "$arguments" | tr ' ' '/')
-util_file_glob="*/$path_to_util_file.*"
+util_file_glob="$SU_SCRIPTS_PATH/$path_to_util_file.*"
 
 util_file=$(
-find $SU_SCRIPTS_PATH \
-  -ipath "$util_file_glob" \
-  -type f \
-  -follow \
-  -executable
+ls $util_file_glob 2>/dev/null
 )
 
 if [ -z "$util_file" ]; then
-  echo -e "Util file not found. Check \033[1m$SU_SCRIPTS_PATH\033[0m for commands available."
-  echo -e "File query: \"$util_file_glob\""
-  echo -e "\033[2mTip: pass file without the extension and make it sure it is executable.\033[0m"
+  printf "Util file not found. Check \033[1m$SU_SCRIPTS_PATH\033[0m for commands available.\n"
+  printf "File query: \"$util_file_glob\"\n"
+  printf "\033[2mTip: pass file without the extension and make it sure it is executable.\033[0m\n"
   exit 1
 fi
 
 file_matches=$(echo "$util_file" | wc -l)
 if [ $file_matches -gt 1 ]; then
-  echo -e "Ambiguity detected. Make sure the scripts at $SU_SCRIPTS_PATH have no name conflict."
+  printf "Ambiguity detected. Make sure the scripts at $SU_SCRIPTS_PATH have no name conflict.\n"
   exit 1
 fi
 
