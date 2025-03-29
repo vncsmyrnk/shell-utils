@@ -2,7 +2,7 @@
 
 SU_SCRIPTS_PATH=${SU_SCRIPTS_PATH:-$HOME/.config/util/scripts}
 
-deps=(find awk)
+deps="find awk"
 if ! command -v $deps >/dev/null; then
   printf "find is necessary for util to work. Please install it before using this executable."
   exit 1
