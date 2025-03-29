@@ -49,3 +49,4 @@ exists() {
 }
 
 main "$@"
+exit 0
