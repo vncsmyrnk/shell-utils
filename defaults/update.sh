@@ -3,7 +3,7 @@
 # Updates installed apps
 
 MANUALLY_INSTALLED_LOCATION=/usr/local/stow
-UPDATE_GLOBAL_SCRIPT=~/update.sh
+UPDATE_GLOBAL_SCRIPT=$HOME/update.sh
 
 main() {
   # Updates package managers
@@ -27,9 +27,19 @@ main() {
     done
   }
 
+  # Checks for global update scripts on utils folder
+  [ -x "$SU_SCRIPTS_ON_UPDATE_PATH" ] && {
+    echo "[UTIL] Now updating on-update scripts"
+    find $SU_SCRIPTS_ON_UPDATE_PATH \
+      -type f \
+      -follow \
+      -executable \
+      -exec {} \;
+  }
+
   # Checks for global update script
   [ -x "$UPDATE_GLOBAL_SCRIPT" ] && {
-    echo "[UTIL] Global update found"
+    echo "[UTIL] Now using the global update script"
     "$UPDATE_GLOBAL_SCRIPT"
   }
 }
