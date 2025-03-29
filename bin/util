@@ -2,7 +2,8 @@
 
 SU_SCRIPTS_PATH=${SU_SCRIPTS_PATH:-$HOME/.config/util/scripts}
 
-if ! command -v find >/dev/null; then
+deps=(find awk)
+if ! command -v $deps >/dev/null; then
   printf "find is necessary for util to work. Please install it before using this executable."
   exit 1
 fi
@@ -16,7 +17,10 @@ if [ -z "$arguments" ]; then
   exit 0
 fi
 
-path_to_util_file=$(echo "$arguments" | tr ' ' '/')
+valid_arguments=$(echo $arguments | awk -F ' --' '{ print $1 }')
+arguments_to_util_file=$(echo $arguments | awk -F ' --' '{ print $2 }')
+
+path_to_util_file=$(echo "$valid_arguments" | tr ' ' '/')
 util_file_glob="$SU_SCRIPTS_PATH/$path_to_util_file.*"
 
 util_file=$(
@@ -36,5 +40,4 @@ if [ $file_matches -gt 1 ]; then
   exit 1
 fi
 
-shift
-$util_file "$@"
+$util_file $arguments_to_util_file
