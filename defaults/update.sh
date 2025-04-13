@@ -16,13 +16,17 @@ main() {
   [ -d $MANUALLY_INSTALLED_LOCATION ] && {
     echo "[UTIL] Now updating manually installed"
     for app in "$MANUALLY_INSTALLED_LOCATION"/*; do
-      echo "Checking $app..."
       app_name=$(basename "$app")
-      find $SU_SCRIPTS_PATH/$app_name \
+      find_path=$SU_SCRIPTS_PATH/$app_name
+      [ -d $find_path ] || {
+        continue
+      }
+      find $find_path \
         -iname "update.*" \
         -type f \
         -follow \
         -executable \
+        -exec echo "found {}." \; \
         -exec {} \;
     done
   }
@@ -34,6 +38,7 @@ main() {
       -type f \
       -follow \
       -executable \
+      -exec echo "found {}." \; \
       -exec {} \;
   }
 
