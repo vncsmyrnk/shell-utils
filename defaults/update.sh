@@ -2,7 +2,6 @@
 
 # Updates installed apps
 
-MANUALLY_INSTALLED_LOCATION=/usr/local/stow
 UPDATE_GLOBAL_SCRIPT=$HOME/update.sh
 
 main() {
@@ -10,26 +9,7 @@ main() {
   if exists apt; then sudo apt-get update && sudo apt-get upgrade; fi
   if exists brew; then brew update && brew upgrade; fi
   if exists yay; then yay; fi
-  echo "[UTIL] Package managers OK"
-
-  # Updates manually installed applications
-  [ -d $MANUALLY_INSTALLED_LOCATION ] && {
-    echo "[UTIL] Now updating manually installed"
-    for app in "$MANUALLY_INSTALLED_LOCATION"/*; do
-      app_name=$(basename "$app")
-      find_path=$SU_SCRIPTS_PATH/$app_name
-      [ -d $find_path ] || {
-        continue
-      }
-      find $find_path \
-        -iname "update.*" \
-        -type f \
-        -follow \
-        -executable \
-        -exec echo "found {}." \; \
-        -exec {} \;
-    done
-  }
+  echo "[UTIL] Package managers OK\n"
 
   # Checks for global update scripts on utils folder
   [ -x "$SU_SCRIPTS_ON_UPDATE_PATH" ] && {
@@ -54,4 +34,3 @@ exists() {
 }
 
 main "$@"
-exit 0
