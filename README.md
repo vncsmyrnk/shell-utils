@@ -24,7 +24,14 @@ Adding completions is also possible, via `$HOME/.config/util/completions` files.
 ## Install
 
 ```sh
-curl -L https://github.com/vncsmyrnk/shell-utils/raw/refs/heads/main/installer.sh | sh
+git clone git@github.com:vncsmyrnk/shell-utils.git
+just install
+```
+
+And for uninstalling:
+
+```sh
+just unset-config
 ```
 
 ## Completions
