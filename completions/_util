@@ -22,7 +22,7 @@ _util() {
   args)
     local all_arguments="${(j:/:)words}"
     local scripts_path_with_arguments="$SU_SCRIPTS_PATH/$all_arguments"
-    local files=($(ls -d "$scripts_path_with_arguments"*))
+    local files=($(ls -d "$scripts_path_with_arguments"* | grep -v 'on-update'))
 
     if [[ "${files[@]}" = "." ]]; then
       _files
