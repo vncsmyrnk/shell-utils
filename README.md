@@ -13,7 +13,7 @@ The `util` command takes a name argument, which corresponds to the script you wa
 
 ### Customization
 
-This project have [default scripts](https://github.com/vncsmyrnk/shell-utils/tree/main/defaults) but it is possible to add custom scripts but just adding more to `$HOME/.config/util/scripts`.
+This project have [default scripts](https://github.com/vncsmyrnk/shell-utils/tree/main/defaults) but it is possible to add custom scripts by just adding more to `$HOME/.config/util/scripts`.
 
 Scripts specific to other applications are located at [utils folder](https://github.com/vncsmyrnk/shell-utils/tree/main/utils).
 
@@ -30,7 +30,7 @@ git clone git@github.com:vncsmyrnk/shell-utils.git
 just install
 ```
 
-And for uninstalling:
+### Uninstall
 
 ```sh
 just unset-config
