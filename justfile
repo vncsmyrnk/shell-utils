@@ -14,7 +14,7 @@ install: install-deps config
 
 config:
   #!/bin/sh
-  \. ./config/setup
+  \. ./config/vars
   mkdir -p $SU_SCRIPTS_PATH {{local_bin_path}} $SU_COMPLETIONS_PATH
   stow -t {{local_bin_path}} bin
   stow -t $SU_SCRIPTS_PATH defaults
@@ -24,7 +24,7 @@ config:
 
 unset-config:
   #!/bin/sh
-  \. ./config/setup
+  \. ./config/vars
   stow -D -t {{local_bin_path}} bin
   stow -D -t $SU_SCRIPTS_PATH defaults
   stow -D -t $SU_COMPLETIONS_PATH completions

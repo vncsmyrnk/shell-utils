@@ -1,8 +1,0 @@
-# vim: set ft=sh:
-
-export SU_BKP_PATHS="$HOME/.zshrc.private $HOME/.env $HOME/Documents $HOME/update.sh"
-export SU_PATH=$HOME/.config/util
-export SU_BIN_PATH=/usr/local/bin
-export SU_SCRIPTS_PATH=$HOME/.config/util/scripts
-export SU_SCRIPTS_ON_UPDATE_PATH=$HOME/.config/util/scripts/on-update
-export SU_COMPLETIONS_PATH=$HOME/.config/util/completions

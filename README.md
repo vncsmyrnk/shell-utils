@@ -30,6 +30,15 @@ git clone git@github.com:vncsmyrnk/shell-utils.git
 just install
 ```
 
+To automatically source files at `$HOME/.config/util/setup`, add this to your `.zshrc`¹:
+
+```sh
+[ -f "$HOME/.config/util/zsh" ] && \. "$HOME/.config/util/zsh"
+```
+
+> [!NOTE]
+> ¹Only avaiable for zsh for now
+
 ### Uninstall
 
 ```sh

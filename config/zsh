@@ -1,0 +1,60 @@
+# vim: set ft=zsh:
+
+# shell-utils can source run commands configuration files automatically at $SU_RC_SOURCE_PATH.
+# So if you have a specific setup for tools like p10k you can put all the config you want
+# sourced on a folder at $SU_RC_SOURCE_PATH.
+#
+# To use this functionality, make sure to run the config task and source this file in your
+# .zshrc:
+#
+# ```sh
+# [ -f $HOME/.config/util/zsh ] && \. $HOME/.config/util/zsh
+# ```
+#
+# $SU_RC_SOURCE_PRIORITY_ORDER handles sourcing priority. It can be a list of folders you
+# need to be sourced first. For example, to source p10k config first, export this in your
+# .zshrc:
+#
+# ```sh
+# export SU_RC_SOURCE_PRIORITY_ORDER="p10k"
+# ```
+#
+# This behavior can be implemented on other shells too. This is the zsh implementation.
+
+\. $HOME/.config/util/vars
+
+function source_setup_dir() {
+  [ -d "$1" ] || return
+  [ -f "$1/setup" ] && \. "$1/setup" # sources setup files first
+  to_source_files=($(find "$1" -follow -type f -not -iname "setup" | xargs))
+  for rc_file in $to_source_files; do
+    \. $rc_file
+  done
+}
+
+function main() {
+  [ -d "$SU_RC_SOURCE_PATH" ] || return
+
+  dirs_to_source=(${(s: :)SU_RC_SOURCE_PRIORITY_ORDER})
+  for to_source_dir_priority in $dirs_to_source; do
+    to_source_dir="$SU_RC_SOURCE_PATH/$to_source_dir_priority"
+    [ -d $to_source_dir ] && {
+      source_setup_dir $to_source_dir
+    }
+  done
+
+  other_dirs=($(find "$SU_RC_SOURCE_PATH"/* -type d | xargs))
+  for to_source_dir in $other_dirs; do
+    other_dir_basename=$(basename $to_source_dir)
+    on_priority_list=$(
+      echo $SU_RC_SOURCE_PRIORITY_ORDER \
+        | tr ' ' '\n' \
+        | grep $other_dir_basename
+    )
+    [ -z "$on_priority_list" ] && {
+      source_setup_dir $to_source_dir
+    }
+  done
+}
+
+main "$@"
