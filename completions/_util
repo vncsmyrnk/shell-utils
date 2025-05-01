@@ -13,7 +13,7 @@ _util() {
   #
   # util command subcommand -> tries to find $SU_SCRIPTS_PATH/command/subommand
 
-  _arguments \
+  _arguments -C \
     '*::arg:->args'
 
   local all_subcommands_but_the_last=("${(j:/:)words[1,CURRENT-1]}")
@@ -27,12 +27,27 @@ _util() {
       -name "$last_command*" \
       -follow \
       -executable \
+      -not -name "on-update*" \
+      -not -name "_*" \
       -printf "%f\n" \
       2>/dev/null \
       | xargs -I{} sh -c 'echo {} | rev | cut -f2- -d "." | rev'
     ))
 
-  if [ ${#files[@]} -eq 0 ]; then
+  if [ ${#files[@]} -eq 0 ] && [ -f "${scripts_path_with_arguments%?}" ]; then
+    dynamic_arguments=()
+    while IFS= read -r line; do
+      dynamic_arguments+=("$line")
+    done < <(awk '/# Completions/ {in_section=1; next} in_section && /^$/ {exit} in_section {sub(/^# /, ""); print}' "${scripts_path_with_arguments%?}"*)
+
+    # Check for dynamic completions on the script itself following this pattern similar to this:
+    # # Completions
+    # # --pattern[File pattern]:pattern:
+    # # --test[File pattern]:test:
+
+    if [ ${#dynamic_arguments[@]} -gt 0 ]; then
+      _arguments "${dynamic_arguments[@]}"
+    fi
     _files
   else
     _describe 'subcommand' files
