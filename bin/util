@@ -1,43 +1,78 @@
 #!/bin/sh
 
-SU_SCRIPTS_PATH=${SU_SCRIPTS_PATH:-$HOME/.config/util/scripts}
+# Given an input, interprets each argument as a part of a path to a script
+# located at $SU_SCRIPTS_PATH
 
-deps="find awk"
-if ! command -v $deps >/dev/null; then
-  printf "find is necessary for util to work. Please install it before using this executable."
+# https://google.github.io/styleguide/shellguide.html
+
+err() {
+  printf "$@" >&2
   exit 1
-fi
+}
 
-arguments="$@"
-if [ -z "$arguments" ]; then
-  printf "util is an attempt to be a shell-agnostic custom utilities tool.\n"
-  printf "It can find and execute your custom scripts like a CLI.\n"
-  printf "\ne.g. \"\$ util folder script\" will look for a script at \$SU_SCRIPTS_PATH/folder/script.(*)\n"
-  printf "More at https://github.com/vncsmyrnk/shell-utils\n"
-  exit 0
-fi
+scripts_path() {
+  local path="${SU_SCRIPTS_PATH:-}"
+  [ -z "$path" ] && {
+    err "\$SU_SCRIPTS_PATH not defined."
+  }
+  echo "$path"
+}
 
-valid_arguments=$(echo $arguments | awk -F ' --' '{ print $1 }')
-arguments_to_util_file=$(echo $arguments | awk -F ' --' '{ print $2 }')
+check_dependencies() {
+  command -v find >/dev/null || {
+    err "find is necessary for util to work. Please install it before using this executable.\n"
+  }
+}
 
-path_to_util_file=$(echo "$valid_arguments" | tr ' ' '/')
-util_file_glob="$SU_SCRIPTS_PATH/$path_to_util_file.*"
+check_empty_arguments() {
+  local arguments="$@"
+  [ -z "$arguments" ] && {
+    printf "util is an attempt to be a shell-agnostic custom utilities tool.
+It can find and execute your custom scripts like a CLI.
+\ne.g. \"\$ util folder script\" will look for a script at \$SU_SCRIPTS_PATH/folder/script.(*)
+More at https://github.com/vncsmyrnk/shell-utils\n"
+    exit 0
+  }
+}
 
-util_file=$(
-ls $util_file_glob 2>/dev/null
-)
+find_and_execute_script() {
+  IFS=' ' read -r -a argument_list <<< "$@"
 
-if [ -z "$util_file" ]; then
-  printf "Util file not found. Check \033[1m$SU_SCRIPTS_PATH\033[0m for commands available.\n"
-  printf "File query: \"$util_file_glob\"\n"
-  printf "\033[2mTip: pass file without the extension and make it sure it is executable.\033[0m\n"
-  exit 1
-fi
+  local current_path=$(scripts_path)
+  for section in "${argument_list[@]}"; do
+    [ -n "$found_script_file_glob" ] && {
+      found_script_arguments="$found_script_arguments $section"
+    }
 
-file_matches=$(echo "$util_file" | wc -l)
-if [ $file_matches -gt 1 ]; then
-  printf "Ambiguity detected. Make sure the scripts at $SU_SCRIPTS_PATH have no name conflict.\n"
-  exit 1
-fi
+    local current_path="$current_path/$section"
+    local script_file_glob="$current_path.*"
+    [ -x $script_file_glob ] && {
+      found_script_file_glob="$script_file_glob"
+    }
+  done
 
-$util_file $arguments_to_util_file
+  if [ -z "$found_script_file_glob" ]; then
+    printf "Util file not found. Check \033[1m$(scripts_path)\033[0m for commands available.\n"
+    printf "\033[2mTip: pass file without the extension and make it sure it is executable.\033[0m\n"
+    exit 1
+  fi
+
+  local script_path=$(find $found_script_file_glob)
+  if [ $(echo $script_path | wc -l) -gt 1 ]; then
+    printf "Ambiguity detected. Make sure the scripts at $(scripts_path) have no name conflict.\n"
+    exit 1
+  fi
+
+  $script_path $found_script_arguments
+}
+
+main() {
+  check_dependencies
+
+  arguments="$@"
+  check_empty_arguments "$arguments"
+  find_and_execute_script "$arguments"
+}
+
+
+main "$@"

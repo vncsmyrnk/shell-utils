@@ -9,7 +9,7 @@ util update # this will execute an script named update.sh
             # in your $HOME/.config/util/scripts directory
 ```
 
-The `util` command takes a name argument, which corresponds to the script you want to run from `$HOME/.config/util/scripts`. Any additional arguments should be explicitly passed after the end of command-line options (e.g. `$ util script -- arg1 arg2`).
+The `util` command takes a name argument, which corresponds to the script you want to run from `$HOME/.config/util/scripts`. Additional arguments are automatically passed to the found script.
 
 ### Customization
 
