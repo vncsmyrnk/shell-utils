@@ -13,27 +13,30 @@ _util() {
   #
   # util command subcommand -> tries to find $SU_SCRIPTS_PATH/command/subommand
 
-  local state
-
   _arguments \
     '*::arg:->args'
 
-  case $state in
-  args)
-    local all_arguments="${(j:/:)words}"
-    local scripts_path_with_arguments="$SU_SCRIPTS_PATH/$all_arguments"
-    local files=($(ls -d "$scripts_path_with_arguments"* | grep -v 'on-update'))
+  local all_subcommands_but_the_last=("${(j:/:)words[1,CURRENT-1]}")
+  local last_command="$words[CURRENT]"
+  local scripts_path_with_arguments="$SU_SCRIPTS_PATH/$all_subcommands_but_the_last"
 
-    if [[ "${files[@]}" = "." ]]; then
-      _files
-    else
-      for f in $files; do
-        [ -f $f ] && f=$(echo $f | rev | cut -f2- -d "." | rev)
-        compadd $(basename $f)
-      done
-    fi
-      ;;
-  esac
+  local files=($(
+    find "$scripts_path_with_arguments" \
+      -maxdepth 1 \
+      -mindepth 1 \
+      -name "$last_command*" \
+      -follow \
+      -executable \
+      -printf "%f\n" \
+      2>/dev/null \
+      | xargs -I{} sh -c 'echo {} | rev | cut -f2- -d "." | rev'
+    ))
+
+  if [ ${#files[@]} -eq 0 ]; then
+    _files
+  else
+    _describe 'subcommand' files
+  fi
 }
 
 _util "$@"
