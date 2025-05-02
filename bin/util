@@ -35,18 +35,25 @@ More at https://github.com/vncsmyrnk/shell-utils\n"
   }
 }
 
-find_and_execute_script() {
-  IFS=' ' read -r -a argument_list <<< "$@"
+file_glob_exists_and_is_executable() {
+  for script_file in $script_file_glob; do
+    if [ -x "$script_file" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
 
+find_and_execute_script() {
   local current_path=$(scripts_path)
-  for section in "${argument_list[@]}"; do
+  for section in "$@"; do
     [ -n "$found_script_file_glob" ] && {
       found_script_arguments="$found_script_arguments $section"
     }
 
     local current_path="$current_path/$section"
     local script_file_glob="$current_path.*"
-    [ -x $script_file_glob ] && {
+    file_glob_exists_and_is_executable "$script_file_glob" && {
       found_script_file_glob="$script_file_glob"
     }
   done
@@ -70,8 +77,8 @@ main() {
   check_dependencies
 
   arguments="$@"
-  check_empty_arguments "$arguments"
-  find_and_execute_script "$arguments"
+  check_empty_arguments $arguments
+  find_and_execute_script $arguments
 }
 
 
