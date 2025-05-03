@@ -9,11 +9,11 @@ main() {
   if exists apt; then sudo apt-get update && sudo apt-get upgrade; fi
   if exists brew; then brew update && brew upgrade; fi
   if exists yay; then yay; fi
-  echo "[UTIL] Package managers OK"
+  printf "[UTIL] Package managers OK\n"
 
   # Checks for global update scripts on utils folder
   [ -x "$SU_SCRIPTS_ON_UPDATE_PATH" ] && {
-    echo -e "\n[UTIL] Now updating on-update scripts"
+    printf "\n[UTIL] Now updating on-update scripts\n"
     find $SU_SCRIPTS_ON_UPDATE_PATH \
       -type f \
       -follow \
@@ -24,7 +24,7 @@ main() {
 
   # Checks for global update script
   [ -x "$UPDATE_GLOBAL_SCRIPT" ] && {
-    echo -e "\n[UTIL] Now using the global update script"
+    printf "\n[UTIL] Now using the global update script\n"
     "$UPDATE_GLOBAL_SCRIPT"
   }
 }
