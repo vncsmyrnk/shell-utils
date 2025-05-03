@@ -48,7 +48,7 @@ find_and_execute_script() {
   local current_path=$(scripts_path)
   for section in "$@"; do
     [ -n "$found_script_file_glob" ] && {
-      found_script_arguments="$found_script_arguments $section"
+      found_script_arguments="$found_script_arguments \"$section\""
     }
 
     local current_path="$current_path/$section"
@@ -70,15 +70,14 @@ find_and_execute_script() {
     exit 1
   fi
 
-  $script_path $found_script_arguments
+  sh -c "$script_path $found_script_arguments"
 }
 
 main() {
   check_dependencies
 
-  arguments="$@"
-  check_empty_arguments $arguments
-  find_and_execute_script $arguments
+  check_empty_arguments "$@"
+  find_and_execute_script "$@"
 }
 
 
