@@ -16,6 +16,15 @@ _util() {
   _arguments -C \
     '*::arg:->args'
 
+  local current_path="$SU_SCRIPTS_PATH"
+  for word in $words; do
+    current_path="$current_path/$word"
+    if [ -f "$current_path"* ]; then
+      local script_path=$(command ls "$current_path"* | head -n 1)
+      break
+    fi
+  done
+
   local all_subcommands_but_the_last=("${(j:/:)words[1,CURRENT-1]}")
   local last_command="$words[CURRENT]"
   local scripts_path_with_arguments="$SU_SCRIPTS_PATH/$all_subcommands_but_the_last"
@@ -34,11 +43,11 @@ _util() {
       | xargs -I{} sh -c 'echo {} | rev | cut -f2- -d "." | rev'
     ))
 
-  if [ ${#files[@]} -eq 0 ] && [ -f "${scripts_path_with_arguments%?}" ]; then
+  if [ ${#files[@]} -eq 0 ] && [ -f $script_path ]; then
     dynamic_arguments=()
     while IFS= read -r line; do
       dynamic_arguments+=("$line")
-    done < <(awk '/# Completions/ {in_section=1; next} in_section && /^$/ {exit} in_section {sub(/^# /, ""); print}' "${scripts_path_with_arguments%?}"*)
+    done < <(awk '/# Completions/ {in_section=1; next} in_section && /^$/ {exit} in_section {sub(/^# /, ""); print}' "$script_path")
 
     # Check for dynamic completions on the script itself following this pattern similar to this:
     # # Completions
@@ -46,6 +55,7 @@ _util() {
     # # --test[File pattern]:test:
 
     if [ ${#dynamic_arguments[@]} -gt 0 ]; then
+      dynamic_arguments+=(":files:_files -W $line[1]")
       _arguments "${dynamic_arguments[@]}"
     fi
     _files
