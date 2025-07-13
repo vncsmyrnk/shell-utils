@@ -2,6 +2,8 @@
 
 # Updates installed apps
 
+# help: updates system packages and runs custom update scripts
+
 UPDATE_GLOBAL_SCRIPT=$HOME/update.sh
 
 main() {

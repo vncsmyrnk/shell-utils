@@ -1,10 +1,10 @@
 # shell-utils 🛠️
 
-Have you ever struggled to locate useful scripts scattered across multiple files when you need them the most? _shell utils_ is a shell-agnostic utility tool designed to make your scripts accessible everywhere using the `util` command.
+Have you ever struggled to locate useful scripts scattered across multiple files when you need them the most? **shell utils** is a shell-agnostic utility tool designed to make your scripts accessible everywhere using the `util` command.
 
-Do you also maintain various run command files for setting up aliases, environment variables, and shell plugins? _shell utils_ includes a configuration script that automatically sources all your essential configurations.
+Do you also maintain various run command files for setting up aliases, environment variables, and shell plugins? **shell utils** includes a configuration script that automatically sources all your essential configurations.
 
-do you manually install apps and maintain scripts to update them? with _shell utils_, you can configure your scripts to run automatically whenever `util update` is executed, streamlining all your update tasks.
+Do you manually install apps and maintain scripts to update them? with **shell utils**, you can configure your scripts to run automatically whenever `util update` is executed, streamlining all your update tasks.
 
 ## Usage
 
@@ -14,6 +14,10 @@ util update # this will execute an script named update.sh
 
 util git checkout-pr # this will execute an script named checkout-pr.sh
                      # in your $HOME/.config/util/git directory
+
+u git # considering a `checkout-pr.*` script exists in the directory
+      # a "commands available" section will be displayed. A comment
+      # starting with "help" will be printed if present on the script
 ```
 
 The `util` command accepts a name argument, representing the script to execute from `$HOME/.config/util/scripts`. Any additional arguments are seamlessly passed to the specified script.
@@ -38,6 +42,10 @@ To automate update tasks when running `util update`, simply place your scripts i
 ### A real world example
 
 [A use case in my dotfiles](https://github.com/vncsmyrnk/dotfiles).
+
+### Development
+
+**shell-utils** is built on the principle of simplicity, ensuring that it remains lightweight and easy to use. The project avoids unnecessary complexity by leveraging tools that are commonly available on most computers, such as `sh`, `grep`, `sed`, and `find`.
 
 ## Install
 

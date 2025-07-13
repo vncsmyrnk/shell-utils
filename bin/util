@@ -44,6 +44,44 @@ file_glob_exists_and_is_executable() {
   return 1
 }
 
+help_for_file() {
+  grep '^# help: ' "$1" \
+    | sed 's/^# help: //'
+}
+
+print_help_for_file() {
+  help_text=$(help_for_file "$1")
+  if [ -n "$help_text" ]; then
+    echo "$help_text"
+  else
+    echo "no help available"
+  fi
+}
+
+list_commands_available_glob() {
+  find "$1" \
+    -type f \
+    -follow \
+  | while read -r file; do
+    command_name=$(basename "$file" | rev | cut -f2- -d "." | rev)
+    help_text=$(help_for_file "$file")
+    printf "$command_name"
+    if [ -n "$help_text" ]; then
+      printf ": $help_text"
+    fi
+    printf "\n"
+  done
+}
+
+help_flag_set() {
+  for arg in "$@"; do
+    if [ "$arg" = "--help" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 find_and_execute_script() {
   local current_path=$(scripts_path)
   for section in "$@"; do
@@ -58,7 +96,11 @@ find_and_execute_script() {
     }
   done
 
-  if [ -z "$found_script_file_glob" ]; then
+  if [ -z "$found_script_file_glob" ] && [ -d "$current_path" ]; then
+    printf "Commands available:\n\n"
+    list_commands_available_glob "$current_path"
+    exit 0
+  elif [ -z "$found_script_file_glob" ]; then
     printf "Util file not found. Check \033[1m$(scripts_path)\033[0m for commands available.\n"
     printf "\033[2mTip: pass file without the extension and make it sure it is executable.\033[0m\n"
     exit 1
@@ -68,6 +110,11 @@ find_and_execute_script() {
   if [ $(echo $script_path | wc -l) -gt 1 ]; then
     printf "Ambiguity detected. Make sure the scripts at $(scripts_path) have no name conflict.\n"
     exit 1
+  fi
+
+  if help_flag_set "$@"; then
+    print_help_for_file "$script_path"
+    exit 0
   fi
 
   sh -c "$script_path $found_script_arguments"

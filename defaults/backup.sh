@@ -3,6 +3,8 @@
 # This script performs a backup of a previously
 # defined files
 
+# help: generates an encrypted backup file and uploads it to a rclone remote
+
 umask 077
 
 SU_SCRIPT_BACKUP_ZIP_DIR=${SU_SCRIPT_BACKUP_ZIP_FILE_PATH:-/tmp}
