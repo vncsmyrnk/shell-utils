@@ -28,6 +28,8 @@ The `util` command accepts a name argument, representing the script to execute f
                                # to make it persistent, add this commands to your `$HOME/.zshrc`
 ```
 
+For more information: `$ man util`
+
 ### Customization
 
 This project includes [default scripts](https://github.com/vncsmyrnk/shell-utils/tree/main/defaults), but you can easily add custom scripts by placing them in `$HOME/.config/util/scripts`. Subfolders within this directory represent subcommands for the `util` command.
@@ -45,7 +47,7 @@ To automate update tasks when running `util update`, simply place your scripts i
 
 ### Development
 
-**shell-utils** is built on the principle of simplicity, ensuring that it remains lightweight and easy to use. The project avoids unnecessary complexity by leveraging tools that are commonly available on most computers, such as `sh`, `grep`, `sed`, and `find`.
+**shell-utils** is built on the principle of simplicity, ensuring that it remains lightweight and easy to use. The project avoids unnecessary complexity by leveraging tools that are commonly available on most unix-like systems, such as `sh`, `grep`, `sed`, and `find`.
 
 ## Install
 

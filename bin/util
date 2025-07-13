@@ -27,7 +27,7 @@ check_dependencies() {
 check_empty_arguments() {
   local arguments="$@"
   [ -z "$arguments" ] && {
-    printf "util is an attempt to be a shell-agnostic custom utilities tool.
+    printf "util is a shell-agnostic custom utilities tool.
 It can find and execute your custom scripts like a CLI.
 \ne.g. \"\$ util folder script\" will look for a script at \$SU_SCRIPTS_PATH/folder/script.(*)
 More at https://github.com/vncsmyrnk/shell-utils\n"

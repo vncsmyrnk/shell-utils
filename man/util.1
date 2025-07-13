@@ -1,0 +1,32 @@
+.TH util 1 "October 2023" "shell-utils" "User Commands"
+.SH NAME
+util \- A shell-agnostic utility tool for managing scripts
+.SH SYNOPSIS
+.B util
+[\-\-help] [command] [arguments]
+.SH DESCRIPTION
+.B util
+is a shell-agnostic utility tool designed to make your scripts accessible everywhere using the `util` command.
+
+The command accepts a name argument, representing the script to execute from `$HOME/.config/util/scripts`. Any additional arguments are seamlessly passed to the specified script.
+
+Setup scripts for third-party applications are located in the utils folder. You can add your own by placing them in `$HOME/.config/util/setup`. Calling the setup script in your shell configuration result in the files at `$HOME/.config/util/setup` being automatically loaded.
+
+.SH OPTIONS
+.TP
+.B \-\-help
+Show help information for the `util` command.
+
+.SH EXAMPLES
+.TP
+.B util update
+Executes a script named `update.sh` in `$HOME/.config/util/scripts`.
+
+.TP
+.B util git checkout-pr
+Executes a script named `checkout-pr.sh` in `$HOME/.config/util/git`.
+
+.SH AUTHOR
+Written by vncsmyrnk.
+.SH SEE ALSO
+Visit https://github.com/vncsmyrnk/shell-utils for more information.
