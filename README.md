@@ -15,9 +15,9 @@ util update # this will execute an script named update.sh
 util git checkout-pr # this will execute an script named checkout-pr.sh
                      # in your $HOME/.config/util/git directory
 
-u git # considering a `checkout-pr.*` script exists in the directory
-      # a "commands available" section will be displayed. A comment
-      # starting with "help" will be printed if present on the script
+util git # considering a `checkout-pr.*` script exists in the directory
+         # a "commands available" section will be displayed. A comment
+         # starting with "help" will be printed if present on the script
 ```
 
 The `util` command accepts a name argument, representing the script to execute from `$HOME/.config/util/scripts`. Any additional arguments are seamlessly passed to the specified script.
@@ -28,7 +28,7 @@ The `util` command accepts a name argument, representing the script to execute f
                                # to make it persistent, add this commands to your `$HOME/.zshrc`
 ```
 
-For more information: `$ man util`
+For more information: `$ man util`.
 
 ### Customization
 
@@ -53,6 +53,7 @@ To automate update tasks when running `util update`, simply place your scripts i
 
 ```sh
 git clone git@github.com:vncsmyrnk/shell-utils.git
+cd shell-utils
 just install # for uninstalling, run `$ just unset-config`
 ```
 
