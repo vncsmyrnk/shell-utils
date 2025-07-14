@@ -19,7 +19,8 @@ _util() {
   local current_path="$SU_SCRIPTS_PATH"
   for word in $words; do
     current_path="$current_path/$word"
-    if [ -f "$current_path"* ]; then
+    candidates=$(find "$current_path"* -maxdepth 0 2>/dev/null)
+    if [ ${#candidates[@]} -eq 1 ]; then
       local script_path=$(command ls "$current_path"* | head -n 1)
       break
     fi
