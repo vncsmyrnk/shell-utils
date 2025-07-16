@@ -11,7 +11,6 @@ main() {
   if exists apt; then sudo apt-get update && sudo apt-get upgrade; fi
   if exists brew; then brew update && brew upgrade; fi
   if exists yay; then yay; fi
-  if exists nix-env; then nix-channel --update && nix-env -uv --show-trace; fi
   printf "[UTIL] Package managers OK\n"
 
   # Checks for global update scripts on utils folder
