@@ -3,15 +3,18 @@ os := `cat /etc/os-release | grep "^NAME=" | cut -d "=" -f2 | tr -d '"'`
 local_bin_path := "$HOME/.local/bin"
 local_man_path := "$HOME/.local/share/man/man1"
 
-install-deps:
-  #!/bin/sh
-  if [ "{{os}}" = "Debian GNU/Linux" ] || [ "{{os}}" = "Ubuntu" ]; then
-    sudo apt-get install stow
-  elif [ "{{os}}" = "Arch Linux" ]; then
-    sudo pacman -S stow
+check-deps:
+  #!/bin/bash
+  dependencies=(stow)
+  missing_dependencies=($(for dep in "${dependencies[@]}"; do command -v "$dep" &> /dev/null || echo "$dep"; done))
+
+  if [ ${#missing_dependencies[@]} -gt 0 ]; then
+    echo "Dependencies not found: ${missing_dependencies[*]}"
+    echo "Please install them with the appropriate package manager"
+    exit 1
   fi
 
-install: install-deps config
+install: check-deps config
 
 config:
   #!/bin/sh
