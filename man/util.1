@@ -1,14 +1,14 @@
 .TH util 1 "July 2025" "shell-utils" "User Commands"
 .SH NAME
-util \- A shell-agnostic utility tool for managing scripts
+util \- A shell-agnostic utility tool for managing user scripts
 .SH SYNOPSIS
 .B util
-[\-\-help] [command] [arguments]
+[\-\-help] [arguments]
 .SH DESCRIPTION
 .B util
 is a shell-agnostic utility tool designed to make your scripts accessible everywhere using the `util` command.
 
-The command accepts a name argument, representing the script to execute from `$HOME/.config/util/scripts`. Any additional arguments are seamlessly passed to the specified script.
+All the arguments represent the path to script to be executed from `$HOME/.config/util/scripts` without directory separators, like a CLI application. Additional arguments after the path is matched are seamlessly passed to the specified script.
 
 Setup scripts for third-party applications are located in the utils folder. You can add your own by placing them in `$HOME/.config/util/setup`. Calling the setup script in your shell configuration result in the files at `$HOME/.config/util/setup` being automatically loaded.
 

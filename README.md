@@ -20,7 +20,7 @@ util git # considering a `checkout-pr.*` script exists in the directory
          # starting with "help" will be printed if present on the script
 ```
 
-The `util` command accepts a name argument, representing the script to execute from `$HOME/.config/util/scripts`. Any additional arguments are seamlessly passed to the specified script.
+All the arguments represent the path to script to be executed from `$HOME/.config/util/scripts` without directory separators, like a CLI application. Additional arguments after the path is matched are seamlessly passed to the specified script.
 
 ```sh
 \. <(util cat setup-zsh)       # sources rc files at `$HOME/.config/util/setup` for zsh
