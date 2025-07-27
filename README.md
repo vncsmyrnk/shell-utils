@@ -39,6 +39,9 @@ util git # considering a `checkout-pr.*` script exists in the
 
 For more information: `$ man util`.
 
+> [!NOTE]
+> At the moment, the only architecture suported is GNU/Linux.
+
 ### Customization
 
 This project includes [default scripts](https://github.com/vncsmyrnk/shell-utils/tree/main/defaults), but you can easily add custom scripts by placing them in `$HOME/.config/util/scripts`. Subfolders within this directory represent subcommands for the `util` command.
@@ -49,6 +52,25 @@ To automate update tasks when running `util update`, simply place your scripts i
 
 > [!TIP]
 > The best practice is to keep your scripts were you already store them and just create symbolic links (stow is a great tool for that) in the folders `$HOME/.config/util/scripts` and `$HOME/.config/util/setup`.
+
+### Completions
+
+This project comes with out-of-the-box support for autocompletion of the scripts accessible to the `util` command. The autocompletion is dynamically generated based on the comments provided in the scripts. A help message can be also added on the script and will be displayed when passing the `--help` option.
+
+```sh
+#!/bin/bash
+
+# help: this message will be displayed when running `--help`
+
+# Completions
+# -a[Message for the a option]
+# -b[Message for the b option]
+
+echo "doing some operations here..."
+```
+
+> [!NOTE]
+> At the moment, autocompletion is only suported in zsh.
 
 ### Real world examples
 
@@ -66,6 +88,3 @@ git clone git@github.com:vncsmyrnk/shell-utils.git
 cd shell-utils
 just install # for uninstalling, run `$ just unset-config`
 ```
-
-> [!NOTE]
-> Only avaiable for zsh for now, but open to implemenations in other shells.
