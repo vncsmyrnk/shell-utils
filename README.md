@@ -47,7 +47,8 @@ To automate update tasks when running `util update`, simply place your scripts i
 
 ### A real world example
 
-[A use case in my dotfiles](https://github.com/vncsmyrnk/dotfiles).
+[A use case in my dotfiles: sourcing setup folders automatically](https://github.com/vncsmyrnk/zsh-config/blob/ae9b9c00012adaeabe243c6998047a761519d205/.zshrc#L9-L11).
+[Another use case in my dotfiles: adding a custom "on-update" script](https://github.com/vncsmyrnk/zsh-config/blob/ae9b9c00012adaeabe243c6998047a761519d205/justfile#L37).
 
 ### Development
 
