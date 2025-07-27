@@ -14,14 +14,15 @@ Do you manually install apps and maintain scripts to update them? with **shell u
 
 ```sh
 util update # this will execute an script named update.sh
-            # in your $HOME/.config/util/scripts directory
+            # in your `$HOME/.config/util/scripts` directory
 
 util git checkout-pr # this will execute an script named checkout-pr.sh
-                     # in your $HOME/.config/util/git directory
+                     # in your `$HOME/.config/util/scripts/git` directory.
 
-util git # considering a `checkout-pr.*` script exists in the directory
-         # a "commands available" section will be displayed. A comment
-         # starting with "help" will be printed if present on the script
+util git # considering a `checkout-pr.*` script exists in the
+         # `$HOME/.config/util/scripts/git` directory # a "commands available"
+         # section will be displayed listing it. A comment starting with "help"
+         # will be printed if present on the script.
 ```
 
 All the arguments represent the path to script to be executed from `$HOME/.config/util/scripts` without directory separators, like a CLI application. Additional arguments after the path is matched are seamlessly passed to the specified script.
