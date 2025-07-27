@@ -28,7 +28,17 @@ Executes a script named `update.sh` in `$HOME/.config/util/scripts`.
 
 .TP
 .B util git checkout-pr
-Executes a script named `checkout-pr.sh` in `$HOME/.config/util/git`.
+Executes a script named `checkout-pr.sh` in `$HOME/.config/util/scripts/git`.
+
+.TP
+.B util config add-script-folder <folder> <destination_name>
+Creates symbolic links for the folder at <folder> in `$HOME/.config/util/scripts/<destination_name>`. The scripts are now accessbile via `$ util <folder> path to script`.
+
+The recommended way of configuring the scripts is manually copying/stowing them to `$HOME/.config/util/scripts` following the structure which best fit your needs. This command just facilitates the process.
+
+.TP
+.B util config remove-script-folder <folder>
+Removes the symbolic links for the folder at `$HOME/.config/util/<folder>`
 
 .SH AUTHOR
 Written by vncsmyrnk.
