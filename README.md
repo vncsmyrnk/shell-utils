@@ -8,7 +8,7 @@ Have you ever struggled to locate useful scripts scattered across multiple files
 
 Do you also maintain various run command files for setting up aliases, environment variables, and shell plugins? **shell utils** includes a configuration script that automatically sources all your essential configurations.
 
-Do you manually install apps and maintain scripts to update them? with **shell utils**, you can configure your scripts to run automatically whenever `util update` is executed, streamlining all your update tasks.
+Do you manually install apps and maintain scripts to update them? **shell utils** lets you configure your scripts to run automatically whenever `util update` is executed, streamlining all your update tasks.
 
 ## Usage
 
