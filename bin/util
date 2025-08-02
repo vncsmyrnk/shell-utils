@@ -82,6 +82,35 @@ help_flag_set() {
   return 1
 }
 
+execute_script() {
+  script_path="$1"
+  script_arguments="$2"
+  sh -c "$script_path $script_arguments"
+}
+
+find_and_execute_aliased_script() {
+  find_path_glob=""
+  for ((i=0; i<${#1}; i++)); do
+    char="${1:i:1}"
+    find_path_glob="$find_path_glob/$char*"
+  done
+
+  candidates=$(cd "$(scripts_path)" && find . -path ".$find_path_glob" -follow | xargs)
+  candidates_count="$(echo \"$candidates\" | wc -w)"
+  if [ -z "$candidates" ]; then
+    return 0
+  elif [ "$candidates_count" -gt 1 ]; then
+    printf "Ambiguity detected for alias script name query. Options found:\n"
+    echo $candidates | tr ' ' '\n' | xargs -I{} realpath $(scripts_path)/{}
+    exit 1
+  fi
+
+  script_path="$(scripts_path)/$candidates"
+  script_arguments=${@:2}
+  execute_script "$script_path" "$script_arguments"
+  exit
+}
+
 find_and_execute_script() {
   local current_path=$(scripts_path)
   for section in "$@"; do
@@ -101,9 +130,7 @@ find_and_execute_script() {
     list_commands_available_glob "$current_path"
     exit 0
   elif [ -z "$found_script_file_glob" ]; then
-    printf "Util file not found. Check \033[1m$(scripts_path)\033[0m for commands available.\n"
-    printf "\033[2mTip: pass file without the extension and make it sure it is executable.\033[0m\n"
-    exit 1
+    return 0
   fi
 
   local script_path=$(find $found_script_file_glob)
@@ -117,7 +144,8 @@ find_and_execute_script() {
     exit 0
   fi
 
-  sh -c "$script_path $found_script_arguments"
+  execute_script "$script_path" "$found_script_arguments"
+  exit
 }
 
 main() {
@@ -125,6 +153,11 @@ main() {
 
   check_empty_arguments "$@"
   find_and_execute_script "$@"
+  find_and_execute_aliased_script "$@"
+
+  printf "Util file not found. Check \033[1m$(scripts_path)\033[0m for commands available.\n"
+  printf "\033[2mTip: pass file without the extension and make it sure it is executable.\033[0m\n"
+  exit 1
 }
 
 main "$@"
