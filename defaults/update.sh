@@ -3,6 +3,7 @@
 # Updates installed apps
 
 # help: updates system packages and runs custom update scripts
+# alias: u
 
 UPDATE_GLOBAL_SCRIPT=$HOME/update.sh
 

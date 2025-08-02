@@ -4,6 +4,7 @@
 # defined files
 
 # help: generates an encrypted backup file and uploads it to a rclone remote
+# alias: b
 
 umask 077
 

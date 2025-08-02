@@ -82,6 +82,27 @@ help_flag_set() {
   return 1
 }
 
+execute_script() {
+  script_path="$1"
+  script_arguments="$2"
+  sh -c "$script_path $script_arguments"
+}
+
+find_and_execute_aliased_script() {
+  candidates=$(grep -Rl "alias: $1\$" $(scripts_path))
+  if [ $? -ne 0 ]; then
+    return 1
+  elif [ "$(echo \"$candidates\" | wc -w)" -gt 1 ]; then
+    printf "Ambiguity detected. Make sure scripts have unique aliases.\n"
+    exit 1
+  fi
+
+  script_path="$candidates"
+  script_arguments="${@:2}"
+  execute_script "$script_path" "$script_arguments"
+  exit
+}
+
 find_and_execute_script() {
   local current_path=$(scripts_path)
   for section in "$@"; do
@@ -117,13 +138,14 @@ find_and_execute_script() {
     exit 0
   fi
 
-  sh -c "$script_path $found_script_arguments"
+  execute_script "$script_path" "$found_script_arguments"
 }
 
 main() {
   check_dependencies
 
   check_empty_arguments "$@"
+  find_and_execute_aliased_script "$@"
   find_and_execute_script "$@"
 }
 
