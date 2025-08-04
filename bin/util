@@ -88,28 +88,28 @@ execute_script() {
   sh -c "$script_path $script_arguments"
 }
 
-find_and_execute_aliased_script() {
-  find_path_glob=""
-  for ((i=0; i<${#1}; i++)); do
-    char="${1:i:1}"
-    find_path_glob="$find_path_glob/$char*"
-  done
-
-  candidates=$(cd "$(scripts_path)" && find . -path ".$find_path_glob" -follow | xargs)
-  candidates_count="$(echo \"$candidates\" | wc -w)"
-  if [ -z "$candidates" ]; then
-    return 0
-  elif [ "$candidates_count" -gt 1 ]; then
-    printf "Ambiguity detected for alias script name query. Options found:\n"
-    echo $candidates | tr ' ' '\n' | xargs -I{} realpath $(scripts_path)/{}
-    exit 1
-  fi
-
-  script_path="$(scripts_path)/$candidates"
-  script_arguments=${@:2}
-  execute_script "$script_path" "$script_arguments"
-  exit
-}
+# find_and_execute_aliased_script() {
+#   find_path_glob=""
+#   for ((i=0; i<${#1}; i++)); do
+#     char="${1:i:1}"
+#     find_path_glob="$find_path_glob/$char*"
+#   done
+#
+#   candidates=$(cd "$(scripts_path)" && find . -path ".$find_path_glob" -follow | xargs)
+#   candidates_count="$(echo \"$candidates\" | wc -w)"
+#   if [ -z "$candidates" ]; then
+#     return 0
+#   elif [ "$candidates_count" -gt 1 ]; then
+#     printf "Ambiguity detected for alias script name query. Options found:\n"
+#     echo $candidates | tr ' ' '\n' | xargs -I{} realpath $(scripts_path)/{}
+#     exit 1
+#   fi
+#
+#   script_path="$(scripts_path)/$candidates"
+#   script_arguments=${@:2}
+#   execute_script "$script_path" "$script_arguments"
+#   exit
+# }
 
 find_and_execute_script() {
   local current_path=$(scripts_path)
@@ -153,7 +153,7 @@ main() {
 
   check_empty_arguments "$@"
   find_and_execute_script "$@"
-  find_and_execute_aliased_script "$@"
+  # find_and_execute_aliased_script "$@"
 
   printf "Util file not found. Check \033[1m$(scripts_path)\033[0m for commands available.\n"
   printf "\033[2mTip: pass file without the extension and make it sure it is executable.\033[0m\n"
