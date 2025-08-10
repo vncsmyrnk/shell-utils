@@ -14,10 +14,6 @@ Do you manually install apps and maintain scripts to update them? **shell utils*
 
 All the arguments represent the path to script to be executed from `$HOME/.config/util/scripts` without directory separators, like a CLI application. Additional arguments after the path is matched are seamlessly passed to the specified script.
 
-<p align="center">
-  <a href="https://asciinema.org/a/kTkzdoHIFRfcLJShWloNHC8vV" target="_blank"><img src="https://asciinema.org/a/kTkzdoHIFRfcLJShWloNHC8vV.svg" /></a>
-</p>
-
 ```sh
 util update # this will execute an script named update.sh
             # in your `$HOME/.config/util/scripts` directory
