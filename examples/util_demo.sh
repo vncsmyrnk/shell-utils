@@ -31,8 +31,5 @@ chmod u+x ~/.config/util/scripts/test/example.sh
 # Run it. It should run the script we just created.
 util test example
 
-# You can also run it by its alias:
-# `util te`
-
 # There you go. You can arrange your scripts in any folder
 # hierarchy you prefer. util will handle possible colisions.
