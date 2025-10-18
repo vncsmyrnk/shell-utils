@@ -45,8 +45,8 @@ file_glob_exists_and_is_executable() {
 }
 
 help_for_file() {
-  grep '^# help: ' "$1" \
-    | sed 's/^# help: //'
+  grep '^# help: ' "$1" |
+    sed 's/^# help: //'
 }
 
 print_help_for_file() {
@@ -59,18 +59,31 @@ print_help_for_file() {
 }
 
 list_commands_available_glob() {
+  help_file_for_current_path="$1/help"
+  if [ -f "$help_file_for_current_path" ]; then
+    printf "$(cat $help_file_for_current_path)"
+    printf "\n\n"
+  fi
+
+  if [ -f "$help_file_for_current_path" ]; then
+    printf "Commands available:\n"
+  else
+    printf "Commands available:\n\n"
+  fi
+
   find "$1" \
     -type f \
-    -follow \
-  | while read -r file; do
-    command_name=$(basename "$file" | rev | cut -f2- -d "." | rev)
-    help_text=$(help_for_file "$file")
-    printf "$command_name"
-    if [ -n "$help_text" ]; then
-      printf ": $help_text"
-    fi
-    printf "\n"
-  done
+    -not -iname 'help' \
+    -follow |
+    while read -r file; do
+      command_name=$(basename "$file" | rev | cut -f2- -d "." | rev)
+      help_text=$(help_for_file "$file")
+      printf "$command_name"
+      if [ -n "$help_text" ]; then
+        printf ": $help_text"
+      fi
+      printf "\n"
+    done
 }
 
 help_flag_set() {
@@ -103,7 +116,6 @@ find_and_execute_script() {
   done
 
   if [ -z "$found_script_file_glob" ] && [ -d "$current_path" ]; then
-    printf "Commands available:\n\n"
     list_commands_available_glob "$current_path"
     exit 0
   elif [ -z "$found_script_file_glob" ]; then

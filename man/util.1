@@ -1,4 +1,4 @@
-.TH util 1 "July 2025" "shell-utils" "User Commands"
+.TH util 1 "October 2025" "shell-utils" "User Commands"
 .SH NAME
 util \- A shell-agnostic utility tool for managing user scripts
 .SH SYNOPSIS
@@ -15,6 +15,8 @@ Setup scripts for third-party applications are located in the utils folder. You 
 Custom completions can be set as comments after a `# Completions` comment header. See `$HOME/.config/util/scripts/locale/gettext.sh` for reference.
 
 Help sections can be added as a text after a comment `# help: `. See `$HOME/.config/util/scripts/update.sh` for reference.
+
+If an uncompleted but existing path to a command was given (a directory was found but not a script) the available scripts at the input path will be listed in a "commands available" section. A custom help section can be put inside a directory named `help` will be printed along the default "commands available" section. The help file content is printed using `printf` so it supports cutomization like text coloring.
 
 .SH OPTIONS
 .TP
