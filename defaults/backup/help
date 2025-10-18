@@ -1,0 +1,3 @@
+Performs backup related actions
+
+You must specify \033[1m$SU_SCRIPT_BACKUP_RCLONE_REMOTE\033[0m and \033[1m$SU_SCRIPT_BACKUP_RCLONE_FOLDER\033[0m in order to the backup be automatically uploaded to the remote.
