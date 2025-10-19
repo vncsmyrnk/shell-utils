@@ -84,3 +84,6 @@ git clone git@github.com:vncsmyrnk/shell-utils.git
 cd shell-utils
 just install # for uninstalling, run `$ just unset-config`
 ```
+
+> [!WARNING]
+> For every breaking change, make sure to run `just unset-config config` in order to reapply installation files.
