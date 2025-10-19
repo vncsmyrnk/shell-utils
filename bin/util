@@ -72,6 +72,7 @@ list_commands_available_glob() {
   fi
 
   find "$1" \
+    -maxdepth 1 \
     -type f \
     -not -iname 'help' \
     -follow |
@@ -83,6 +84,16 @@ list_commands_available_glob() {
         printf ": $help_text"
       fi
       printf "\n"
+    done
+
+  find "$1" \
+    -mindepth 1 \
+    -maxdepth 1 \
+    -type d \
+    -follow |
+    while read -r dir; do
+      command_name=$(basename "$dir")
+      printf "$command_name\n"
     done
 }
 
