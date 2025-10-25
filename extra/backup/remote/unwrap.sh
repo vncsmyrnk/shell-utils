@@ -33,9 +33,7 @@ check_dependencies() {
 decrypt_backup() {
   dest_decrypted_file=$(basename "$1" | cut -d '.' -f1)
   dest_decrypted_file="$dest_decrypted_file.$(printf "$1" | cut -d '.' -f2)"
-
   dest_backup_file="$SU_SCRIPT_REMOTE_UNWRAP_DEST/$dest_decrypted_file"
-  rm -f dest_backup_file
 
   openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -salt \
     -in "$1" \
@@ -47,8 +45,6 @@ decrypt_backup() {
   fi
 
   dest_backup_folder=$(echo "$1" | cut -d '.' -f1)
-  rm -rf dest_backup_folder
-
   unzip -q "$dest_backup_file" -d "$dest_backup_folder" || {
     echo "failed to unzip the backup" >&2
   }
