@@ -53,9 +53,11 @@ print_help_for_file() {
   help_text=$(help_for_file "$1")
   if [ -n "$help_text" ]; then
     echo "$help_text"
-  else
-    echo "no help available"
+    return 0
   fi
+
+  echo "no help available"
+  return 1
 }
 
 list_commands_available_glob() {
@@ -140,7 +142,9 @@ find_and_execute_script() {
   fi
 
   if help_flag_set "$@"; then
-    print_help_for_file "$script_path"
+    print_help_for_file "$script_path" || {
+      exit 1
+    }
     exit 0
   fi
 
