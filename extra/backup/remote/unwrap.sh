@@ -2,20 +2,36 @@
 
 # help: Downloads a backup file, decrypts and unzips it
 #
-# Usage: util backup remote unwrap <BACKUP_FILE>
+# Usage: util backup remote unwrap [--latest] [file]
+
+# Completions
+# --latest[Use the latest backup]
 
 SU_SCRIPT_REMOTE_UNWRAP_DEST=${SU_SCRIPT_REMOTE_UNWRAP_DEST:-/tmp}
 
+latest_flag=false
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  -l | --latest)
+    latest_flag=true
+    shift
+    ;;
+  *)
+    break
+    ;;
+  esac
+done
+
 check_dependencies() {
   if ! command -v rclone >/dev/null; then
-    echo "list failed: rclone not found." >&2
+    printf "list failed: rclone not found." >&2
     exit 1
   fi
 }
 
 decrypt_backup() {
   dest_decrypted_file=$(basename "$1" | cut -d '.' -f1)
-  dest_decrypted_file="$dest_decrypted_file.$(echo "$1" | cut -d '.' -f2)"
+  dest_decrypted_file="$dest_decrypted_file.$(printf "$1" | cut -d '.' -f2)"
 
   dest_backup_file="$SU_SCRIPT_REMOTE_UNWRAP_DEST/$dest_decrypted_file"
   rm -f dest_backup_file
@@ -32,7 +48,7 @@ decrypt_backup() {
   dest_backup_folder=$(echo "$1" | cut -d '.' -f1)
   rm -rf dest_backup_folder
 
-  unzip -s "$dest_backup_file" -d "$dest_backup_folder" || {
+  unzip -q "$dest_backup_file" -d "$dest_backup_folder" || {
     echo "failed to unzip the backup" >&2
   }
 }
@@ -43,21 +59,34 @@ main() {
     exit 1
   fi
 
-  if [ -z "$1" ]; then
+  if [ -n "$1" ] && [ "$latest_flag" = true ]; then
+    printf "invalid options. The \033[1m--latest\033[0m implies no other arguments\n" >&2
+    exit 1
+  elif [ -z "$1" ] && [ "$latest_flag" = false ]; then
     echo "A backup file must be informed." >&2
     exit 1
   fi
 
-  printf "Downloading backup file...\n"
-  rclone copy "$SU_SCRIPT_BACKUP_RCLONE_REMOTE:$SU_SCRIPT_BACKUP_RCLONE_FOLDER/$1" \
+  backup_file="$1"
+  if [ "$latest_flag" = true ]; then
+    echo "Fetching latest backup file..."
+    backup_file=$(
+      rclone ls "$SU_SCRIPT_BACKUP_RCLONE_REMOTE:$SU_SCRIPT_BACKUP_RCLONE_FOLDER" |
+        head -n 1 |
+        awk '{ print $2 }'
+    )
+  fi
+
+  echo "Downloading backup file..."
+  rclone copy "$SU_SCRIPT_BACKUP_RCLONE_REMOTE:$SU_SCRIPT_BACKUP_RCLONE_FOLDER/$backup_file" \
     "$SU_SCRIPT_REMOTE_UNWRAP_DEST"
 
-  printf "Decrypting it...\n"
-  decrypt_backup "$SU_SCRIPT_REMOTE_UNWRAP_DEST/$1" || {
+  echo "Decrypting it..."
+  decrypt_backup "$SU_SCRIPT_REMOTE_UNWRAP_DEST/$backup_file" || {
     exit 1
   }
 
-  printf "Done. Backup unwrapped at $SU_SCRIPT_REMOTE_UNWRAP_DEST\n"
+  echo "Done. Backup unwrapped at $SU_SCRIPT_REMOTE_UNWRAP_DEST"
 }
 
 main "$@"
