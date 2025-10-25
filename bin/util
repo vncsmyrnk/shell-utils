@@ -45,10 +45,10 @@ file_glob_exists_and_is_executable() {
 }
 
 help_for_file() {
-  sed -n '/^# \[help\]/,/^$/p' "$1" |
+  printf "$(sed -n '/^# \[help\]/,/^$/p' "$1" |
     grep -v '^# \[help\]' |
     sed 's/^# //' |
-    sed 's/^#//'
+    sed 's/^#//')"
 }
 
 print_help_for_file() {
