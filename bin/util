@@ -45,8 +45,11 @@ file_glob_exists_and_is_executable() {
 }
 
 help_for_file() {
-  grep '^# help: ' "$1" |
-    sed 's/^# help: //'
+  sed -n '/^# help: /,/^$/p' "$1" |
+    sed 's/^# help: //' |
+    sed 's/^# //' |
+    sed 's/^#/ /' |
+    head -n -1
 }
 
 print_help_for_file() {
@@ -80,10 +83,10 @@ list_commands_available_glob() {
     -follow |
     while read -r file; do
       command_name=$(basename "$file" | rev | cut -f2- -d "." | rev)
-      help_text=$(help_for_file "$file")
+      summarized_help_text=$(help_for_file "$file" | head -n 1)
       printf "$command_name"
-      if [ -n "$help_text" ]; then
-        printf ": $help_text"
+      if [ -n "$summarized_help_text" ]; then
+        printf ": $summarized_help_text"
       fi
       printf "\n"
     done
