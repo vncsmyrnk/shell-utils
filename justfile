@@ -5,7 +5,7 @@ local_man_path := "$HOME/.local/share/man/man1"
 
 check-deps:
   #!/bin/bash
-  dependencies=(stow)
+  dependencies=(stow grep sh bash sed find)
   missing_dependencies=($(for dep in "${dependencies[@]}"; do command -v "$dep" &> /dev/null || echo "$dep"; done))
 
   if [ ${#missing_dependencies[@]} -gt 0 ]; then
