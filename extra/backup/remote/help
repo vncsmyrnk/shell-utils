@@ -1,2 +1,3 @@
 Offers actions related to the backups uploaded to the rclone remote.
-Run `util backup` for more information.
+
+Run `util backup` for more information about uploading backups to a remote first.
