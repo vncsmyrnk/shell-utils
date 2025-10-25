@@ -59,7 +59,7 @@ print_help_for_file() {
     return 0
   fi
 
-  echo "no help available"
+  echo "No help available"
   return 1
 }
 
@@ -67,14 +67,12 @@ list_commands_available_glob() {
   help_file_for_current_path="$1/help"
   if [ -f "$help_file_for_current_path" ]; then
     printf "$(cat $help_file_for_current_path)"
-    printf "\n\n"
+    printf "\n"
+  else
+    printf "This command has subcommands, but no help section.\n"
   fi
 
-  if [ -f "$help_file_for_current_path" ]; then
-    printf "Commands available:\n"
-  else
-    printf "Commands available:\n\n"
-  fi
+  printf "\n\033[4mCommands available:\033[0m\n"
 
   find "$1" \
     -maxdepth 1 \
@@ -84,9 +82,9 @@ list_commands_available_glob() {
     while read -r file; do
       command_name=$(basename "$file" | rev | cut -f2- -d "." | rev)
       summarized_help_text=$(help_for_file "$file" | head -n 1)
-      printf "$command_name"
+      printf "\033[1m$command_name\033[0m"
       if [ -n "$summarized_help_text" ]; then
-        printf ": $summarized_help_text"
+        printf " - $summarized_help_text"
       fi
       printf "\n"
     done
@@ -98,7 +96,7 @@ list_commands_available_glob() {
     -follow |
     while read -r dir; do
       command_name=$(basename "$dir")
-      printf "$command_name\n"
+      printf "\033[1m$command_name\033[0m\n"
     done
 }
 
