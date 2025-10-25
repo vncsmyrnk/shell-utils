@@ -1,0 +1,63 @@
+#!/bin/bash
+
+# help: Downloads a backup file, decrypts and unzips it
+#
+# Usage: util backup remote unwrap <BACKUP_FILE>
+
+SU_SCRIPT_REMOTE_UNWRAP_DEST=${SU_SCRIPT_REMOTE_UNWRAP_DEST:-/tmp}
+
+check_dependencies() {
+  if ! command -v rclone >/dev/null; then
+    echo "list failed: rclone not found." >&2
+    exit 1
+  fi
+}
+
+decrypt_backup() {
+  dest_decrypted_file=$(basename "$1" | cut -d '.' -f1)
+  dest_decrypted_file="$dest_decrypted_file.$(echo "$1" | cut -d '.' -f2)"
+
+  dest_backup_file="$SU_SCRIPT_REMOTE_UNWRAP_DEST/$dest_decrypted_file"
+  rm -f dest_backup_file
+
+  openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -salt \
+    -in "$1" \
+    -out "$dest_backup_file" \
+    -pass env:SU_SCRIPT_BACKUP_ENCRYPT_PASSWORD
+  if [ $? -ne 0 ]; then
+    echo "decryption failed" >&2
+    exit 1
+  fi
+
+  dest_backup_folder=$(echo "$1" | cut -d '.' -f1)
+  rm -rf dest_backup_folder
+
+  unzip -s "$dest_backup_file" -d "$dest_backup_folder" || {
+    echo "failed to unzip the backup" >&2
+  }
+}
+
+main() {
+  if [ -z "$SU_SCRIPT_BACKUP_ENCRYPT_PASSWORD" ]; then
+    echo "unwrap failed: no password was provided" >&2
+    exit 1
+  fi
+
+  if [ -z "$1" ]; then
+    echo "A backup file must be informed." >&2
+    exit 1
+  fi
+
+  printf "Downloading backup file...\n"
+  rclone copy "$SU_SCRIPT_BACKUP_RCLONE_REMOTE:$SU_SCRIPT_BACKUP_RCLONE_FOLDER/$1" \
+    "$SU_SCRIPT_REMOTE_UNWRAP_DEST"
+
+  printf "Decrypting it...\n"
+  decrypt_backup "$SU_SCRIPT_REMOTE_UNWRAP_DEST/$1" || {
+    exit 1
+  }
+
+  printf "Done. Backup unwrapped at $SU_SCRIPT_REMOTE_UNWRAP_DEST\n"
+}
+
+main "$@"
