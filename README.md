@@ -56,9 +56,10 @@ This project comes with out-of-the-box support for autocompletion of the scripts
 ```sh
 #!/bin/bash
 
-# help: this message will be displayed when running `--help`
+# [help]
+# This message will be displayed when running `--help`
 
-# Completions
+# [completions]
 # -a[Message for the a option]
 # -b[Message for the b option]
 

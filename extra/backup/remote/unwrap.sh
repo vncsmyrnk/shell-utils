@@ -1,10 +1,11 @@
 #!/bin/bash
 
-# help: Downloads a backup file, decrypts and unzips it
+# [help]
+# Downloads a backup file, decrypts and unzips it
 #
 # Usage: util backup remote unwrap [--latest] [file]
 
-# Completions
+# [completions]
 # --latest[Use the latest backup]
 
 SU_SCRIPT_REMOTE_UNWRAP_DEST=${SU_SCRIPT_REMOTE_UNWRAP_DEST:-/tmp}

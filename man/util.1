@@ -12,9 +12,9 @@ All the arguments represent the path to script to be executed from `$HOME/.confi
 
 Setup scripts for third-party applications are located in the utils folder. You can add your own by placing them in `$HOME/.config/util/setup`. Calling the setup script in your shell configuration result in the files at `$HOME/.config/util/setup` being automatically loaded.
 
-Custom completions can be set as comments after a `# Completions` comment header. See `$HOME/.config/util/scripts/locale/gettext.sh` for reference.
+Custom completions can be set as comments after a `# [completions]` comment header. See `$HOME/.config/util/scripts/locale/gettext.sh` for reference.
 
-Help sections can be added as a text after a comment `# help: `. See `$HOME/.config/util/scripts/update.sh` for reference. Multi-line texts are suported. All commented lines after the `help` header will be considered a part of the help section.
+Help sections can be added as a text after a comment line `# [help]`. See `$HOME/.config/util/scripts/update.sh` for reference. Multi-line texts are suported. All commented lines after the `help` header will be considered a part of the help section.
 
 If an uncompleted but existing path to a command was given (a directory was found but not a script) the available scripts at the input path will be listed in a "commands available" section. A custom help section can be put inside a directory named `help` will be printed along the default "commands available" section. The help file content is printed using `printf` so it supports cutomization like text coloring.
 

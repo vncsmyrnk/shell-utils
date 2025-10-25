@@ -10,11 +10,12 @@ mkdir -p ~/.config/util/scripts/test
 
 # Creates a simple script which only displays.
 # a simple message. The script name will be the subcommand.
-cat << EOF > ~/.config/util/scripts/test/example.sh
+cat <<EOF >~/.config/util/scripts/test/example.sh
 #!/bin/sh
-# help: this is a test command. It only prints a "it works" message
+# [help]
+# This is a test command. It only prints a "it works" message
 
-# Completions
+# [completions]
 # -a[Sample a option]
 
 echo "it works"

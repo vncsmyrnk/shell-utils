@@ -3,7 +3,8 @@
 # This script performs a backup of a previously
 # defined files
 
-# help: Generates an encrypted backup file and uploads it to a rclone remote.
+# [help]
+# Generates an encrypted backup file and uploads it to a rclone remote.
 #
 # All paths set at \033[1m$SU_BKP_PATHS\033[0m will be copied to the zip backup file. It is predefined with useful paths but it can be overriden.
 #

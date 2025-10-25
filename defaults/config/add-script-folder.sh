@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# help: makes a folder of scripts acessible to the util command
+# [help]
+# Makes a folder of scripts acessible to the util command
 
 main() {
   if [ -z "$1" ] || [ -z "$2" ]; then

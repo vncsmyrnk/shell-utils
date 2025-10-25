@@ -48,7 +48,7 @@ _util() {
     dynamic_arguments=('--help' ':files')
     while IFS= read -r line; do
       dynamic_arguments+=("$line")
-    done < <(awk '/# Completions/ {in_section=1; next} in_section && /^$/ {exit} in_section {sub(/^# /, ""); print}' "$script_path")
+    done < <(awk '/# \[completions\]/ {in_section=1; next} in_section && /^$/ {exit} in_section {sub(/^# /, ""); print}' "$script_path")
 
     # Check for dynamic completions on the script itself following this pattern similar to this:
     # # Completions

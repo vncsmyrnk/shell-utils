@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# help: lists backups uploaded to the current set rclone remote
+# [help]
+# Lists backups uploaded to the current set rclone remote
 
 if ! command -v rclone >/dev/null; then
   echo "list failed: rclone not found." >&2

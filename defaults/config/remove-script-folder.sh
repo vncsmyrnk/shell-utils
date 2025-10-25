@@ -1,6 +1,7 @@
 #!/bin/sh
 
-# help: removes a folder from the scripts acessible to the util command
+# [help]
+# Removes a folder from the scripts acessible to the util command
 
 main() {
   if [ -z "$1" ]; then

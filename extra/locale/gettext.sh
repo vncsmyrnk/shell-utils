@@ -1,12 +1,15 @@
 #!/bin/sh
 
-# Completions
+# [help]
+# Fetches a corresponding translation of a word in a mo file
+
+# [completions]
 # -l[forces language instead of infering it from the mo path]
 
 while getopts ":l" opt; do
   case $opt in
-    l) language="$OPTARG" ;;
-    \?) echo "Invalid option -$OPTARG" >&2 ;;
+  l) language="$OPTARG" ;;
+  \?) echo "Invalid option -$OPTARG" >&2 ;;
   esac
 done
 
