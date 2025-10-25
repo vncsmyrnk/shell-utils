@@ -3,7 +3,9 @@
 # Updates installed apps
 
 # [help]
-# Updates system packages and runs custom update scripts
+# Updates system packages and runs custom update scripts.
+#
+# Runs custom scripts located at \033[1m$SU_SCRIPTS_ON_UPDATE_PATH\033[0m and a global script at \033[1m$UPDATE_GLOBAL_SCRIPT\033[0m if available.
 
 UPDATE_GLOBAL_SCRIPT=$HOME/update.sh
 
