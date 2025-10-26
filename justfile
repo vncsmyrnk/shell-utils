@@ -36,3 +36,6 @@ unset-config:
   stow -D -t $SU_COMPLETIONS_PATH completions
   stow -D -t $SU_PATH setup
   stow -D -t $HOME/.local/share/man/man1 man
+
+shellcheck:
+  shellcheck -s sh bin/** defaults/*/**.sh setup/** extra/*/**.sh
