@@ -1,7 +1,9 @@
 #!/bin/sh
 
 # [help]
-# Fetches a corresponding translation of a word in a mo file
+# Fetches a corresponding translation of a word in a mo file.
+#
+# Usage: `util locale gettext [FILE] [ID] [-l language]`
 
 # [completions]
 # -l[forces language instead of infering it from the mo path]
