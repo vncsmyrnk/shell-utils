@@ -4,6 +4,8 @@
 # Downloads a backup file, decrypts and unzips it
 #
 # Usage: util backup remote unwrap [--latest] [file]
+#
+# Tip: use `rsync -av backup dest` to copy the backup files to their destination places
 
 # [completions]
 # --latest[Use the latest backup]
