@@ -24,7 +24,7 @@ SU_SCRIPT_BACKUP_ENCRYPTED_FILE_PATH="$SU_SCRIPT_BACKUP_ENCRYPTED_DIR/backup_$ti
 
 main() {
   if [ -z "$SU_BKP_PATHS" ]; then
-    echo "Please define the environment variable \$SU_BKP_PATHS for properly creating the backup zip"
+    printf "Please define the environment variable \$SU_BKP_PATHS for properly creating the backup zip\n"
     exit 1
   fi
 
@@ -32,16 +32,16 @@ main() {
   compress_files
 
   if [ -z "$SU_SCRIPT_BACKUP_ZIP_FILE_PATH" ]; then
-    echo "backup failed for unknown reasons" >&2
+    printf "backup failed for unknown reasons\n" >&2
   fi
 
   backup_size=$(ls -lh "$SU_SCRIPT_BACKUP_ZIP_FILE_PATH" | awk '{ print $5 }')
-  echo "Backup file generated at $SU_SCRIPT_BACKUP_ZIP_FILE_PATH [$backup_size]"
+  printf "Backup file generated at $SU_SCRIPT_BACKUP_ZIP_FILE_PATH [$backup_size]\n"
 
   encrypt_backup_zip
 
   upload_backup_zip_to_rclone
-  echo "\nBackup successfuly done."
+  printf "\nBackup successfuly done.\n"
 }
 
 compress_files() {
@@ -49,47 +49,47 @@ compress_files() {
   for file_path in $SU_BKP_PATHS; do
     if [ -d "$file_path" ]; then
       dir_size=$(du -sh $file_path | awk '{ print $1 }')
-      echo "Adding $file_path to be compressed [$dir_size]"
+      printf "Adding $file_path to be compressed [$dir_size]\n"
       zip -rq "$SU_SCRIPT_BACKUP_ZIP_FILE_PATH" "$file_path"
     elif [ -f "$file_path" ]; then
       file_size=$(ls -lh "$file_path" | awk '{ print $5 }')
-      echo "Adding $file_path to be compressed [$file_size]"
+      printf "Adding $file_path to be compressed [$file_size]\n"
       zip -q "$SU_SCRIPT_BACKUP_ZIP_FILE_PATH" "$file_path"
     else
-      echo "Failed to add $file_path. It does not exist"
+      printf "Failed to add $file_path. It does not exist\n"
     fi
   done
 
   if ! zip -T "$SU_SCRIPT_BACKUP_ZIP_FILE_PATH" >/dev/null 2>&1; then
-    echo "Backup verification failed: zip file is corrupted" >&2
+    printf "Backup verification failed: zip file is corrupted\n" >&2
     exit 1
   fi
 }
 
 upload_backup_zip_to_rclone() {
   if [ -z "$SU_SCRIPT_BACKUP_RCLONE_REMOTE" ] && [ -z "$SU_SCRIPT_BACKUP_RCLONE_FOLDER" ]; then
-    echo "rclone is not properly configured and the upload was not done." >&2
+    printf "rclone is not properly configured and the upload was not done.\n" >&2
     exit 0
   fi
 
   if ! command -v rclone >/dev/null; then
-    echo "Remote copy failed: rclone not found. Ensure the zip is manually saved." >&2
+    printf "Remote copy failed: rclone not found. Ensure the zip is manually saved.\n" >&2
     exit 1
   fi
 
   if [ ! -f "$SU_SCRIPT_BACKUP_ENCRYPTED_FILE_PATH" ]; then
-    echo "Remote copy failed: backup must be encrypted to be uploaded. Enable encryption first."
+    printf "Remote copy failed: backup must be encrypted to be uploaded. Enable encryption first.\n"
     exit 0
   fi
 
-  echo "\nNow copying it to remote..."
+  printf "\nNow copying it to remote...\n"
   rclone copy -v "$SU_SCRIPT_BACKUP_ENCRYPTED_FILE_PATH" \
     $SU_SCRIPT_BACKUP_RCLONE_REMOTE:$SU_SCRIPT_BACKUP_RCLONE_FOLDER
 }
 
 encrypt_backup_zip() {
   if [ -z "$SU_SCRIPT_BACKUP_ENCRYPT_PASSWORD" ]; then
-    echo "file was not encrypted." >&2
+    printf "file was not encrypted.\n" >&2
     return
   fi
 
@@ -98,7 +98,7 @@ encrypt_backup_zip() {
     -out "$SU_SCRIPT_BACKUP_ENCRYPTED_FILE_PATH" \
     -pass env:SU_SCRIPT_BACKUP_ENCRYPT_PASSWORD
   if [ $? -ne 0 ]; then
-    echo "encryption failed" >&2
+    printf "encryption failed\n" >&2
     exit 1
   fi
 }
