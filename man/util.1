@@ -12,7 +12,7 @@ All the arguments represent the path to script to be executed from `$HOME/.confi
 
 Setup scripts for third-party applications are located in the utils folder. You can add your own by placing them in `$HOME/.config/util/setup`. Calling the setup script in your shell configuration result in the files at `$HOME/.config/util/setup` being automatically loaded.
 
-Custom completions can be set at a file named "[script_name].completions.[shell]". See `$HOME/.config/util/scripts/totp/_generate.completions.zsh` for reference.
+Custom completions can be set at a file named "[script_name].completions.[shell]". See `$HOME/.config/util/scripts/totp/_generate.completions.zsh` for reference. All the arguments passed to the script are also passed to the completion script.
 
 Help sections can be added as a text after a comment line `# [help]`. See `$HOME/.config/util/scripts/update.sh` for reference. Multi-line texts are suported. All commented lines after the `help` header will be considered a part of the help section.
 
