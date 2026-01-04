@@ -9,4 +9,4 @@
 #
 # Usage: `. <(util cat source-setup-dirs)`
 
-cat $HOME/.config/util/source_setup_dirs
+cat "$HOME/.config/util/source_setup_dirs"

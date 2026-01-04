@@ -5,8 +5,8 @@
 #
 # This enables completions for custom commands and options.
 #
-# Usage: `. <(util cat completions-zsh)`
+# Usage: `. <(util cat completions zsh)`
 
 cat <<EOF
-[ -d "\$SU_COMPLETIONS_PATH" ] && fpath=("\$SU_COMPLETIONS_PATH" \$fpath)
+[ -d "\$SU_COMPLETIONS_PATH/zsh" ] && fpath=("\$SU_COMPLETIONS_PATH/zsh" \$fpath)
 EOF
