@@ -15,10 +15,10 @@ Do you manually install apps and maintain scripts to update them? **shell utils*
 All the arguments represent the path to script to be executed from `$HOME/.config/util/scripts` without directory separators, like a CLI application. Additional arguments after the path is matched are seamlessly passed to the specified script.
 
 ```sh
-util update # this will execute an script named update.sh
+util update # this will execute an script named update.*
             # in your `$HOME/.config/util/scripts` directory
 
-util git checkout-pr # this will execute an script named checkout-pr.sh
+util git checkout-pr # this will execute an script named checkout-pr.*
                      # in your `$HOME/.config/util/scripts/git` directory.
 
 util git # considering a `checkout-pr.*` script exists in the
@@ -36,7 +36,7 @@ util git # considering a `checkout-pr.*` script exists in the
 For more information: `$ man util`.
 
 > [!NOTE]
-> At the moment, the only architecture suported is GNU/Linux.
+> At the moment, the only OS suported is GNU/Linux.
 
 ### Customization
 
