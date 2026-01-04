@@ -10,7 +10,7 @@
 #
 # The TOTP duration can be defined with $TOTP_CURRENT_TIME.
 
-TOTP_SECRETS_DIR=${SECRETS_DIR:-"$HOME/.secrets/totp"}
+TOTP_SECRETS_DIR=${TOTP_SECRETS_DIR:-"$HOME/.secrets/totp"}
 TOTP_CURRENT_TIME=${TOTP_CURRENT_TIME:-"5 seconds"}
 
 error() {
