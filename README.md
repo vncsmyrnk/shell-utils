@@ -59,10 +59,6 @@ This project comes with out-of-the-box support for autocompletion of the scripts
 # [help]
 # This message will be displayed when running `--help`
 
-# [completions]
-# -a[Message for the a option]
-# -b[Message for the b option]
-
 echo "doing some operations here..."
 ```
 

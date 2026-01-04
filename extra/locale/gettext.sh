@@ -5,9 +5,6 @@
 #
 # Usage: `util locale gettext [FILE] [ID] [-l language]`
 
-# [completions]
-# -l[forces language instead of infering it from the mo path]
-
 while getopts ":l" opt; do
   case $opt in
   l) language="$OPTARG" ;;

@@ -17,10 +17,12 @@ _util() {
     '*::arg:->args'
 
   local current_path="$SU_SCRIPTS_PATH"
-  for word in $words; do
+  for i in {1..$#words}; do
+    word=${words[$i]}
     candidates=($(find "$current_path" -follow -type f -name "$word"\* -maxdepth 1 2>/dev/null))
     if [ ${#candidates[@]} -eq 1 ]; then
       local script_path=${candidates[@]:0:1}
+      local script_arguments=${words[@]:$i}
       break
     fi
     current_path="$current_path/$word"
@@ -45,17 +47,17 @@ _util() {
     ))
 
   if [ ${#files[@]} -eq 0 ] && [ -f "$script_path" ]; then
-    dynamic_arguments=('--help' ':files')
-    while IFS= read -r line; do
-      dynamic_arguments+=("$line")
-    done < <(awk '/# \[completions\]/ {in_section=1; next} in_section && /^$/ {exit} in_section {sub(/^# /, ""); print}' "$script_path")
+    _arguments '--help' ':files'
 
-    # Check for dynamic completions on the script itself following this pattern similar to this:
-    # # Completions
-    # # --pattern[File pattern]:pattern:
-    # # --test[File pattern]:test:
+    # Sources completions directly from the script config located at
+    # `_[script_basename].completions.zsh`
+    script_file_basename=$(basename "$script_path" | rev | cut -f2- -d "." | rev)
+    script_completion_file="$(dirname $script_path)/_$script_file_basename.completions.zsh"
+    if [ -f "$script_completion_file" ]; then
+      . "$script_completion_file" "${script_arguments[@]}"
+      return
+    fi
 
-    _arguments "${dynamic_arguments[@]}"
     _files
   else
     _describe 'subcommand' files

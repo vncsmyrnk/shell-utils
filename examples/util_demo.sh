@@ -15,19 +15,15 @@ cat <<EOF >~/.config/util/scripts/test/example.sh
 # [help]
 # This is a test command. It only prints a "it works" message
 
-# [completions]
-# -a[Sample a option]
-
 echo "it works"
 EOF
 
 # Make it executable
 chmod u+x ~/.config/util/scripts/test/example.sh
 
-# Autocompletions should appear when typing util commands.
-# Like `util tes<TAB>` or `util test <TAB>`
-# An `util test example <TAB>` should list the flags
-# available for the script.
+# Autocompletions can be defined at
+# ~/.config/util/scripts/test/example.completions.[shell] (i.e
+# ~/.config/util/scripts/test/example.completions.zsh).
 
 # Run it. It should run the script we just created.
 util test example
