@@ -14,12 +14,12 @@ TOTP_SECRETS_DIR=${TOTP_SECRETS_DIR:-"$HOME/.secrets/totp"}
 TOTP_CURRENT_TIME=${TOTP_CURRENT_TIME:-"5 seconds"}
 
 error() {
-  printf "$1\n"
+  printf "%s\n" "$1"
   exit 1
 }
 
 usage() {
-  printf "$1\n"
+  printf "%s\n" "$1"
   echo "usage: totp generate [ENTITY]"
   exit 1
 }
