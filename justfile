@@ -39,3 +39,15 @@ unset-config:
 
 shellcheck:
   shellcheck -s sh bin/** defaults/*/**.sh setup/** extra/*/**.sh
+
+benchmark-find-and-execute:
+  #!/usr/bin/env bash
+  SCRIPT_DIR="$HOME/.config/util/scripts/tests/benchmarks"
+  SCRIPT_NAME="example.sh"
+  SCRIPT_PATH="$SCRIPT_DIR/$SCRIPT_NAME"
+
+  mkdir -p "$SCRIPT_DIR"
+  echo "echo \"hello \$1\"" > "$SCRIPT_PATH"
+  chmod u+x "$SCRIPT_PATH"
+  time "{{local_bin_path}}/util" tests benchmarks example "this is a test"
+  rm -rf "$HOME/.config/util/scripts/tests"
