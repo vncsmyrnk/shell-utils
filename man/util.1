@@ -3,7 +3,9 @@
 util \- A shell-agnostic utility tool for managing user scripts
 .SH SYNOPSIS
 .B util
-[\-\-help] [arguments]
+[arguments]
+[\-\-help]
+[\-\-to-stdout]
 .SH DESCRIPTION
 .B util
 is a shell-agnostic utility tool designed to make your scripts accessible everywhere using the `util` command.
@@ -29,7 +31,11 @@ They are called "extra scripts", useful for daily activies. Backup and update ar
 .SH OPTIONS
 .TP
 .B \-\-help
-Show help information for the `util` command.
+Show help information for the `util` script.
+
+.TP
+.B \-\-to-stdout
+Print the script to the standard input.
 
 .SH EXAMPLES
 .TP

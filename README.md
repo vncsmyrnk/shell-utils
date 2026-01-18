@@ -28,9 +28,9 @@ util git # considering a `checkout-pr.*` script exists in the
 ```
 
 ```sh
-\. <(util cat source-setup-dirs) # sources rc files at `$HOME/.config/util/setup`
-\. <(util cat completions zsh)   # adds completions for the util command for zsh
-                                 # to make it persistent, add this commands to your rc file
+\. <(util config source_setup_dirs --to-stdout) # sources rc files at `$HOME/.config/util/setup`
+\. <(util completions zsh --to-stdout)          # adds completions for the util command for zsh
+                                                # to make it persistent, add this commands to your rc file
 ```
 
 For more information: `$ man util`.

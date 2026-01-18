@@ -1,5 +1,8 @@
 # vim: set ft=sh:
 
+# [help]
+# Script for sourcing predefined shell files. Useful for shell runtime configuration setups.
+#
 # shell-utils can source run commands configuration files automatically at $SU_RC_SOURCE_PATH.
 # So if you have a specific setup for tools like p10k you can put all the config you want
 # sourced on a folder at $SU_RC_SOURCE_PATH.
@@ -8,7 +11,7 @@
 # rc file:
 #
 # ```sh
-# [ -f $HOME/.config/util/source_setup_dirs ] && \. $HOME/.config/util/source_setup_dirs
+# \. <(util config source_setup_dirs --to-stdout)
 # ```
 
 \. "$HOME/.config/util/vars"

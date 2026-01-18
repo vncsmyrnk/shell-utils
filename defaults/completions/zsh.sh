@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 # [help]
 # Sets the completions file for zsh.
@@ -7,6 +7,4 @@
 #
 # Usage: `. <(util cat completions zsh)`
 
-cat <<EOF
-[ -d "\$SU_COMPLETIONS_PATH/zsh" ] && fpath=("\$SU_COMPLETIONS_PATH/zsh" \$fpath)
-EOF
+[ -d "$SU_COMPLETIONS_PATH/zsh" ] && fpath=("$SU_COMPLETIONS_PATH/zsh" $fpath)
