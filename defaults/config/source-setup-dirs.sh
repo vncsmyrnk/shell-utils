@@ -11,7 +11,7 @@
 # rc file:
 #
 # ```sh
-# \. <(util config source_setup_dirs --to-stdout)
+# \. <(util config source-setup-dirs --to-stdout)
 # ```
 
 \. "$HOME/.config/util/vars"
