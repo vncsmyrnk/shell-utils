@@ -6,12 +6,12 @@
 # https://google.github.io/styleguide/shellguide.html
 
 err() {
-  printf "$@" >&2
+  printf "%s" "$@" >&2
   exit 1
 }
 
 scripts_path() {
-  local path="${SU_SCRIPTS_PATH:-}"
+  path="${SU_SCRIPTS_PATH:-}"
   [ -z "$path" ] && {
     err "\$SU_SCRIPTS_PATH not defined."
   }
@@ -25,8 +25,7 @@ check_dependencies() {
 }
 
 check_empty_arguments() {
-  local arguments="$@"
-  [ -z "$arguments" ] && {
+  [ $# -eq 0 ] && {
     printf "util is a shell-agnostic utility tool designed to make your scripts accessible everywhere using the util command.
 It can find and execute your custom scripts like a CLI.
 \ne.g. \"\$ util folder script\" will look for a script at \$SU_SCRIPTS_PATH/folder/script.(*)
@@ -65,7 +64,7 @@ print_help_for_file() {
 list_commands_available_glob() {
   help_file_for_current_path="$1/help"
   if [ -f "$help_file_for_current_path" ]; then
-    printf "$(cat $help_file_for_current_path)"
+    printf "%s" "$(cat "$help_file_for_current_path")"
     printf "\n"
   else
     printf "This command has subcommands, but no help section.\n"
@@ -81,9 +80,9 @@ list_commands_available_glob() {
     while read -r file; do
       command_name=$(basename "$file" | rev | cut -f2- -d "." | rev)
       summarized_help_text=$(help_for_file "$file" | head -n 1)
-      printf "\033[1m$command_name\033[0m"
+      printf "\033[1m%s\033[0m" "$command_name"
       if [ -n "$summarized_help_text" ]; then
-        printf " - $summarized_help_text"
+        printf " - %s" "$summarized_help_text"
       fi
       printf "\n"
     done
@@ -95,7 +94,7 @@ list_commands_available_glob() {
     -follow |
     while read -r dir; do
       command_name=$(basename "$dir")
-      printf "\033[1m$command_name\033[0m\n"
+      printf "\033[1m%s\033[0m\n" "$command_name"
     done
 }
 
@@ -115,14 +114,14 @@ execute_script() {
 }
 
 find_and_execute_script() {
-  local current_path=$(scripts_path)
+  current_path=$(scripts_path)
   for section in "$@"; do
     [ -n "$found_script_file_glob" ] && {
       found_script_arguments="$found_script_arguments \"$section\""
     }
 
-    local current_path="$current_path/$section"
-    local script_file_glob="$current_path.*"
+    current_path="$current_path/$section"
+    script_file_glob="$current_path.*"
     file_glob_exists_and_is_executable "$script_file_glob" && {
       found_script_file_glob="$script_file_glob"
     }
@@ -135,9 +134,9 @@ find_and_execute_script() {
     return 0
   fi
 
-  local script_path=$(find $found_script_file_glob)
-  if [ $(echo $script_path | wc -l) -gt 1 ]; then
-    printf "Ambiguity detected. Make sure the scripts at $(scripts_path) have no name conflict.\n"
+  script_path=$(find $found_script_file_glob)
+  if [ "$(echo "$script_path" | wc -l)" -gt 1 ]; then
+    printf "Ambiguity detected. Make sure the scripts at %s have no name conflict.\n" "$(scripts_path)"
     exit 1
   fi
 
@@ -158,7 +157,7 @@ main() {
   check_empty_arguments "$@"
   find_and_execute_script "$@"
 
-  printf "Util file not found. Check \033[1m$(scripts_path)\033[0m for commands available.\n"
+  printf "Util file not found. Check \033[1m%s\033[0m for commands available.\n" "$(scripts_path)"
   printf "\033[2mTip: pass file without the extension and make it sure it is executable.\033[0m\n"
   exit 1
 }
