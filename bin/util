@@ -98,9 +98,11 @@ list_commands_available_glob() {
     done
 }
 
-help_flag_set() {
+flag_set() {
+  desired_flag="$1"
+  shift
   for arg in "$@"; do
-    if [ "$arg" = "--help" ]; then
+    if [ "$arg" = "$desired_flag" ]; then
       return 0
     fi
   done
@@ -140,10 +142,15 @@ find_and_execute_script() {
     exit 1
   fi
 
-  if help_flag_set "$@"; then
+  if flag_set "--help" "$@"; then
     print_help_for_file "$script_path" || {
       exit 1
     }
+    exit 0
+  fi
+
+  if flag_set "--to-stdout" "$@"; then
+    cat "$script_path"
     exit 0
   fi
 

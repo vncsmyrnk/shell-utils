@@ -47,7 +47,7 @@ _util() {
     ))
 
   if [ ${#files[@]} -eq 0 ] && [ -f "$script_path" ]; then
-    _arguments '--help' ':files'
+    _arguments '--help' '--to-stdout' ':files'
 
     # Sources completions directly from the script config located at
     # `_[script_basename].completions.zsh`
