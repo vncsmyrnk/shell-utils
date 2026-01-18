@@ -7,9 +7,6 @@
 #
 # Tip: use `rsync -av backup dest` to copy the backup files to their destination places
 
-# [completions]
-# --latest[Use the latest backup]
-
 SU_SCRIPT_REMOTE_UNWRAP_DEST=${SU_SCRIPT_REMOTE_UNWRAP_DEST:-/tmp}
 
 latest_flag=false
