@@ -14,8 +14,6 @@
 # \. <(util config source-setup-dirs --to-stdout)
 # ```
 
-\. "$HOME/.config/util/vars"
-
 source_setup_dir() {
   [ -d "$1" ] || return
   [ -f "$1/setup" ] && \. "$1/setup" # sources setup files first

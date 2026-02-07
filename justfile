@@ -18,7 +18,7 @@ install: check-deps config
 
 config:
   #!/bin/sh
-  \. ./setup/vars
+  \. ./defaults/config/default-vars.sh
   mkdir -p $SU_SCRIPTS_PATH $SU_COMPLETIONS_PATH {{local_bin_path}} {{local_man_path}}
   stow -t {{local_bin_path}} bin
   stow -t $SU_SCRIPTS_PATH defaults --no-folding
@@ -29,7 +29,7 @@ config:
 
 unset-config:
   #!/bin/sh
-  \. ./setup/vars
+  \. ./defaults/config/default-vars.sh
   stow -D -t {{local_bin_path}} bin
   stow -D -t $SU_SCRIPTS_PATH defaults --no-folding
   stow -D -t $SU_SCRIPTS_PATH extra --no-folding
