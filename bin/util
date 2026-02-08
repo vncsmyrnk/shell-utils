@@ -5,17 +5,14 @@
 
 # https://google.github.io/styleguide/shellguide.html
 
+# Is recommended to set the default vars or set custom values for them in order
+# to use the basic functionalities of the util command and the default scripts.
+# To set the defaults: `$ \. <(util config default-vars --to-stdout)`
+SU_SCRIPTS_PATH=${SU_SCRIPTS_PATH:-"$HOME/.config/util/scripts"}
+
 err() {
   printf "%s" "$@" >&2
   exit 1
-}
-
-scripts_path() {
-  path="${SU_SCRIPTS_PATH:-}"
-  [ -z "$path" ] && {
-    err "\$SU_SCRIPTS_PATH not defined."
-  }
-  echo "$path"
 }
 
 check_dependencies() {
@@ -116,7 +113,7 @@ execute_script() {
 }
 
 find_and_execute_script() {
-  current_path=$(scripts_path)
+  current_path="$SU_SCRIPTS_PATH"
   for section in "$@"; do
     [ -n "$found_script_file_glob" ] && {
       found_script_arguments="$found_script_arguments \"$section\""
@@ -138,7 +135,7 @@ find_and_execute_script() {
 
   script_path=$(find $found_script_file_glob)
   if [ "$(echo "$script_path" | wc -l)" -gt 1 ]; then
-    printf "Ambiguity detected. Make sure the scripts at %s have no name conflict.\n" "$(scripts_path)"
+    printf "Ambiguity detected. Make sure the scripts at %s have no name conflict.\n" "$SU_SCRIPTS_PATH"
     exit 1
   fi
 
@@ -164,7 +161,7 @@ main() {
   check_empty_arguments "$@"
   find_and_execute_script "$@"
 
-  printf "Util file not found. Check \033[1m%s\033[0m for commands available.\n" "$(scripts_path)"
+  printf "Util file not found. Check \033[1m%s\033[0m for commands available.\n" "$SU_SCRIPTS_PATH"
   printf "\033[2mTip: pass file without the extension and make it sure it is executable.\033[0m\n"
   exit 1
 }
