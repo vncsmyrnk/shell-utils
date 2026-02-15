@@ -33,7 +33,7 @@ unset-config:
   stow -D -t $SU_SCRIPTS_PATH defaults --no-folding
   stow -D -t $SU_SCRIPTS_PATH extra --no-folding
   stow -D -t $SU_COMPLETIONS_PATH completions
-  stow -D -t $HOME/.local/share/man/man1 man
+  stow -D -t {{local_man_path}} man
 
 shellcheck:
   shellcheck -s sh bin/** defaults/*/**.sh extra/*/**.sh
