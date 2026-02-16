@@ -73,6 +73,7 @@ list_commands_available_glob() {
     -maxdepth 1 \
     -type f \
     -not -iname 'help' \
+    -not -name "_*" \
     -follow |
     while read -r file; do
       command_name=$(basename "$file" | rev | cut -f2- -d "." | rev)
