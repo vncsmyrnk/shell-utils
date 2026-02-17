@@ -40,11 +40,14 @@ main() {
   fi
 
   totp_code=$(
-    gpg -d -q "$secret_file" | oathtool --totp -b --now "$TOTP_CURRENT_TIME" -
+    gpg -d -q "$secret_file" | oathtool --totp -b --now "$TOTP_CURRENT_TIME" - || echo "-1"
   )
 
-  echo "$totp_code"
+  if [[ "$totp_code" = "-1" ]]; then
+    exit 1
+  fi
 
+  echo "$totp_code"
   if command -v xclip &>/dev/null; then
     echo -n "$totp_code" | xclip -selection clipboard
   fi
