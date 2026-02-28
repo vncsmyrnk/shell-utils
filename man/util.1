@@ -84,6 +84,17 @@ Force overwrite without confirmation prompt.
 .B \-d, \-\-dry-run
 Show what would be done without making changes.
 
+.SS config remove
+.B util remove add
+<target>
+[\-d|\-\-dry-run]
+
+Deletes the script file or folder.
+
+.TP
+.B \-d, \-\-dry-run
+Show what would be done without making changes.
+
 .SH EXAMPLES
 .TP
 .B util update
@@ -96,6 +107,10 @@ Executes a script named `checkout-pr.sh` in `$HOME/.config/util/scripts/git`.
 .TP
 .B util config add ~/scripts
 Creates symbolic links for the folder at ~/scripts in `$HOME/.config/util/scripts`. The scripts are now accessbile via `$ util <script-file-name`. So if a `test.sh` is at ~/scripts, it is now accessbile via `$ util test`.
+
+.TP
+.B util config remove test/script
+If `$HOME/.config/util/scripts/test/script.*` is a file, it is removed. If `$HOME/.config/util/scripts/test/script` is a directory, it is also removed entirely.
 
 .SH AUTHOR
 Written by vncsmyrnk.
