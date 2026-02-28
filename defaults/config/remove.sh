@@ -16,10 +16,15 @@ user_confirmed_removal() {
 main() {
   target_name=""
   dry_run=false
+  force_removal=false
   while [ $# -gt 0 ]; do
     case $1 in
     -d | --dry-run)
       dry_run=true
+      shift
+      ;;
+    -f | --force)
+      force_removal=true
       shift
       ;;
     *)
@@ -50,7 +55,7 @@ main() {
 
   destination_path="$TARGET_PATH/$target_name"
   if [ -d "$destination_path" ]; then
-    if ! user_confirmed_removal; then
+    if ! "$force_removal" && ! user_confirmed_removal; then
       exit 1
     fi
     rm -rf "$destination_path"
@@ -58,7 +63,7 @@ main() {
   fi
 
   for f in "$destination_path".*; do
-    if ! user_confirmed_removal; then
+    if ! "$force_removal" && ! user_confirmed_removal; then
       exit 1
     fi
     rm -f "$f"
