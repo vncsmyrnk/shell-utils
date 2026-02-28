@@ -38,6 +38,16 @@ To start using the `util` command, make sure to source the default variables or 
 .ec
 .fi
 
+Then make some scripts available to the util command:
+
+.nf
+.eo
+util config add <path/to/script>
+.ec
+.fi
+
+The script should be available with `$ util <script-file-name-with-no-extension>`
+
 .SH OPTIONS
 .TP
 .B \-\-help
@@ -46,6 +56,33 @@ Show help information for the `util` script.
 .TP
 .B \-\-to-stdout
 Print the script to the standard input.
+
+.SH COMMANDS
+.SS config add
+.B util config add
+<file|directory>
+[\-t|\-\-target-name <name>]
+[\-p|\-\-parent-path <path>]
+[\-f|\-\-force]
+[\-d|\-\-dry-run]
+
+Makes a script or a folder of scripts accessible to the util command. Creates symbolic links of the sources in order for the scripts to be found by util.
+
+.TP
+.B \-t, \-\-target-name <name>
+Custom name for the target symlink (default: source basename).
+
+.TP
+.B \-p, \-\-parent-path <path>
+Parent path relative to scripts directory.
+
+.TP
+.B \-f, \-\-force
+Force overwrite without confirmation prompt.
+
+.TP
+.B \-d, \-\-dry-run
+Show what would be done without making changes.
 
 .SH EXAMPLES
 .TP
@@ -57,14 +94,8 @@ Executes a script named `update.sh` in `$HOME/.config/util/scripts`.
 Executes a script named `checkout-pr.sh` in `$HOME/.config/util/scripts/git`.
 
 .TP
-.B util config add-script-folder <folder> <destination_name>
-Creates symbolic links for the folder at <folder> in `$HOME/.config/util/scripts/<destination_name>`. The scripts are now accessbile via `$ util <folder> path to script`.
-
-The recommended way of configuring the scripts is manually copying/stowing them to `$HOME/.config/util/scripts` following the structure which best fit your needs. This command just facilitates the process.
-
-.TP
-.B util config remove-script-folder <folder>
-Removes the symbolic links for the folder at `$HOME/.config/util/<folder>`
+.B util config add ~/scripts
+Creates symbolic links for the folder at ~/scripts in `$HOME/.config/util/scripts`. The scripts are now accessbile via `$ util <script-file-name`. So if a `test.sh` is at ~/scripts, it is now accessbile via `$ util test`.
 
 .SH AUTHOR
 Written by vncsmyrnk.

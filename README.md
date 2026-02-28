@@ -25,6 +25,10 @@ util git # considering a `checkout-pr.*` script exists in the
          # `$HOME/.config/util/scripts/git` directory # a "commands available"
          # section will be displayed listing it. A comment starting with "help"
          # will be printed if present on the script.
+
+util config add ~/scripts/test.sh # Creates a symbolic link of the file at
+                                  # `$HOME/.config/util/scripts` making
+                                  # the script executable via `$ util test`
 ```
 
 ```sh
