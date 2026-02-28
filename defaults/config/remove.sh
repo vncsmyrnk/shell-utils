@@ -3,7 +3,7 @@
 # [help]
 # Removes a folder from the scripts acessible to the util command
 
-SCRIPTS_TARGET_PATH="$SU_SCRIPTS_PATH"
+TARGET_PATH="$SU_PATH"
 
 user_confirmed_removal() {
   printf "Are you sure? [y/N]: "
@@ -36,8 +36,8 @@ main() {
 
   if "$dry_run"; then
     echo "scripts to be removed:"
-    find "$SCRIPTS_TARGET_PATH" \
-      -path "$SCRIPTS_TARGET_PATH/$target_name*" \
+    find "$TARGET_PATH" \
+      -path "$TARGET_PATH/$target_name*" \
       -follow \
       -executable \
       -type f \
@@ -48,7 +48,7 @@ main() {
     exit 0
   fi
 
-  destination_path="$SCRIPTS_TARGET_PATH/$target_name"
+  destination_path="$TARGET_PATH/$target_name"
   if [ -d "$destination_path" ]; then
     if ! user_confirmed_removal; then
       exit 1

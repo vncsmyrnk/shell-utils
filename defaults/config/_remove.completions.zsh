@@ -10,7 +10,7 @@ if grep -q ' ' <<<"$arguments"; then
 fi
 
 local files=($(
-  find "$SU_SCRIPTS_PATH" \
+  find "$SU_PATH" \
     -follow \
     -executable \
     -not -name "on-update*" \
