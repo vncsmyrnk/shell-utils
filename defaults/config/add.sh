@@ -5,7 +5,7 @@
 #
 # Creates symbolic links of the sources informed in order to the scripts to be found by util.
 
-SCRIPTS_TARGET_PATH="$SU_SCRIPTS_PATH"
+TARGET_PATH="$SU_PATH"
 
 if [ -z "$1" ]; then
   echo "Usage: util config add <file|directory> [-t|--target-name <name>] [-p|--parent-path <path>] [-f|--force] [-d|--dry-run]"
@@ -45,7 +45,7 @@ user_confirms_possbile_override() {
 main() {
   source_path=""
   target_name=""
-  parent_path=""
+  parent_path="scripts"
   force_overwrite=false
   dry_run=false
   while [ $# -gt 0 ]; do
@@ -82,7 +82,7 @@ main() {
   done
 
   if [ -n "$parent_path" ]; then
-    SCRIPTS_TARGET_PATH="$SCRIPTS_TARGET_PATH/$parent_path"
+    TARGET_PATH="$TARGET_PATH/$parent_path"
   fi
 
   source=$(realpath "$source_path")
@@ -90,7 +90,7 @@ main() {
   if [ -n "$target_name" ]; then
     target="$target_name"
   fi
-  target="$SCRIPTS_TARGET_PATH/$target"
+  target="$TARGET_PATH/$target"
 
   if "$dry_run"; then
     echo "source: $source"

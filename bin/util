@@ -8,7 +8,8 @@
 # Is recommended to set the default vars or set custom values for them in order
 # to use the basic functionalities of the util command and the default scripts.
 # To set the defaults: `$ \. <(util config default-vars --to-stdout)`
-SU_SCRIPTS_PATH=${SU_SCRIPTS_PATH:-"$HOME/.config/util/scripts"}
+SU_PATH=${SU_PATH:-"$HOME/.config/util"}
+SU_SCRIPTS_PATH=${SU_SCRIPTS_PATH:-"$SU_PATH/scripts"}
 
 err() {
   printf "%s" "$@" >&2

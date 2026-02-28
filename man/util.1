@@ -68,13 +68,15 @@ Print the script to the standard input.
 
 Makes a script or a folder of scripts accessible to the util command. Creates symbolic links of the sources in order for the scripts to be found by util.
 
+It can also define other configuration files at `$HOME/.config/util` folder, like setup files.
+
 .TP
 .B \-t, \-\-target-name <name>
 Custom name for the target symlink (default: source basename).
 
 .TP
 .B \-p, \-\-parent-path <path>
-Parent path relative to scripts directory.
+Parent path relative to scripts directory (default: scripts).
 
 .TP
 .B \-f, \-\-force
