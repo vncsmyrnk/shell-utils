@@ -29,7 +29,7 @@ create_symbolic_link_to_file_target() {
   ln -s "$source" "$target"
 }
 
-user_confirms_possbile_override() {
+user_confirms_possbile_overwrite() {
   target="$1"
   if [ ! -f "$target" ] && [ ! -d "$target" ]; then
     return
@@ -99,7 +99,7 @@ main() {
     exit 0
   fi
 
-  if ! "$force_overwrite" && ! user_confirms_possbile_override "$target"; then
+  if ! "$force_overwrite" && ! user_confirms_possbile_overwrite "$target"; then
     exit 1
   fi
 
