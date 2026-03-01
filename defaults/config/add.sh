@@ -85,11 +85,10 @@ main() {
   fi
 
   source=$(realpath "$source_path")
-  target=$(basename "$source")
+  target="$TARGET_PATH"
   if [ -n "$target_name" ]; then
-    target="$target_name"
+    target="$target/$target_name"
   fi
-  target="$TARGET_PATH/$target"
 
   if "$dry_run"; then
     echo "source: $source"
@@ -101,6 +100,11 @@ main() {
   if [ -d "$source" ]; then
     create_symbolic_link_to_dir_target "$source" "$target"
     exit 0
+  fi
+
+  if [ -z "$target_name" ]; then
+    source_basename=$(basename "$source")
+    target="$target/$source_basename"
   fi
 
   if "$force_overwrite" || user_confirms_possbile_overwrite "$target"; then
