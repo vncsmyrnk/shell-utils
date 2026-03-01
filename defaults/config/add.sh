@@ -17,7 +17,6 @@ create_symbolic_link_to_dir_target() {
   target="$2"
   source_basename=$(basename "$source")
   source_dirpath=$(dirname "$source")
-  rm -rf "$target"
   mkdir -p "$target"
   stow -t "$target" -d "$source_dirpath" "$source_basename" --no-folding
 }
@@ -99,16 +98,17 @@ main() {
     exit 0
   fi
 
-  if ! "$force_overwrite" && ! user_confirms_possbile_overwrite "$target"; then
-    exit 1
-  fi
-
   if [ -d "$source" ]; then
     create_symbolic_link_to_dir_target "$source" "$target"
     exit 0
   fi
 
-  create_symbolic_link_to_file_target "$source" "$target"
+  if "$force_overwrite" || user_confirms_possbile_overwrite "$target"; then
+    create_symbolic_link_to_file_target "$source" "$target"
+    exit 0
+  fi
+
+  exit 1
 }
 
 main "$@"
