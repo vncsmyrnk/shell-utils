@@ -56,7 +56,7 @@ To automate update tasks when running `util update`, simply place your scripts i
 
 ### Completions and help messages
 
-This project comes with out-of-the-box support for autocompletion of the scripts accessible to the `util` command. The autocompletion is dynamically generated based on the comments provided in the scripts. A help message can be also added on the script and will be displayed when passing the `--help` option.
+This project comes with out-of-the-box support for autocompletion of the scripts accessible to the `util` command. The autocompletion is dynamically generated based on special completions file that can be defined per script. A help message can be also added on the script and will be displayed when passing the `--help` option.
 
 ```sh
 #!/bin/bash
