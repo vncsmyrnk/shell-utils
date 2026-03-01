@@ -13,14 +13,35 @@ user_confirmed_removal() {
   fi
 }
 
+remove_directory() {
+  target="$1"
+  original_source="$2"
+  force_removal="$3"
+  if ! "$force_removal" && ! user_confirmed_removal; then
+    exit 1
+  fi
+
+  if [ -n "$original_source" ]; then
+    original_basename=$(basename "$original_source")
+    original_dirname=$(dirname "$original_source")
+    stow -D -t "$target" -d "$original_dirname" "$original_basename"
+    exit 0
+  fi
+  rm -rf "$target"
+}
+
 main() {
   target_name=""
-  dry_run=false
+  original_source=""
   force_removal=false
   while [ $# -gt 0 ]; do
     case $1 in
-    -d | --dry-run)
-      dry_run=true
+    -s | --original-source)
+      original_source="$2"
+      shift 2
+      ;;
+    --original-source=*)
+      original_source="${1#*=}"
       shift
       ;;
     -f | --force)
@@ -39,30 +60,13 @@ main() {
     exit 1
   fi
 
-  if "$dry_run"; then
-    echo "scripts to be removed:"
-    find "$TARGET_PATH" \
-      -path "$TARGET_PATH/$target_name*" \
-      -follow \
-      -executable \
-      -type f \
-      -not -name "on-update*" \
-      -not -name "_*" \
-      -printf "%P\n"
-    echo "dry-run mode detected, no action taken."
+  target="$TARGET_PATH/$target_name"
+  if [ -d "$target" ]; then
+    remove_directory "$target" "$original_source" "$force_removal"
     exit 0
   fi
 
-  destination_path="$TARGET_PATH/$target_name"
-  if [ -d "$destination_path" ]; then
-    if ! "$force_removal" && ! user_confirmed_removal; then
-      exit 1
-    fi
-    rm -rf "$destination_path"
-    exit 0
-  fi
-
-  for f in "$destination_path".*; do
+  for f in "$target".*; do
     if ! "$force_removal" && ! user_confirmed_removal; then
       exit 1
     fi

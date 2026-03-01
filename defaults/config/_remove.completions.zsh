@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 _arguments \
-  '(-d --dry-run)'{-d,--dry-run}'[Show what would be done without making changes]' \
+  '(-s --original-source)'{-s,--original-source}'[Only remove files existing on the original source]' \
   "${common_flags[@]}"
 
 arguments="$1"
@@ -13,7 +13,6 @@ local files=($(
   find "$SU_PATH" \
     -follow \
     -executable \
-    -not -name "on-update*" \
     -not -name "_*" \
     -printf "%P\n" |
     xargs -I{} sh -c 'echo {} | rev | cut -f2- -d "." | rev'
