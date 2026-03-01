@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # [help]
-# Removes a folder from the scripts acessible to the util command
+# Removes a script or a folder from the scripts acessible to the util command
 
 TARGET_PATH="$SU_PATH"
 
