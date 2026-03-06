@@ -48,7 +48,9 @@ main() {
   fi
 
   echo "$totp_code"
-  if command -v xclip &>/dev/null; then
+  if command -v wl-copy &>/dev/null; then
+    echo -n "$totp_code" | wl-copy
+  elif command -v xclip &>/dev/null; then
     echo -n "$totp_code" | xclip -selection clipboard
   fi
 }
