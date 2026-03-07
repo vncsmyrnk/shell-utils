@@ -2,6 +2,8 @@
 
 # vim: set ft=zsh:
 
+CACHE_FILE="$HOME/.cache/shell-utils/scripts"
+
 common_flags=(
   '--to-stdout'
   '--help'
@@ -9,9 +11,7 @@ common_flags=(
 )
 
 _util() {
-  if [ ! -d "$SU_SCRIPTS_PATH" ]; then
-    return
-  fi
+  util cache generate
 
   # Captures all arguments and suggests the files/folders in
   # $SU_SCRIPTS_PATH. If a file is found, the files in the
@@ -22,51 +22,44 @@ _util() {
   _arguments -C \
     '*::arg:->args'
 
-  local current_path="$SU_SCRIPTS_PATH"
-  for i in {1..$#words}; do
-    word=${words[$i]}
-    candidates=($(find "$current_path" -follow -type f -name "$word"\* -maxdepth 1 2>/dev/null))
-    if [ ${#candidates[@]} -eq 1 ]; then
-      local script_path=${candidates[@]:0:1}
+  local non_empty_words=($words)
+  if [ -z "${non_empty_words[-1]}" ]; then
+    non_empty_words=("${(@)non_empty_words[1,-2]}")
+  fi
+
+  local candidate_script_query=""
+  for i in {1..$#non_empty_words}; do
+    candidate_script_query="$candidate_script_query/${words[$i]}"
+    candidate_script=$(
+      grep -P ":${candidate_script_query:1}\.(sh|zsh)$" "$CACHE_FILE" \
+        | sed 's/:/\//'
+    )
+
+    if [ -f "$candidate_script" ]; then
+      # Sources completions directly from the script config located at
+      # `_[script_basename].completions.zsh`
+      local script_file_basename=$(basename "$candidate_script" | rev | cut -f2- -d "." | rev)
+      local script_completion_file="$(dirname $candidate_script)/_$script_file_basename.completions.zsh"
       local script_arguments=${words[@]:$i}
-      break
+      if [ -f "$script_completion_file" ]; then
+        . "$script_completion_file" "${script_arguments[@]}"
+        return
+      fi
+
+      _arguments "${common_flags[@]}"
+      _files
     fi
-    current_path="$current_path/$word"
   done
 
-  local all_subcommands_but_the_last=("${(j:/:)words[1,CURRENT-1]}")
-  local last_command="$words[CURRENT]"
-  local scripts_path_with_arguments="$SU_SCRIPTS_PATH/$all_subcommands_but_the_last"
+  local query="${(j:\/:)words}"
 
-  local files=($(
-    find "$scripts_path_with_arguments" \
-      -maxdepth 1 \
-      -mindepth 1 \
-      -name "$last_command*" \
-      -follow \
-      -executable \
-      -not -name "on-update*" \
-      -not -name "_*" \
-      -printf "%f\n" \
-      2>/dev/null \
-      | xargs -I{} sh -c 'echo {} | rev | cut -f2- -d "." | rev'
-    ))
+  candidate_paths=($(
+    grep -P ":${query}[^\/]*$" "$CACHE_FILE" \
+      | sed 's/:/\//' \
+      | xargs -I{} sh -c 'basename {} | rev | cut -f2- -d "." | rev'
+  ))
 
-  if [ ${#files[@]} -eq 0 ] && [ -f "$script_path" ]; then
-    # Sources completions directly from the script config located at
-    # `_[script_basename].completions.zsh`
-    script_file_basename=$(basename "$script_path" | rev | cut -f2- -d "." | rev)
-    script_completion_file="$(dirname $script_path)/_$script_file_basename.completions.zsh"
-    if [ -f "$script_completion_file" ]; then
-      . "$script_completion_file" "${script_arguments[@]}"
-      return
-    fi
-
-    _arguments "${common_flags[@]}"
-    _files
-  else
-    _describe 'subcommand' files
-  fi
+   _describe 'subcommand' candidate_paths
 }
 
 _util "$@"

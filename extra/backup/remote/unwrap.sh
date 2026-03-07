@@ -7,7 +7,10 @@
 #
 # Tip: use `rsync -av backup dest` to copy the backup files to their destination places
 
-SU_SCRIPT_REMOTE_UNWRAP_DEST=${SU_SCRIPT_REMOTE_UNWRAP_DEST:-/tmp}
+SHELL_UTILS_BACKUP_RCLONE_REMOTE=${SHELL_UTILS_BACKUP_RCLONE_REMOTE:-"gdrive"}
+SHELL_UTILS_BACKUP_RCLONE_FOLDER=${SHELL_UTILS_BACKUP_RCLONE_FOLDER:-"bkp"}
+SHELL_UTILS_REMOTE_UNWRAP_DEST=${SHELL_UTILS_REMOTE_UNWRAP_DEST:-/tmp}
+SHELL_UTILS_BACKUP_ENCRYPT_PASSWORD=${SHELL_UTILS_BACKUP_ENCRYPT_PASSWORD:-""}
 
 latest_flag=false
 while [[ $# -gt 0 ]]; do
@@ -32,12 +35,12 @@ check_dependencies() {
 decrypt_backup() {
   dest_decrypted_file=$(basename "$1" | cut -d '.' -f1)
   dest_decrypted_file="$dest_decrypted_file.$(printf "$1" | cut -d '.' -f2)"
-  dest_backup_file="$SU_SCRIPT_REMOTE_UNWRAP_DEST/$dest_decrypted_file"
+  dest_backup_file="$SHELL_UTILS_REMOTE_UNWRAP_DEST/$dest_decrypted_file"
 
   openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -salt \
     -in "$1" \
     -out "$dest_backup_file" \
-    -pass env:SU_SCRIPT_BACKUP_ENCRYPT_PASSWORD
+    -pass env:SHELL_UTILS_BACKUP_ENCRYPT_PASSWORD
   if [ $? -ne 0 ]; then
     echo "decryption failed" >&2
     exit 1
@@ -50,7 +53,7 @@ decrypt_backup() {
 }
 
 main() {
-  if [ -z "$SU_SCRIPT_BACKUP_ENCRYPT_PASSWORD" ]; then
+  if [ -z "$SHELL_UTILS_BACKUP_ENCRYPT_PASSWORD" ]; then
     echo "unwrap failed: no password was provided" >&2
     exit 1
   fi
@@ -67,22 +70,22 @@ main() {
   if [ "$latest_flag" = true ]; then
     echo "Fetching latest backup file..."
     backup_file=$(
-      rclone ls "$SU_SCRIPT_BACKUP_RCLONE_REMOTE:$SU_SCRIPT_BACKUP_RCLONE_FOLDER" |
+      rclone ls "$SHELL_UTILS_BACKUP_RCLONE_REMOTE:$SHELL_UTILS_BACKUP_RCLONE_FOLDER" |
         head -n 1 |
         awk '{ print $2 }'
     )
   fi
 
   echo "Downloading backup file..."
-  rclone copy "$SU_SCRIPT_BACKUP_RCLONE_REMOTE:$SU_SCRIPT_BACKUP_RCLONE_FOLDER/$backup_file" \
-    "$SU_SCRIPT_REMOTE_UNWRAP_DEST"
+  rclone copy "$SHELL_UTILS_BACKUP_RCLONE_REMOTE:$SHELL_UTILS_BACKUP_RCLONE_FOLDER/$backup_file" \
+    "$SHELL_UTILS_REMOTE_UNWRAP_DEST"
 
   echo "Decrypting it..."
-  decrypt_backup "$SU_SCRIPT_REMOTE_UNWRAP_DEST/$backup_file" || {
+  decrypt_backup "$SHELL_UTILS_REMOTE_UNWRAP_DEST/$backup_file" || {
     exit 1
   }
 
-  echo "Done. Backup unwrapped at $SU_SCRIPT_REMOTE_UNWRAP_DEST"
+  echo "Done. Backup unwrapped at $SHELL_UTILS_REMOTE_UNWRAP_DEST"
 }
 
 main "$@"

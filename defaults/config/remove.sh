@@ -3,7 +3,7 @@
 # [help]
 # Removes a script or a folder from the scripts acessible to the util command
 
-TARGET_PATH="$SU_PATH"
+TARGET_PATH="$SHELL_UTILS_USER_CONFIG"
 
 user_confirmed_removal() {
   printf "Are you sure? [y/N]: "
@@ -28,6 +28,10 @@ remove_directory() {
     exit 0
   fi
   rm -rf "$target"
+}
+
+regenerate_cache() {
+  "$SHELL_UTILS_SCRIPTS/cache/generate.sh" --force
 }
 
 main() {
@@ -63,6 +67,7 @@ main() {
   target="$TARGET_PATH/$target_name"
   if [ -d "$target" ]; then
     remove_directory "$target" "$original_source" "$force_removal"
+    regenerate_cache
     exit 0
   fi
 
@@ -71,6 +76,7 @@ main() {
       exit 1
     fi
     rm -f "$f"
+    regenerate_cache
     exit 0
   done
 

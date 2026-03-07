@@ -5,8 +5,9 @@
 # [help]
 # Updates system packages and runs custom update scripts.
 #
-# Runs custom scripts located at \033[1m$SU_SCRIPTS_ON_UPDATE_PATH\033[0m and a global script at \033[1m$UPDATE_GLOBAL_SCRIPT\033[0m if available.
+# Runs custom scripts located at \033[1m$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH\033[0m and a global script at \033[1m$UPDATE_GLOBAL_SCRIPT\033[0m if available.
 
+SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH=${SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH:-"$SHELL_UTILS_USER_CONFIG/scripts/on-update"}
 UPDATE_GLOBAL_SCRIPT=$HOME/update.sh
 
 main() {
@@ -17,9 +18,9 @@ main() {
   printf "[UTIL] Package managers OK\n"
 
   # Checks for global update scripts on utils folder
-  [ -x "$SU_SCRIPTS_ON_UPDATE_PATH" ] && {
+  [ -x "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" ] && {
     printf "\n[UTIL] Now updating on-update scripts\n"
-    find $SU_SCRIPTS_ON_UPDATE_PATH \
+    find "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" \
       -type f \
       -follow \
       -executable \

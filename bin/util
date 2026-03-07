@@ -1,48 +1,27 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Given an input, interprets each argument as a part of a path to a script
-# located at $SU_SCRIPTS_PATH
+# located at $SHELL_UTILS_SCRIPTS or $SHELL_UTILS_USER_CONFIG
 
 # https://google.github.io/styleguide/shellguide.html
 
-# Is recommended to set the default vars or set custom values for them in order
-# to use the basic functionalities of the util command and the default scripts.
-# To set the defaults: `$ \. <(util config default-vars --to-stdout)`
-SU_PATH=${SU_PATH:-"$HOME/.config/util"}
-SU_SCRIPTS_PATH=${SU_SCRIPTS_PATH:-"$SU_PATH/scripts"}
-
-err() {
-  printf "%s" "$@" >&2
-  exit 1
-}
-
-check_dependencies() {
-  command -v find >/dev/null || {
-    err "find is necessary for util to work. Please install it before using this executable.\n"
-  }
-}
+export SHELL_UTILS_SCRIPTS=${SHELL_UTILS_SCRIPTS:-"$HOME/.local/share/shell-utils/scripts"}
+export SHELL_UTILS_USER_CONFIG=${SHELL_UTILS_USER_CONFIG:-"$HOME/.config/shell-utils"}
+export SHELL_UTILS_USER_SCRIPTS=${SHELL_UTILS_USER_SCRIPTS:-"$SHELL_UTILS_USER_CONFIG/scripts"}
+export SHELL_UTILS_CACHE_FILE=${SHELL_UTILS_CACHE_FILE:-"$HOME/.cache/shell-utils/scripts"}
 
 check_empty_arguments() {
   [ $# -eq 0 ] && {
     printf "util is a shell-agnostic utility tool designed to make your scripts accessible everywhere using the util command.
 It can find and execute your custom scripts like a CLI.
-\ne.g. \"\$ util folder script\" will look for a script at \$SU_SCRIPTS_PATH/folder/script.(*)
+\ne.g. \"\$ util folder script\" will look for a script at \$SHELL_UTILS_USER_SCRIPTS/folder/script.(*)
 More at https://github.com/vncsmyrnk/shell-utils\n"
     exit 0
   }
 }
 
-file_glob_exists_and_is_executable() {
-  for script_file in $script_file_glob; do
-    if [ -x "$script_file" ]; then
-      return 0
-    fi
-  done
-  return 1
-}
-
 help_for_file() {
-  printf "$(sed -n '/^# \[help\]/,/^$/p' "$1" |
+  printf "%s" "$(sed -n '/^# \[help\]/,/^$/p' "$1" |
     grep -v '^# \[help\]' |
     sed 's/^# //' |
     sed 's/^#//')"
@@ -97,73 +76,62 @@ list_commands_available_glob() {
     done
 }
 
-flag_set() {
-  desired_flag="$1"
-  shift
-  for arg in "$@"; do
-    if [ "$arg" = "$desired_flag" ]; then
-      return 0
-    fi
-  done
-  return 1
-}
-
-execute_script() {
-  script_path="$1"
-  script_arguments="$2"
-  sh -c "$script_path $script_arguments"
-}
-
 find_and_execute_script() {
-  current_path="$SU_SCRIPTS_PATH"
-  for section in "$@"; do
-    [ -n "$found_script_file_glob" ] && {
-      found_script_arguments="$found_script_arguments \"$section\""
-    }
-
-    current_path="$current_path/$section"
-    script_file_glob="$current_path.*"
-    file_glob_exists_and_is_executable "$script_file_glob" && {
-      found_script_file_glob="$script_file_glob"
-    }
+  query=""
+  for arg in "$@"; do
+    q="$q\\/$arg"
+    query="$query|:${q:2}(\/|\.sh|\.zsh)?$"
   done
 
-  if [ -z "$found_script_file_glob" ] && [ -d "$current_path" ]; then
-    list_commands_available_glob "$current_path"
+  candidate_paths=$(
+    grep -P "${query:1}" "$SHELL_UTILS_CACHE_FILE"
+  )
+  if [ -z "$candidate_paths" ]; then
+    echo "Not found"
+    return
+  fi
+
+  candidate_paths=$(sed 's/:/\//' <<<"$candidate_paths")
+  candidates=$(wc -l <<<"$candidate_paths")
+  closest_match=$(tail -n 1 <<<"$candidate_paths")
+
+  if [[ -d "$closest_match" ]] && [[ "$#" != "$candidates" ]]; then
+    return
+  fi
+
+  if [[ -d "$closest_match" ]]; then
+    list_commands_available_glob "$closest_match"
     exit 0
-  elif [ -z "$found_script_file_glob" ]; then
-    return 0
   fi
 
-  script_path=$(find $found_script_file_glob)
-  if [ "$(echo "$script_path" | wc -l)" -gt 1 ]; then
-    printf "Ambiguity detected. Make sure the scripts at %s have no name conflict.\n" "$SU_SCRIPTS_PATH"
-    exit 1
+  if [[ ! -x "$closest_match" ]]; then
+    return
   fi
 
-  if flag_set "--help" "$@"; then
-    print_help_for_file "$script_path" || {
+  if [[ "$*" == *'--help'* ]]; then
+    print_help_for_file "$closest_match" || {
       exit 1
     }
     exit 0
   fi
 
-  if flag_set "--to-stdout" "$@"; then
-    cat "$script_path"
+  if [[ "$*" == *'--to-stdout'* ]]; then
+    cat "$closest_match"
     exit 0
   fi
 
-  execute_script "$script_path" "$found_script_arguments"
+  printf -v arguments " \"%s\" " "${@:(($candidates + 1))}"
+  bash -c "$closest_match $arguments"
   exit
 }
 
 main() {
-  check_dependencies
+  "$SHELL_UTILS_SCRIPTS/cache/generate.sh"
 
   check_empty_arguments "$@"
   find_and_execute_script "$@"
 
-  printf "Util file not found. Check \033[1m%s\033[0m for commands available.\n" "$SU_SCRIPTS_PATH"
+  printf "Util file not found. Check \033[1m%s\033[0m for commands available.\n" "$SHELL_UTILS_USER_SCRIPTS"
   printf "\033[2mTip: pass file without the extension and make it sure it is executable.\033[0m\n"
   exit 1
 }

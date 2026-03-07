@@ -5,7 +5,7 @@
 #
 # Creates symbolic links of the sources informed in order to the scripts to be found by util.
 
-TARGET_PATH="$SU_PATH"
+TARGET_PATH="$SHELL_UTILS_USER_CONFIG"
 
 if [ -z "$1" ]; then
   echo "Usage: util config add <file|directory> [-t|--target-name <name>] [-p|--parent-path <path>] [-f|--force] [-d|--dry-run]"
@@ -39,6 +39,10 @@ user_confirms_possbile_overwrite() {
   if [ "$choice" != "y" ] && [ "$choice" != "Y" ]; then
     false
   fi
+}
+
+regenerate_cache() {
+  "$SHELL_UTILS_SCRIPTS/cache/generate.sh" --force
 }
 
 main() {
@@ -99,6 +103,7 @@ main() {
 
   if [ -d "$source" ]; then
     create_symbolic_link_to_dir_target "$source" "$target"
+    regenerate_cache
     exit 0
   fi
 
@@ -109,6 +114,7 @@ main() {
 
   if "$force_overwrite" || user_confirms_possbile_overwrite "$target"; then
     create_symbolic_link_to_file_target "$source" "$target"
+    regenerate_cache
     exit 0
   fi
 

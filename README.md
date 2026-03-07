@@ -12,30 +12,23 @@ Do you manually install apps and maintain scripts to update them? **shell utils*
 
 ## Usage
 
-All the arguments represent the path to script to be executed from `$HOME/.config/util/scripts` without directory separators, like a CLI application. Additional arguments after the path is matched are seamlessly passed to the specified script.
+All the arguments represent the path to script to be executed from `$HOME/.config/shell-utils/scripts` without directory separators, like a CLI application. Additional arguments after the path is matched are seamlessly passed to the specified script.
 
 ```sh
 util update # this will execute an script named update.*
-            # in your `$HOME/.config/util/scripts` directory
+            # in your `$HOME/.config/shell-utils/scripts` directory
 
 util git checkout-pr # this will execute an script named checkout-pr.*
-                     # in your `$HOME/.config/util/scripts/git` directory.
+                     # in your `$HOME/.config/shell-utils/scripts/git` directory.
 
 util git # considering a `checkout-pr.*` script exists in the
-         # `$HOME/.config/util/scripts/git` directory # a "commands available"
+         # `$HOME/.config/shell-utils/scripts/git` directory # a "commands available"
          # section will be displayed listing it. A comment starting with "help"
          # will be printed if present on the script.
 
 util config add ~/scripts/test.sh # Creates a symbolic link of the file at
-                                  # `$HOME/.config/util/scripts` making
+                                  # `$HOME/.config/shell-utils/scripts` making
                                   # the script executable via `$ util test`
-```
-
-```sh
-\. <(util config default-vars --to-stdout)      # sets the default environment variables
-\. <(util config source-setup-dirs --to-stdout) # sources rc files at `$HOME/.config/util/setup`
-\. <(util completions zsh --to-stdout)          # adds completions for the util command for zsh
-                                                # to make it persistent, add this commands to your rc file
 ```
 
 For more information: `$ man util`.
@@ -45,14 +38,14 @@ For more information: `$ man util`.
 
 ### Customization
 
-This project includes [default scripts](https://github.com/vncsmyrnk/shell-utils/tree/main/defaults), but you can easily add custom scripts by placing them in `$HOME/.config/util/scripts`. Subfolders within this directory represent subcommands for the `util` command.
+This project includes [default scripts](https://github.com/vncsmyrnk/shell-utils/tree/main/defaults), but you can easily add custom scripts by placing them in `$HOME/.config/shell-utils/scripts`. Subfolders within this directory represent subcommands for the `util` command.
 
-Similarly, setup scripts for third-party applications are located in the [utils folder](https://github.com/vncsmyrnk/shell-utils/tree/main/utils). You can add your own by placing them in `$HOME/.config/util/setup`.
+Similarly, setup scripts for third-party applications are located in the [utils folder](https://github.com/vncsmyrnk/shell-utils/tree/main/utils). You can add your own by placing them in `$HOME/.config/shell-utils/setup`.
 
-To automate update tasks when running `util update`, simply place your scripts in `$HOME/.config/util/scripts/on-update`.
+To automate update tasks when running `util update`, simply place your scripts in `$HOME/.config/shell-utils/scripts/on-update`.
 
 > [!TIP]
-> The best practice is to keep your scripts were you already store them and just create symbolic links (stow is a great tool for that) in the folders `$HOME/.config/util/scripts` and `$HOME/.config/util/setup`.
+> The best practice is to keep your scripts were you already store them and just create symbolic links (stow is a great tool for that) in the folders `$HOME/.config/shell-utils/scripts` and `$HOME/.config/shell-utils/setup`.
 
 ### Completions and help messages
 

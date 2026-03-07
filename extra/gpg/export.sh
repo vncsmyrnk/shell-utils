@@ -3,10 +3,10 @@
 # [help]
 # Exports the public and private gpg keys for an ID
 
-SU_GPG_EXPORT_TARGET_PATH=${SU_GPG_EXPORT_TARGET_PATH:-/tmp}
-SU_GPG_EXPORT_ENCRYPT_PASSWORD=${SU_GPG_EXPORT_ENCRYPT_PASSWORD-:}
-SU_GPG_RCLONE_REMOTE=${SU_GPG_RCLONE_REMOTE:-}
-SU_GPG_RCLONE_FOLDER=${SU_GPG_RCLONE_FOLDER:-}
+SHELL_UTILS_GPG_EXPORT_TARGET_PATH=${SHELL_UTILS_GPG_EXPORT_TARGET_PATH:-/tmp}
+SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD=${SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD-:}
+SHELL_UTILS_GPG_RCLONE_REMOTE=${SHELL_UTILS_GPG_RCLONE_REMOTE:-}
+SHELL_UTILS_GPG_RCLONE_FOLDER=${SHELL_UTILS_GPG_RCLONE_FOLDER:-}
 
 remote=false
 gpg_email=""
@@ -38,11 +38,11 @@ if [ -z "$gpg_email" ]; then
 fi
 
 timestamp=$(date +"%Y%m%d%H%M%S")
-private_key_target_path="$SU_GPG_EXPORT_TARGET_PATH/$gpg_email-private-key-backup.asc"
-public_key_target_path="$SU_GPG_EXPORT_TARGET_PATH/$gpg_email-public-key-backup.asc"
-trust_backup_target_path="$SU_GPG_EXPORT_TARGET_PATH/trust-backup.txt"
-zipped_key_target_path="$SU_GPG_EXPORT_TARGET_PATH/$gpg_email-gpg-keys.zip"
-encrypted_key_target_path="$SU_GPG_EXPORT_TARGET_PATH/$timestamp-$gpg_email-gpg-keys.enc"
+private_key_target_path="$SHELL_UTILS_GPG_EXPORT_TARGET_PATH/$gpg_email-private-key-backup.asc"
+public_key_target_path="$SHELL_UTILS_GPG_EXPORT_TARGET_PATH/$gpg_email-public-key-backup.asc"
+trust_backup_target_path="$SHELL_UTILS_GPG_EXPORT_TARGET_PATH/trust-backup.txt"
+zipped_key_target_path="$SHELL_UTILS_GPG_EXPORT_TARGET_PATH/$gpg_email-gpg-keys.zip"
+encrypted_key_target_path="$SHELL_UTILS_GPG_EXPORT_TARGET_PATH/$timestamp-$gpg_email-gpg-keys.enc"
 
 export_gpg_key() {
   gpg --export-secret-keys --armor "$1" >"$private_key_target_path"
@@ -51,13 +51,13 @@ export_gpg_key() {
 }
 
 zip_and_upload_key() {
-  if [ -z "$SU_GPG_EXPORT_ENCRYPT_PASSWORD" ]; then
-    printf "Define the \$SU_GPG_EXPORT_ENCRYPT_PASSWORD variable to properly encrypt the key compressed file."
+  if [ -z "$SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD" ]; then
+    printf "Define the \$SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD variable to properly encrypt the key compressed file."
     return 1
   fi
 
-  if [ -z "$SU_GPG_RCLONE_REMOTE" ] || [ -z "$SU_GPG_RCLONE_FOLDER" ]; then
-    printf "Define \$SU_GPG_RCLONE_REMOTE and \$SU_GPG_RCLONE_FOLDER variables to properly upload the key compressed file."
+  if [ -z "$SHELL_UTILS_GPG_RCLONE_REMOTE" ] || [ -z "$SHELL_UTILS_GPG_RCLONE_FOLDER" ]; then
+    printf "Define \$SHELL_UTILS_GPG_RCLONE_REMOTE and \$SHELL_UTILS_GPG_RCLONE_FOLDER variables to properly upload the key compressed file."
     return 1
   fi
 
@@ -69,10 +69,10 @@ zip_and_upload_key() {
   openssl enc -aes-256-cbc -pbkdf2 -iter 100000 -salt \
     -in "$zipped_key_target_path" \
     -out "$encrypted_key_target_path" \
-    -pass env:SU_GPG_EXPORT_ENCRYPT_PASSWORD
+    -pass env:SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD
 
   rclone copy -v "$encrypted_key_target_path" \
-    "$SU_GPG_RCLONE_REMOTE:$SU_GPG_RCLONE_FOLDER"
+    "$SHELL_UTILS_GPG_RCLONE_REMOTE:$SHELL_UTILS_GPG_RCLONE_FOLDER"
 }
 
 main() {
