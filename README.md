@@ -40,8 +40,6 @@ For more information: `$ man util`.
 
 This project includes [default scripts](https://github.com/vncsmyrnk/shell-utils/tree/main/defaults), but you can easily add custom scripts by placing them in `$HOME/.config/shell-utils/scripts`. Subfolders within this directory represent subcommands for the `util` command.
 
-Similarly, setup scripts for third-party applications are located in the [utils folder](https://github.com/vncsmyrnk/shell-utils/tree/main/utils). You can add your own by placing them in `$HOME/.config/shell-utils/setup`.
-
 To automate update tasks when running `util update`, simply place your scripts in `$HOME/.config/shell-utils/scripts/on-update`.
 
 > [!TIP]
@@ -60,25 +58,23 @@ This project comes with out-of-the-box support for autocompletion of the scripts
 echo "doing some operations here..."
 ```
 
-> [!NOTE]
-> At the moment, autocompletion is only suported in zsh.
-
-### Real world examples
-
-- [A use case in my dotfiles: sourcing setup folders automatically](https://github.com/vncsmyrnk/zsh-config/blob/ae9b9c00012adaeabe243c6998047a761519d205/.zshrc#L9-L11)
-- [Another use case in my dotfiles: adding a custom "on-update" script](https://github.com/vncsmyrnk/zsh-config/blob/ae9b9c00012adaeabe243c6998047a761519d205/justfile#L37)
-
-### Development
-
-**shell-utils** is built on the principle of simplicity, ensuring that it remains lightweight and easy to use. The project avoids unnecessary complexity by leveraging tools that are commonly available on most unix-like systems, such as `sh`, `grep`, `sed`, and `find`.
-
 ## Install
 
-```sh
-git clone git@github.com:vncsmyrnk/shell-utils.git
-cd shell-utils
-just install # for uninstalling, run `$ just unset-config`
-```
+<details><summary>Nix profile</summary>
 
-> [!WARNING]
-> For every breaking change, make sure to run `just unset-config config` in order to reapply installation files.
+```sh
+nix profile install github:vncsmyrnk/shell-utils
+```
+</details>
+
+<details><summary>Nix flake</summary>
+
+```nix
+inputs = {
+  shell-utils = {
+    url = "github:vncsmyrnk/shell-utils";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+};
+```
+</details>
