@@ -125,9 +125,16 @@ find_and_execute_script() {
   exit
 }
 
-main() {
+ensure_cache_exists() {
+  if [[ "$*" == 'cache generate'* ]]; then
+    "$SHELL_UTILS_SCRIPTS/cache/generate.sh" "${@:3}"
+    exit 0
+  fi
   "$SHELL_UTILS_SCRIPTS/cache/generate.sh"
+}
 
+main() {
+  ensure_cache_exists "$@"
   check_empty_arguments "$@"
   find_and_execute_script "$@"
 

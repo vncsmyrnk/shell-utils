@@ -8,8 +8,8 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-    in {
-      packages.${system}.default = pkgs.stdenv.mkDerivation {
+
+      shellUtils = pkgs.stdenv.mkDerivation {
         name = "shell-utils";
 
         src = ./.;
@@ -40,10 +40,12 @@
             --set SHELL_UTILS_SCRIPTS $out/share/shell-utils/scripts
         '';
       };
+    in {
+      packages.${system}.default = shellUtils;
 
       apps.${system}.default = {
         type = "app";
-        program = "${self.packages.${system}.default}/bin/util";
+        program = "${shellUtils}/bin/util";
       };
     };
 }
