@@ -6,8 +6,6 @@
 
 Have you ever struggled to locate useful scripts scattered across multiple files when you need them the most? **shell utils** is a shell-agnostic utility tool designed to make your scripts accessible everywhere using the `util` command.
 
-Do you also maintain various run command files for setting up aliases, environment variables, and shell plugins? **shell utils** includes a configuration script that automatically sources all your essential configurations.
-
 Do you manually install apps and maintain scripts to update them? **shell utils** lets you configure your scripts to run automatically whenever `util update` is executed, streamlining all your update tasks.
 
 ## Usage
@@ -18,32 +16,30 @@ All the arguments represent the path to script to be executed from `$HOME/.confi
 util update # this will execute an script named update.*
             # in your `$HOME/.config/shell-utils/scripts` directory
 
-util git checkout-pr # this will execute an script named checkout-pr.*
-                     # in your `$HOME/.config/shell-utils/scripts/git` directory.
+util random generate -l 20 # this will execute an script named generate.*
+                           # in your `$HOME/.config/shell-utils/scripts/random/generate` directory,
+                           # automatically forwarding all arguments.
 
-util git # considering a `checkout-pr.*` script exists in the
-         # `$HOME/.config/shell-utils/scripts/git` directory # a "commands available"
-         # section will be displayed listing it. A comment starting with "help"
-         # will be printed if present on the script.
+util random # considering a `generate.*` script exists in the
+            # `$HOME/.config/shell-utils/scripts/random/generate` directory, a "commands available"
+            # section will be displayed listing it. A comment starting with "help"
+            # will be printed if present on the script.
 
-util config add ~/scripts/test.sh # Creates a symbolic link of the file at
-                                  # `$HOME/.config/shell-utils/scripts` making
-                                  # the script executable via `$ util test`
+util config add ~/scripts/example.sh # Creates a symbolic link of the file at
+                                     # `$HOME/.config/shell-utils/scripts` making
+                                     # the script executable via `$ util example`
 ```
 
 For more information: `$ man util`.
-
-> [!NOTE]
-> At the moment, the only OS suported is GNU/Linux.
 
 ### Customization
 
 This project includes [default scripts](https://github.com/vncsmyrnk/shell-utils/tree/main/defaults), but you can easily add custom scripts by placing them in `$HOME/.config/shell-utils/scripts`. Subfolders within this directory represent subcommands for the `util` command.
 
-To automate update tasks when running `util update`, simply place your scripts in `$HOME/.config/shell-utils/scripts/on-update`.
+To automate update tasks when running `util update`, simply place your scripts in `$HOME/.config/shell-utils/scripts/on-update`. You can achieve this using `$ util config add`.
 
 > [!TIP]
-> The best practice is to keep your scripts were you already store them and just create symbolic links (stow is a great tool for that) in the folders `$HOME/.config/shell-utils/scripts` and `$HOME/.config/shell-utils/setup`.
+> The best practice is to keep your scripts were you already store them and just create symbolic links in the folder `$HOME/.config/shell-utils/scripts`. This can be done via `$ util config add`.
 
 ### Completions and help messages
 
@@ -60,14 +56,13 @@ echo "doing some operations here..."
 
 ## Install
 
-<details><summary>Nix profile</summary>
+### Nix profile
 
 ```sh
 nix profile install github:vncsmyrnk/shell-utils
 ```
-</details>
 
-<details><summary>Nix flake</summary>
+### Nix flake
 
 ```nix
 inputs = {
@@ -77,4 +72,3 @@ inputs = {
   };
 };
 ```
-</details>
