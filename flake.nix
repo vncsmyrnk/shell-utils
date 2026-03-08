@@ -12,7 +12,16 @@
       shellUtils = pkgs.stdenv.mkDerivation {
         name = "shell-utils";
 
-        src = ./.;
+        src = pkgs.lib.fileset.toSource {
+          root = ./.;
+          fileset = pkgs.lib.fileset.unions [
+            ./bin
+            ./defaults
+            ./extra
+            ./completions
+            ./man
+          ];
+        };
 
         nativeBuildInputs = [ pkgs.makeWrapper ];
 
