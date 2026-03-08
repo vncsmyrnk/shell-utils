@@ -9,6 +9,8 @@
 # The gpg files should be located at $TOTP_SECRETS_DIR which can be overriden
 #
 # The TOTP duration can be defined with $TOTP_CURRENT_TIME.
+#
+# Entities can be created with `$ util totp add`
 
 TOTP_SECRETS_DIR=${TOTP_SECRETS_DIR:-"$HOME/.secrets/totp"}
 TOTP_CURRENT_TIME=${TOTP_CURRENT_TIME:-"5 seconds"}
