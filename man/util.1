@@ -1,4 +1,4 @@
-.TH util 1 "October 2025" "shell-utils" "User Commands"
+.TH util 1 "March 2026" "shell-utils" "User Commands"
 .SH NAME
 util \- A shell-agnostic utility tool for managing user scripts
 .SH SYNOPSIS
@@ -10,13 +10,11 @@ util \- A shell-agnostic utility tool for managing user scripts
 .B util
 is a shell-agnostic utility tool designed to make your scripts accessible everywhere using the `util` command.
 
-All the arguments represent the path to script to be executed from `$HOME/.config/util/scripts` without directory separators, like a CLI application. Additional arguments after the path is matched are seamlessly passed to the specified script.
+All the arguments represent the path to script to be executed from `$HOME/.config/shell-utils/scripts` without directory separators, like a CLI application. Additional arguments after the path is matched are seamlessly passed to the specified script.
 
-Setup scripts for third-party applications are located in the utils folder. You can add your own by placing them in `$HOME/.config/util/setup`. Calling the setup script in your shell configuration result in the files at `$HOME/.config/util/setup` being automatically loaded.
+Custom completions can be set at a file named "[script_name].completions.[shell]". See `$HOME/.config/shell-utils/scripts/totp/_generate.completions.zsh` for reference. All the arguments passed to the script are also passed to the completion script.
 
-Custom completions can be set at a file named "[script_name].completions.[shell]". See `$HOME/.config/util/scripts/totp/_generate.completions.zsh` for reference. All the arguments passed to the script are also passed to the completion script.
-
-Help sections can be added as a text after a comment line `# [help]`. See `$HOME/.config/util/scripts/update.sh` for reference. Multi-line texts are suported. All commented lines after the `help` header will be considered a part of the help section.
+Help sections can be added as a text after a comment line `# [help]`. See `$HOME/.config/shell-utils/scripts/update.sh` for reference. Multi-line texts are suported. All commented lines after the `help` header will be considered a part of the help section.
 
 If an uncompleted but existing path to a command was given (a directory was found but not a script) the available scripts at the input path will be listed in a "commands available" section. A custom help section can be put inside a directory named `help` will be printed along the default "commands available" section. The help file content is printed using `printf` so it supports cutomization like text coloring.
 
@@ -30,15 +28,7 @@ They are called "extra scripts", useful for daily activies. Backup and update ar
 
 .SS Get started
 
-To start using the `util` command, make sure to source the default variables or set custom values for them:
-
-.nf
-.eo
-\. <(util config default-vars --to-stdout)
-.ec
-.fi
-
-Then make some scripts available to the util command:
+Add some scripts to make them available to the util command:
 
 .nf
 .eo
@@ -100,19 +90,19 @@ Show what would be done without making changes.
 .SH EXAMPLES
 .TP
 .B util update
-Executes a script named `update.sh` in `$HOME/.config/util/scripts`.
+Executes a script named `update.sh` in `$HOME/.config/shell-utils/scripts`.
 
 .TP
 .B util git checkout-pr
-Executes a script named `checkout-pr.sh` in `$HOME/.config/util/scripts/git`.
+Executes a script named `checkout-pr.sh` in `$HOME/.config/shell-utils/scripts/git`.
 
 .TP
 .B util config add ~/scripts
-Creates symbolic links for the folder at ~/scripts in `$HOME/.config/util/scripts`. The scripts are now accessbile via `$ util <script-file-name`. So if a `test.sh` is at ~/scripts, it is now accessbile via `$ util test`.
+Creates symbolic links for the folder at ~/scripts in `$HOME/.config/shell-utils/scripts`. The scripts are now accessbile via `$ util <script-file-name`. So if a `test.sh` is at ~/scripts, it is now accessbile via `$ util test`.
 
 .TP
 .B util config remove test/script
-If `$HOME/.config/util/scripts/test/script.*` is a file, it is removed. If `$HOME/.config/util/scripts/test/script` is a directory, it is also removed entirely.
+If `$HOME/.config/shell-utils/scripts/test/script.*` is a file, it is removed. If `$HOME/.config/shell-utils/scripts/test/script` is a directory, it is also removed entirely.
 
 .SH AUTHOR
 Written by vncsmyrnk.
