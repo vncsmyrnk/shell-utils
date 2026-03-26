@@ -1,60 +1,58 @@
 {
-  description =
-    "A shell-agnostic utility tool designed to make your scripts accessible everywhere";
+  description = "A shell-agnostic utility tool designed to make your scripts accessible everywhere";
 
-  inputs = { nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable"; };
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  };
 
-  outputs = { self, nixpkgs }:
+  outputs =
+    { self, nixpkgs }:
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
 
-      shellUtils = pkgs.stdenv.mkDerivation {
-        name = "shell-utils";
-
+      shellUtils = pkgs.buildGoModule {
+        name = "util";
         src = pkgs.lib.fileset.toSource {
           root = ./.;
           fileset = pkgs.lib.fileset.unions [
-            ./bin
+            ./cmd
             ./defaults
             ./extra
             ./completions
             ./man
+            ./go.mod
           ];
         };
+        version = "0.0.1";
+        vendorHash = null;
+        doCheck = false;
 
-        nativeBuildInputs = [ pkgs.makeWrapper ];
+        subPackages = [
+          "cmd/util"
+        ];
 
-        installPhase = ''
-          mkdir -p $out/bin $out/share/shell-utils/scripts $out/share/zsh/site-functions $out/share/man/man1
+        env = {
+          CGO_ENABLED = 1;
+        };
 
-          cp -a bin/* $out/bin/
+        ldflags = [
+          "-s"
+          "-w"
+          "-X main.baseDefaultScriptsPath=${builtins.placeholder "out"}/share/shell-utils/scripts"
+        ];
+
+        postInstall = ''
+          mkdir -p $out/share/shell-utils/scripts $out/share/zsh/site-functions $out/share/man/man1
+
           cp -a defaults/* $out/share/shell-utils/scripts/
           cp -a extra/* $out/share/shell-utils/scripts/
           cp -a completions/zsh/* $out/share/zsh/site-functions/
           cp -a man/* $out/share/man/man1/
-
-          wrapProgram $out/bin/util \
-            --prefix PATH : ${
-              pkgs.lib.makeBinPath [
-                pkgs.fd
-                pkgs.gnugrep
-                pkgs.gnused
-                pkgs.findutils
-                pkgs.coreutils
-                pkgs.bash
-                pkgs.openssl
-              ]
-            } \
-            --set SHELL_UTILS_SCRIPTS $out/share/shell-utils/scripts
         '';
       };
-    in {
+    in
+    {
       packages.${system}.default = shellUtils;
-
-      apps.${system}.default = {
-        type = "app";
-        program = "${shellUtils}/bin/util";
-      };
     };
 }
