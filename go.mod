@@ -1,3 +1,3 @@
-module util
+module scriptrunner
 
 go 1.26

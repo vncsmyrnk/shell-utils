@@ -29,7 +29,7 @@
         doCheck = false;
 
         subPackages = [
-          "cmd/util"
+          "cmd/runner"
         ];
 
         env = {
@@ -45,6 +45,7 @@
         postInstall = ''
           mkdir -p $out/share/shell-utils/scripts $out/share/zsh/site-functions $out/share/man/man1
 
+          mv $out/bin/runner $out/bin/util
           cp -a defaults/* $out/share/shell-utils/scripts/
           cp -a extra/* $out/share/shell-utils/scripts/
           cp -a completions/zsh/* $out/share/zsh/site-functions/
