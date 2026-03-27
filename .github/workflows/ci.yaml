@@ -19,4 +19,4 @@ jobs:
         run: nix flake check
 
       - name: Build flake
-        run: nix build
+        run: nix build .# -L
