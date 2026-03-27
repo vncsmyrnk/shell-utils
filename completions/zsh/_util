@@ -2,8 +2,6 @@
 
 # vim: set ft=zsh:
 
-CACHE_FILE="$HOME/.cache/shell-utils/scripts"
-
 common_flags=(
   '--to-stdout'
   '--help'
@@ -11,55 +9,32 @@ common_flags=(
 )
 
 _util() {
-  util cache generate
+  local result=$(
+    util-suggester "${words[2,-1]}"
+  )
 
-  # Captures all arguments and suggests the files/folders in
-  # $SU_SCRIPTS_PATH. If a file is found, the files in the
-  # current folder are suggested
-  #
-  # util command subcommand -> tries to find $SU_SCRIPTS_PATH/command/subommand
+  local candidate_script=$(awk -F';' 'NR==1 { print $2 }' <<<"$result")
+  if [ -f "$candidate_script" ]; then
+    # Sources completions directly from the script config located at
+    # `_[script_basename].completions.zsh`
+    local script_file_basename=$(basename "$candidate_script" | rev | cut -f2- -d "." | rev)
+    local script_completion_file="$(dirname $candidate_script)/_$script_file_basename.completions.zsh"
+    local script_arguments=$(awk -F';' 'NR==1 { print $2 }' <<<"$result")
+    if [ -f "$script_completion_file" ]; then
+      . "$script_completion_file" "${script_arguments[@]}"
+      return
+    fi
 
-  _arguments -C \
-    '*::arg:->args'
-
-  local non_empty_words=($words)
-  if [ -z "${non_empty_words[-1]}" ]; then
-    non_empty_words=("${(@)non_empty_words[1,-2]}")
+    _arguments "${common_flags[@]}"
+    _files
+    return
   fi
 
-  local candidate_script_query=""
-  for i in {1..$#non_empty_words}; do
-    candidate_script_query="$candidate_script_query/${words[$i]}"
-    candidate_script=$(
-      grep -P ":${candidate_script_query:1}\.(sh|zsh)$" "$CACHE_FILE" \
-        | sed 's/:/\//'
-    )
-
-    if [ -f "$candidate_script" ]; then
-      # Sources completions directly from the script config located at
-      # `_[script_basename].completions.zsh`
-      local script_file_basename=$(basename "$candidate_script" | rev | cut -f2- -d "." | rev)
-      local script_completion_file="$(dirname $candidate_script)/_$script_file_basename.completions.zsh"
-      local script_arguments=${words[@]:$i}
-      if [ -f "$script_completion_file" ]; then
-        . "$script_completion_file" "${script_arguments[@]}"
-        return
-      fi
-
-      _arguments "${common_flags[@]}"
-      _files
-    fi
-  done
-
-  local query="${(j:\/:)words}"
-
-  candidate_paths=($(
-    grep -P ":${query}[^\/]*$" "$CACHE_FILE" \
-      | sed 's/:/\//' \
-      | xargs -I{} sh -c 'basename {} | rev | cut -f2- -d "." | rev'
+  local paths=($(
+    awk -F';' '{ print $2 }' <<<"$result"
   ))
 
-   _describe 'subcommand' candidate_paths
+  _describe 'subcommand' paths
 }
 
 _util "$@"
