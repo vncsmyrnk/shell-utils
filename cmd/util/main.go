@@ -115,7 +115,7 @@ func shellBin() (string, error) {
 	if shell == "" {
 		shell = defaultShell
 	}
-	if slices.Contains(validShells, shell) {
+	if !slices.Contains(validShells, filepath.Base(shell)) {
 		return shell, errors.New("invalid shell")
 	}
 	return shell, nil
