@@ -56,14 +56,14 @@ func main() {
 		currentRelativePathArg = filepath.Join(os.Args[1:i]...)
 		matches := pathMatchesForBasePaths(currentRelativePathArg, scriptsLookupPaths...)
 		if len(matches) > 0 {
+			if len(matches) > 1 {
+				fatalF("ambiguity detected")
+			}
 			path = matches[0]
 			executableFound = true
 			break
 		}
 
-		if len(matches) > 0 {
-			fatalF("ambiguity detected")
-		}
 		i--
 	}
 
