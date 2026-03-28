@@ -10,7 +10,7 @@ common_flags=(
 
 _util() {
   local result=$(
-    util-suggester "${words[2,-1]}"
+    util-complete "${words[2,-1]}"
   )
 
   local candidate_script=$(awk -F';' 'NR==1 { print $2 }' <<<"$result")

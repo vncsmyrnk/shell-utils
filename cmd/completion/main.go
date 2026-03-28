@@ -70,9 +70,9 @@ func main() {
 }
 
 func help() {
-	fmt.Println("Suggester lists the autocompletion suggestions for the util command's arguments.")
+	fmt.Println("Lists autocompletions for util commands arguments and flags.")
 	fmt.Println("\nUsage:")
-	fmt.Println(" util-suggester <query>")
+	fmt.Println(" util-complete <query>")
 	fmt.Println("\nThe query should be the exact prompt typed on the prompt when <TAB> is preesed.")
 	fmt.Println("Check out \033[4mhttps://github.com/vncsmyrnk/shell-utils\033[0m for more.")
 }
