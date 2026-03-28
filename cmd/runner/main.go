@@ -96,7 +96,13 @@ func main() {
 	}
 
 	cmd := exec.Command(shell, args...)
-	output, err := cmd.CombinedOutput()
+
+	// Connect the command's standard streams directly to the Go program's streams.
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err = cmd.Run()
 	if err != nil {
 		var statusCode int
 		if exitErr, ok := errors.AsType[*exec.ExitError](err); ok {
@@ -106,8 +112,6 @@ func main() {
 		}
 		os.Exit(statusCode)
 	}
-
-	fmt.Print(string(output))
 }
 
 func shellBin() (string, error) {
