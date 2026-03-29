@@ -32,11 +32,16 @@ func main() {
 
 		for _, p := range scriptsLookupPaths {
 			path := pathGlob[:len(pathGlob)-1] // Removes * to search for exact file path matches
+			if f, err := os.Stat(filepath.Join(p, path)); err == nil && !f.IsDir() {
+				stringArgs := strings.Join(validArgs[i+1:], " ")
+				fmt.Print("match;", filepath.Join(p, path), ";", stringArgs, "\n") // Found exact match
+				return
+			}
 			if m, err := filepath.Glob(filepath.Join(p, fmt.Sprint(path, ".*"))); err == nil && len(m) > 0 {
 				for _, exactPath := range m {
 					stringArgs := strings.Join(validArgs[i+1:], " ")
 					if relP, err := filepath.Abs(exactPath); err == nil {
-						fmt.Print("match;", relP, ";", stringArgs, "\n") // Found exact match
+						fmt.Print("match;", relP, ";", stringArgs, "\n") // Found exact matches with extensions
 					}
 				}
 				return

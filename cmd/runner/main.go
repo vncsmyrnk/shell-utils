@@ -205,10 +205,16 @@ func helpSection(p string) (string, error) {
 	return strings.ReplaceAll(t, "\\033", "\033"), nil
 }
 
-func pathMatchesForBasePaths(relativePath string, basePaths ...string) []string {
+func pathMatchesForBasePaths(
+	relativePath string, basePaths ...string,
+) []string {
 	for _, p := range basePaths {
-		if matches, _ := filepath.Glob(filepath.Join(p, fmt.Sprint(relativePath, ".*"))); len(matches) > 0 {
-			return matches
+		absPath := filepath.Join(p, relativePath)
+		if f, err := os.Stat(absPath); err == nil && !f.IsDir() {
+			return []string{absPath}
+		}
+		if m, _ := filepath.Glob(fmt.Sprint(absPath, ".*")); len(m) > 0 {
+			return m
 		}
 	}
 	return nil
