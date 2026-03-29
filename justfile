@@ -2,12 +2,7 @@ default:
   just --list
 
 install:
-  nix profile add
-
-reinstall:
-  @rm -rf "$HOME/.cache/shell-utils/scripts"
-  nix profile remove shell-utils
-  nix profile add
+  nix profile add .#
 
 build:
   @nix build .#
