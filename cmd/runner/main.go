@@ -13,22 +13,13 @@ import (
 	"syscall"
 )
 
-const (
-	defaultShell = "sh"
-)
-
 var (
 	baseDefaultScriptsPath = "./extra"
-	validShells            = []string{"bash", "sh", "zsh", "fish"}
 )
 
 func main() {
 	configUserScriptsPath := filepath.Join(os.Getenv("HOME"), ".config", "shell-utils", "scripts")
 	scriptsLookupPaths := []string{baseDefaultScriptsPath, configUserScriptsPath}
-	shell, err := shellBin()
-	if err != nil {
-		fatalF("failed to get shell executable path: %s", err)
-	}
 
 	var (
 		path, currentRelativePathArg string
@@ -95,14 +86,14 @@ func main() {
 		os.Exit(0)
 	}
 
-	cmd := exec.Command(shell, args...)
+	cmd := exec.Command(path, os.Args[i:]...)
 
 	// Connect the command's standard streams directly to the Go program's streams.
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
-	err = cmd.Run()
+	err := cmd.Run()
 	if err != nil {
 		var statusCode int
 		if exitErr, ok := errors.AsType[*exec.ExitError](err); ok {
@@ -112,17 +103,6 @@ func main() {
 		}
 		os.Exit(statusCode)
 	}
-}
-
-func shellBin() (string, error) {
-	shell := os.Getenv("SHELL")
-	if shell == "" {
-		shell = defaultShell
-	}
-	if !slices.Contains(validShells, filepath.Base(shell)) {
-		return shell, errors.New("invalid shell")
-	}
-	return shell, nil
 }
 
 func help() {
