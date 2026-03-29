@@ -10,11 +10,10 @@ reinstall:
   nix profile add
 
 build:
-  nix build
+  @nix build .#
 
 run *args:
-  @rm -rf "$HOME/.cache/shell-utils/scripts"
-  nix run .# {{args}}
+  @go run ./cmd/runner/main.go {{args}}
 
 shellcheck:
   shellcheck -s sh bin/** defaults/*/**.sh extra/*/**.sh
