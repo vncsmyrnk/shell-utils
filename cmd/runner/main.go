@@ -15,7 +15,8 @@ import (
 
 var (
 	baseDefaultScriptsPath = "./extra"
-	configUserScriptsPath  = filepath.Join(os.Getenv("HOME"), ".config", "shell-utils", "scripts")
+	configUserPath         = filepath.Join(os.Getenv("HOME"), ".config", "shell-utils")
+	configUserScriptsPath  = filepath.Join(configUserPath, "scripts")
 )
 
 func main() {
@@ -92,6 +93,9 @@ func main() {
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+
+	cmd.Env = append(cmd.Environ(),
+		fmt.Sprintf("SHELL_UTILS_USER_CONFIG=%s", configUserPath))
 
 	err := cmd.Run()
 	if err != nil {
