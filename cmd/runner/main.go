@@ -15,10 +15,10 @@ import (
 
 var (
 	baseDefaultScriptsPath = "./extra"
+	configUserScriptsPath  = filepath.Join(os.Getenv("HOME"), ".config", "shell-utils", "scripts")
 )
 
 func main() {
-	configUserScriptsPath := filepath.Join(os.Getenv("HOME"), ".config", "shell-utils", "scripts")
 	scriptsLookupPaths := []string{baseDefaultScriptsPath, configUserScriptsPath}
 
 	var (
@@ -106,9 +106,11 @@ func main() {
 }
 
 func help() {
-	fmt.Println("util is a shell-agnostic utility tool designed to make your scripts accessible everywhere using the util command.")
+	fmt.Println("util is a shell-agnostic utility tool designed to make your",
+		"scripts accessible everywhere using the util command.")
 	fmt.Println("It can find and execute your custom scripts like a CLI.")
-	fmt.Println("\ne.g. \"$ util folder script\" will look for a script at $SHELL_UTILS_USER_SCRIPTS/folder/script.(*)")
+	fmt.Println("\ne.g. \"$ util folder script\" will look for a script at",
+		filepath.Join(configUserScriptsPath, "folder", "script.(*)"))
 	fmt.Println("More at https://github.com/vncsmyrnk/shell-utils")
 }
 
