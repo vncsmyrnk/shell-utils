@@ -19,7 +19,7 @@ _util() {
     # `_[script_basename].completions.zsh`
     local script_file_basename=$(basename "$candidate_script" | rev | cut -f2- -d "." | rev)
     local script_completion_file="$(dirname $candidate_script)/_$script_file_basename.completions.zsh"
-    local script_arguments=$(awk -F';' 'NR==1 { print $2 }' <<<"$result")
+    local script_arguments=($(awk -F';' 'NR==1 { print $3 }' <<<"$result"))
     if [ -f "$script_completion_file" ]; then
       . "$script_completion_file" "${script_arguments[@]}"
       return
