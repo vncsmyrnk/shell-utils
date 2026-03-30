@@ -35,7 +35,7 @@ For more information: `$ man util`.
 
 ### Customization
 
-This project includes [default scripts](https://github.com/vncsmyrnk/shell-utils/tree/main/defaults), but you can easily add custom scripts by placing them in `$HOME/.config/shell-utils/scripts`. Subfolders within this directory represent subcommands for the `util` command.
+This project includes [default extra scripts](https://github.com/vncsmyrnk/shell-utils/tree/main/extra), but you can easily add custom scripts by placing them in `$HOME/.config/shell-utils/scripts`. Subfolders within this directory represent subcommands for the `util` command. The dependencies for the extra scripts are not specified, so their successful execution depends on your runtime environment.
 
 To automate update tasks when running `util update`, simply place your scripts in `$HOME/.config/shell-utils/scripts/on-update`. You can achieve this using `$ util config add`.
 

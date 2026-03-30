@@ -1,0 +1,194 @@
+package main
+
+import (
+	"bufio"
+	"errors"
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+	"syscall"
+
+	flag "github.com/spf13/pflag"
+
+	"shellutils/internal"
+)
+
+func main() {
+	helpFlag := flag.BoolP("help", "h", false, "Displays this help message")
+	forceFlag := flag.BoolP("force", "f", false, "Performs the action without confirmation")
+	flag.Usage = func() {
+		fmt.Fprintln(os.Stderr,
+			"Provides actions for managing the scripts available to the util command\n",
+			"\nUsage:\n", "config [command] [options] [flags]\n",
+			"\nCommands:\n", "add\n remove")
+		fmt.Fprintln(os.Stderr, "\nFlags:")
+		flag.PrintDefaults()
+	}
+
+	addCmd := flag.NewFlagSet("add", flag.ExitOnError)
+	addCmd.AddFlagSet(flag.CommandLine)
+	addCmd.Usage = func() {
+		fmt.Fprintln(os.Stderr,
+			"Usage:\n", "util config add <path> [flags]",
+		)
+		fmt.Fprint(os.Stderr, "\nFlags:\n", addCmd.FlagUsages())
+	}
+	targetName := addCmd.StringP("target-name", "t", "", "Name of the file on the target directory.")
+	parentPath := addCmd.StringP("parent-path", "p", "", "Parent folder name at the target directory, creating it if not exists.")
+	flag.CommandLine.AddFlagSet(addCmd)
+
+	removeCmd := flag.NewFlagSet("remove", flag.ExitOnError)
+	removeCmd.AddFlagSet(flag.CommandLine)
+	removeCmd.Usage = func() {
+		fmt.Fprintln(os.Stderr,
+			"Usage:\n", "util config remove <path>",
+		)
+		fmt.Fprintln(os.Stderr, "\nFlags:")
+		flag.PrintDefaults()
+	}
+	flag.CommandLine.AddFlagSet(removeCmd)
+
+	flag.Parse()
+	if flag.NArg() == 0 {
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	switch os.Args[1] {
+	case "add":
+		if *helpFlag {
+			addCmd.Usage()
+			os.Exit(1)
+		}
+
+		addCmd.Parse(flag.Args()[1:])
+		input := addInput{
+			srcPath:    addCmd.Arg(0),
+			targetName: *targetName,
+			parentPath: *parentPath,
+			force:      *forceFlag,
+		}
+		if err := add(input, internal.ConfigUserScriptsPath); err != nil {
+			if errors.Is(err, insufficientArgumentsErr) {
+				addCmd.Usage()
+				os.Exit(1)
+			}
+			fmt.Printf("failed to add scripts: %s\n", err)
+		}
+	case "remove":
+		if *helpFlag {
+			removeCmd.Usage()
+			os.Exit(1)
+		}
+
+		removeCmd.Parse(flag.Args()[1:])
+		input := removeInput{
+			srcPath: removeCmd.Arg(0),
+			force:   *forceFlag,
+		}
+		if err := remove(input, internal.ConfigUserScriptsPath); err != nil {
+			if errors.Is(err, insufficientArgumentsErr) {
+				removeCmd.Usage()
+				os.Exit(1)
+			}
+			fmt.Printf("failed to add scripts: %s\n", err)
+		}
+	default:
+		flag.Usage()
+		os.Exit(1)
+	}
+}
+
+var (
+	insufficientArgumentsErr = errors.New("insufficient arguments")
+	filePathIsRequiredErr    = fmt.Errorf("a file path is required: %w", insufficientArgumentsErr)
+	confirmationFailedErr    = errors.New("confirmation failed")
+)
+
+type addInput struct {
+	srcPath    string
+	targetName string
+	parentPath string
+	force      bool
+}
+
+func add(a addInput, targetScriptsPath string) error {
+	if a.srcPath == "" {
+		return filePathIsRequiredErr
+	}
+
+	destName := filepath.Base(a.srcPath)
+	if a.targetName != "" {
+		destName = a.targetName
+	}
+
+	destParentDir := a.parentPath
+	destPath := filepath.Join(targetScriptsPath, destParentDir, destName)
+	_, err := os.Stat(destPath)
+	if e, ok := errors.AsType[syscall.Errno](err); ok && !e.Is(os.ErrNotExist) {
+		return err
+	}
+	if err == nil {
+		if !a.force && !promptDestructiveConfirmation(
+			"There is already a script/folder at this target, it will be overwritten") {
+			return confirmationFailedErr
+		}
+		if err := os.Remove(destPath); err != nil {
+			return err
+		}
+	}
+
+	if _, err := os.Stat(filepath.Dir(destPath)); err != nil {
+		if e, ok := errors.AsType[syscall.Errno](err); ok && e.Is(os.ErrNotExist) {
+			if err := os.Mkdir(filepath.Dir(destPath), 0755); err != nil {
+				return err
+			}
+		}
+	}
+
+	return os.Symlink(a.srcPath, destPath)
+}
+
+type removeInput struct {
+	srcPath string
+	force   bool
+}
+
+func remove(r removeInput, targetScriptsPath string) error {
+	if r.srcPath == "" {
+		return filePathIsRequiredErr
+	}
+
+	destPath := filepath.Join(targetScriptsPath, r.srcPath)
+	f, err := os.Stat(destPath)
+	if err != nil {
+		if e, ok := errors.AsType[syscall.Errno](err); ok && e.Is(os.ErrNotExist) {
+			return errors.New("target path not found.")
+		}
+		return err
+	}
+
+	if f.IsDir() {
+		if !r.force && !promptDestructiveConfirmation("Destination is a directory") {
+			return confirmationFailedErr
+		}
+	}
+
+	return os.RemoveAll(destPath)
+}
+
+func promptDestructiveConfirmation(msg ...any) bool {
+	s := bufio.NewScanner(os.Stdin)
+	fmt.Print(msg...)
+	fmt.Print(". Continue? [y/N]: ")
+	s.Scan()
+	input := strings.ToLower(s.Text())
+
+	return strings.ToLower(input) == "y"
+}
+
+func fatalF(s string, args ...any) {
+	fmt.Fprintf(os.Stderr, fmt.Sprintln(s), args...)
+	os.Exit(1)
+}

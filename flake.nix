@@ -17,20 +17,22 @@
           root = ./.;
           fileset = pkgs.lib.fileset.unions [
             ./cmd
-            ./defaults
-            ./extra
             ./completions
+            ./extra
+            ./internal
             ./man
             ./go.mod
+            ./go.sum
           ];
         };
         version = "0.0.1";
-        vendorHash = null;
+        vendorHash = "sha256-Z8V1a3uJdG/lj6AP4Xly01MQSq/yBnB2/TuERrrj0o0=";
         doCheck = false;
 
         subPackages = [
           "cmd/runner"
           "cmd/completion"
+          "cmd/config"
         ];
 
         env = {
@@ -48,9 +50,10 @@
 
           mv $out/bin/runner $out/bin/util
           mv $out/bin/completion $out/bin/util-complete
-          cp -a defaults/* $out/share/shell-utils/scripts/
+          mv $out/bin/config $out/share/shell-utils/scripts/
           cp -a extra/* $out/share/shell-utils/scripts/
-          cp -a completions/zsh/* $out/share/zsh/site-functions/
+          cp -a completions/zsh/_util $out/share/zsh/site-functions/
+          cp -a completions/zsh/*.completions.zsh $out/share/shell-utils/scripts/
           cp -a man/* $out/share/man/man1/
         '';
       };
