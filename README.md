@@ -57,19 +57,21 @@ echo "doing some operations here..."
 
 ## Install
 
-### Nix profile
-
 ```sh
 nix profile install github:vncsmyrnk/shell-utils
 ```
 
-### Nix flake
+### Flake
 
 ```nix
-inputs = {
-  shell-utils = {
-    url = "github:vncsmyrnk/shell-utils";
-    inputs.nixpkgs.follows = "nixpkgs";
+{
+  inputs = {
+    shell-utils = {
+      url = "github:vncsmyrnk/shell-utils";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-};
+}
 ```
+
+[Example](https://github.com/vncsmyrnk/dotfiles/blob/4b86eca56bdf638990011b9ea4dc578beb2743b0/flake.nix#L13)
