@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -71,14 +72,19 @@ func main() {
 	args = append(args, os.Args[i:]...)
 
 	if slices.Contains(args, "--help") {
-		err := catHelpSection(path)
-		if err != nil {
-			fatalF(fmt.Sprint(err))
+		if s, _ := isScript(path); s {
+			err := catHelpSection(path)
+			if err != nil {
+				fatalF(fmt.Sprint(err))
+			}
+			os.Exit(0)
 		}
-		os.Exit(0)
 	}
 
 	if slices.Contains(args, "--to-stdout") {
+		if s, _ := isScript(path); !s {
+			fatalF("Invalid option, the target is not a script.")
+		}
 		cat(path)
 		os.Exit(0)
 	}
@@ -214,4 +220,23 @@ func pathMatchesForBasePaths(
 		}
 	}
 	return nil
+}
+
+func isScript(filename string) (bool, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return false, err
+	}
+	defer file.Close()
+
+	magic := make([]byte, 2)
+	_, err = io.ReadFull(file, magic)
+	if err != nil {
+		if err == io.EOF || err == io.ErrUnexpectedEOF {
+			return false, nil
+		}
+		return false, err
+	}
+
+	return magic[0] == '#' && magic[1] == '!', nil
 }
