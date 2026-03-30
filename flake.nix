@@ -40,7 +40,7 @@
         ldflags = [
           "-s"
           "-w"
-          "-X main.baseDefaultScriptsPath=${builtins.placeholder "out"}/share/shell-utils/scripts"
+          "-X shellutils/internal.BaseDefaultScriptsPath=${builtins.placeholder "out"}/share/shell-utils/scripts"
         ];
 
         postInstall = ''

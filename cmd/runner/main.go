@@ -11,16 +11,12 @@ import (
 	"strconv"
 	"strings"
 	"syscall"
-)
 
-var (
-	baseDefaultScriptsPath = "./extra"
-	configUserPath         = filepath.Join(os.Getenv("HOME"), ".config", "shell-utils")
-	configUserScriptsPath  = filepath.Join(configUserPath, "scripts")
+	"shellutils/internal"
 )
 
 func main() {
-	scriptsLookupPaths := []string{baseDefaultScriptsPath, configUserScriptsPath}
+	scriptsLookupPaths := []string{internal.BaseDefaultScriptsPath, internal.ConfigUserScriptsPath}
 
 	var (
 		path, currentRelativePathArg string
@@ -95,7 +91,7 @@ func main() {
 	cmd.Stderr = os.Stderr
 
 	cmd.Env = append(cmd.Environ(),
-		fmt.Sprintf("SHELL_UTILS_USER_CONFIG=%s", configUserPath))
+		fmt.Sprintf("SHELL_UTILS_USER_CONFIG=%s", internal.ConfigUserPath))
 
 	err := cmd.Run()
 	if err != nil {
@@ -114,7 +110,7 @@ func help() {
 		"scripts accessible everywhere using the util command.")
 	fmt.Println("It can find and execute your custom scripts like a CLI.")
 	fmt.Println("\ne.g. \"$ util folder script\" will look for a script at",
-		filepath.Join(configUserScriptsPath, "folder", "script.(*)"))
+		filepath.Join(internal.ConfigUserScriptsPath, "folder", "script.(*)"))
 	fmt.Println("More at https://github.com/vncsmyrnk/shell-utils")
 }
 

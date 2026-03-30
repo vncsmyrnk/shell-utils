@@ -6,10 +6,8 @@ import (
 	"path/filepath"
 	"slices"
 	"strings"
-)
 
-var (
-	baseDefaultScriptsPath = "./extra"
+	"shellutils/internal"
 )
 
 func main() {
@@ -18,8 +16,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	configUserScriptsPath := filepath.Join(os.Getenv("HOME"), ".config", "shell-utils", "scripts")
-	scriptsLookupPaths := []string{baseDefaultScriptsPath, configUserScriptsPath}
+	scriptsLookupPaths := []string{internal.BaseDefaultScriptsPath, internal.ConfigUserScriptsPath}
 
 	validArgs := []string{""}
 	if len(os.Args) > 1 {
