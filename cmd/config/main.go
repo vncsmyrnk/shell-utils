@@ -200,12 +200,16 @@ func remove(r removeInput, targetScriptsPath string) error {
 		return filePathIsRequiredErr
 	}
 
-	destPath := filepath.Join(targetScriptsPath, r.srcPath)
+	m, _ := filepath.Glob(fmt.Sprint(filepath.Join(targetScriptsPath, r.srcPath), "*"))
+	if len(m) > 1 {
+		return errors.New("path matches more than one script.")
+	} else if len(m) == 0 {
+		return errors.New("target path not found.")
+	}
+
+	destPath := m[0]
 	f, err := os.Lstat(destPath)
 	if err != nil {
-		if e, ok := errors.AsType[syscall.Errno](err); ok && e.Is(os.ErrNotExist) {
-			return errors.New("target path not found.")
-		}
 		return err
 	}
 
