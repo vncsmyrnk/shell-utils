@@ -134,7 +134,7 @@ func add(a addInput, targetScriptsPath string) error {
 			"There is already a script/folder at this target, it will be overwritten") {
 			return confirmationFailedErr
 		}
-		if err := os.Remove(destPath); err != nil {
+		if err := os.RemoveAll(destPath); err != nil {
 			return err
 		}
 	}
