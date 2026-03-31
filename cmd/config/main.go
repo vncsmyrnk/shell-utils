@@ -161,7 +161,7 @@ func remove(r removeInput, targetScriptsPath string) error {
 	}
 
 	destPath := filepath.Join(targetScriptsPath, r.srcPath)
-	f, err := os.Stat(destPath)
+	f, err := os.Lstat(destPath)
 	if err != nil {
 		if e, ok := errors.AsType[syscall.Errno](err); ok && e.Is(os.ErrNotExist) {
 			return errors.New("target path not found.")
