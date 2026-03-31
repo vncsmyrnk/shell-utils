@@ -120,7 +120,8 @@ func add(a addInput, targetScriptsPath string) error {
 		return filePathIsRequiredErr
 	}
 
-	if _, err := os.Stat(a.srcPath); err != nil {
+	src, err := os.Stat(a.srcPath)
+	if err != nil {
 		if e, ok := errors.AsType[syscall.Errno](err); ok && e.Is(os.ErrNotExist) {
 			return errors.New("source path not found.")
 		}
@@ -134,16 +135,16 @@ func add(a addInput, targetScriptsPath string) error {
 
 	destParentDir := a.parentPath
 	destPath := filepath.Join(targetScriptsPath, destParentDir, destName)
-	_, err := os.Stat(destPath)
+	f, err := os.Stat(destPath)
 	if e, ok := errors.AsType[syscall.Errno](err); ok && !e.Is(os.ErrNotExist) {
 		return err
 	}
-	if err == nil {
+	if err == nil && !f.IsDir() {
 		if !a.force && !promptDestructiveConfirmation(
-			"There is already a script/folder at this target, it will be overwritten") {
+			"There is already a script at this target, it will be overwritten") {
 			return confirmationFailedErr
 		}
-		if err := os.RemoveAll(destPath); err != nil {
+		if err := os.Remove(destPath); err != nil {
 			return err
 		}
 	}
@@ -154,6 +155,32 @@ func add(a addInput, targetScriptsPath string) error {
 				return err
 			}
 		}
+	}
+
+	if src.IsDir() {
+		if err := os.Mkdir(destPath, 0755); err != nil {
+			if e, ok := errors.AsType[syscall.Errno](err); ok && !e.Is(os.ErrExist) {
+				return err
+			}
+		}
+		srcEntries, err := os.ReadDir(a.srcPath)
+		if err != nil {
+			return err
+		}
+		for _, e := range srcEntries { // Target dir exists, merges src items into it
+			dAbsSrcPath, err := filepath.Abs(filepath.Join(a.srcPath, e.Name()))
+			if err != nil {
+				return err
+			}
+			srcPath, err := filepath.Rel(destPath, dAbsSrcPath) // Builds relative path to src just like stow would
+			if err != nil {
+				return err
+			}
+			if err := os.Symlink(srcPath, filepath.Join(destPath, e.Name())); err != nil {
+				return err
+			}
+		}
+		return nil
 	}
 
 	return os.Symlink(a.srcPath, destPath)
