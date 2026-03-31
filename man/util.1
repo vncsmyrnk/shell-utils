@@ -56,7 +56,6 @@ Print the script to the standard input.
 [\-t|\-\-target-name <name>]
 [\-p|\-\-parent-path <path>]
 [\-f|\-\-force]
-[\-d|\-\-dry-run]
 
 Makes a script or a folder of scripts accessible to the util command. Creates symbolic links of the sources in order for the scripts to be found by util.
 
@@ -74,20 +73,16 @@ Parent path relative to scripts directory (default: scripts).
 .B \-f, \-\-force
 Force overwrite without confirmation prompt.
 
-.TP
-.B \-d, \-\-dry-run
-Show what would be done without making changes.
-
 .SS config remove
 .B util remove add
 <target>
-[\-d|\-\-dry-run]
+[\-f|\-\-force]
 
 Deletes the script file or folder.
 
 .TP
-.B \-d, \-\-dry-run
-Show what would be done without making changes.
+.B \-f, \-\-force
+Force overwrite without confirmation prompt.
 
 .SH EXAMPLES
 .TP
