@@ -75,6 +75,7 @@ func main() {
 				os.Exit(1)
 			}
 			fmt.Printf("failed to add scripts: %s\n", err)
+			os.Exit(1)
 		}
 	case "remove":
 		if *helpFlag {
@@ -92,7 +93,8 @@ func main() {
 				removeCmd.Usage()
 				os.Exit(1)
 			}
-			fmt.Printf("failed to add scripts: %s\n", err)
+			fmt.Printf("failed to remove scripts: %s\n", err)
+			os.Exit(1)
 		}
 	default:
 		flag.Usage()
