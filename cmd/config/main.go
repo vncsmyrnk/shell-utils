@@ -118,6 +118,13 @@ func add(a addInput, targetScriptsPath string) error {
 		return filePathIsRequiredErr
 	}
 
+	if _, err := os.Stat(a.srcPath); err != nil {
+		if e, ok := errors.AsType[syscall.Errno](err); ok && e.Is(os.ErrNotExist) {
+			return errors.New("source path not found.")
+		}
+		return err
+	}
+
 	destName := filepath.Base(a.srcPath)
 	if a.targetName != "" {
 		destName = a.targetName
