@@ -183,7 +183,11 @@ func add(a addInput, targetScriptsPath string) error {
 		return nil
 	}
 
-	return os.Symlink(a.srcPath, destPath)
+	srcPath, err := filepath.Rel(filepath.Dir(destPath), a.srcPath) // Builds relative path to src just like stow would
+	if err != nil {
+		return err
+	}
+	return os.Symlink(srcPath, destPath)
 }
 
 type removeInput struct {
