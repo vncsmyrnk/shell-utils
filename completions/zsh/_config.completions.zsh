@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-persistent_flags=(
+local persistent_flags=(
   '--help'
 )
 
@@ -15,10 +15,15 @@ add)
   return
   ;;
 remove)
+  local -a entries=($(
+    cd ~/.config/shell-utils/scripts || echo ""
+    find -not -name "_*" -not -name "help" | cut -b 3- | rev | cut -f2- -d "." | rev
+  ))
+  echo "$entries" >>/tmp/test
   _arguments \
     '(-f --force)'{-f,--force}'[Force overwrite without confirmation]' \
     "${persistent_flags[@]}" \
-    '3:script file:_files'
+    "3:path:(${entries})"
   return
   ;;
 esac
