@@ -204,6 +204,9 @@ func remove(r removeInput, targetScriptsPath string) error {
 	if len(m) > 1 {
 		return errors.New("path matches more than one script.")
 	} else if len(m) == 0 {
+		if r.force {
+			return nil
+		}
 		return errors.New("target path not found.")
 	}
 
