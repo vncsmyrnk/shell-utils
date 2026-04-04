@@ -14,7 +14,7 @@ main() {
   # Updates package managers
   if exists apt; then sudo apt-get update && sudo apt-get upgrade; fi
   if exists brew; then brew update && brew upgrade; fi
-  if exists yay; then yay; fi
+  if exists yay; then yay --devel; fi
   printf "[UTIL] Package managers OK\n"
 
   # Checks for global update scripts on utils folder
