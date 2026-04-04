@@ -1,2 +1,7 @@
 result
 extra/config
+dist/
+pkg/
+src/
+shell-utils/
+*.zst

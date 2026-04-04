@@ -1,4 +1,5 @@
 ![shell](https://img.shields.io/badge/Shell-121011?style=flat&logo=gnu-bash&logoColor=white)
+[![AUR Version](https://img.shields.io/aur/version/shell-utils-git?style=plastic&label=AUR)](https://aur.archlinux.org/packages/shell-utils-git)
 [![contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/vncsmyrnk/shell-utils/issues)
 [![Issue count](https://img.shields.io/github/issues-search?query=repo%3Avncsmyrnk%2Fshell-utils%20is%3Aopen&label=open%20issues)](https://github.com/vncsmyrnk/shell-utils/issues)
 [![CI workflow](https://github.com/vncsmyrnk/shell-utils/actions/workflows/ci.yaml/badge.svg)](https://github.com/vncsmyrnk/shell-utils/actions/workflows/ci.yaml)
@@ -57,11 +58,20 @@ echo "doing some operations here..."
 
 ## Install
 
+### AUR
+
+Install it with your favorite AUR helper.
+
+```sh
+yay -S shell-utils-git
+```
+
+### Nix
+
+
 ```sh
 nix profile install github:vncsmyrnk/shell-utils
 ```
-
-### Flake
 
 ```nix
 {
