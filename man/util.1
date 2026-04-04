@@ -52,14 +52,14 @@ Print the script to the standard input.
 .SH COMMANDS
 .SS config add
 .B util config add
-<file|directory>
+<file|directory|github:username/repo>
 [\-t|\-\-target-name <name>]
 [\-p|\-\-parent-path <path>]
 [\-f|\-\-force]
 
 Makes a script or a folder of scripts accessible to the util command. Creates symbolic links of the sources in order for the scripts to be found by util.
 
-It can also define other configuration files at `$HOME/.config/util` folder, like setup files.
+It can also download GitHub repos, to make scripts accessible via the util command.
 
 .TP
 .B \-t, \-\-target-name <name>

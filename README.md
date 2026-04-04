@@ -41,6 +41,8 @@ This project includes [default extra scripts](https://github.com/vncsmyrnk/shell
 
 To automate update tasks when running `util update`, simply place your scripts in `$HOME/.config/shell-utils/scripts/on-update`. You can achieve this using `$ util config add`.
 
+You can also add scripts from a GitHub repo using `$ util config add github:username/repo`.
+
 > [!TIP]
 > The best practice is to keep your scripts were you already store them and just create symbolic links in the folder `$HOME/.config/shell-utils/scripts`. This can be done via `$ util config add`.
 

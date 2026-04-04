@@ -26,7 +26,7 @@
           ];
         };
         version = "0.0.1";
-        vendorHash = "sha256-Z8V1a3uJdG/lj6AP4Xly01MQSq/yBnB2/TuERrrj0o0=";
+        vendorHash = "sha256-mP5UYLWlnGWCHHObkVvCNNxYzjWf/xg9Eonf7P+JpGQ=";
         doCheck = false;
 
         subPackages = [
