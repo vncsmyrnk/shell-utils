@@ -1,7 +1,8 @@
-![shell](https://img.shields.io/badge/Shell-121011?style=flat&logo=gnu-bash&logoColor=white)
+![shell](https://img.shields.io/badge/Shell-121011?style=plastic&logo=gnu-bash&logoColor=white)
+[![Go Version](https://img.shields.io/badge/Go-1.26-blue?style=plastic&logo=go)](https://go.dev/)
 [![AUR Version](https://img.shields.io/aur/version/shell-utils-git?style=plastic&label=AUR)](https://aur.archlinux.org/packages/shell-utils-git)
-[![contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/vncsmyrnk/shell-utils/issues)
-[![Issue count](https://img.shields.io/github/issues-search?query=repo%3Avncsmyrnk%2Fshell-utils%20is%3Aopen&label=open%20issues)](https://github.com/vncsmyrnk/shell-utils/issues)
+[![contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=plastic)](https://github.com/vncsmyrnk/shell-utils/issues)
+[![Issue count](https://img.shields.io/github/issues-search?style=plastic&query=repo%3Avncsmyrnk%2Fshell-utils%20is%3Aopen&label=open%20issues)](https://github.com/vncsmyrnk/shell-utils/issues)
 [![CI workflow](https://github.com/vncsmyrnk/shell-utils/actions/workflows/ci.yaml/badge.svg)](https://github.com/vncsmyrnk/shell-utils/actions/workflows/ci.yaml)
 
 # shell-utils 🛠️
