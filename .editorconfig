@@ -13,5 +13,5 @@ indent_size = 2
 [*.go]
 indent_style = tab
 
-[*.1]
+[*.{1, md}]
 max_line_length = unset
