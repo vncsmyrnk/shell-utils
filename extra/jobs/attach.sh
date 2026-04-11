@@ -2,6 +2,8 @@
 
 # [help]
 # Attaches to the TMUX session and window of a job
+#
+# Usage: util jobs attach <name>
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 \. "$DIR/_variables"
