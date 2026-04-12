@@ -13,4 +13,4 @@ if [[ -z "$job_name" ]]; then
   exit 1
 fi
 
-tmux switch-client -t "$SESSION_NAME:$job_name"
+tmux switch-client -t "$_jobs_session_name:$job_name"

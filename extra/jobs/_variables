@@ -1,3 +1,4 @@
 # vim: set ft=sh:
 
-SESSION_NAME=procs
+_jobs_session_name=procs
+_jobs_log_dir=/tmp

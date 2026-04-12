@@ -3,7 +3,7 @@
 \. "${0:a:h}/_variables"
 
 _arguments \
-  '--all' \
+  "-f" \
   "${common_flags[@]}"
 
 arguments="$1"

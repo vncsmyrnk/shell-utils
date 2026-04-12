@@ -11,7 +11,7 @@ if grep -q ' ' <<<"$arguments"; then
 fi
 
 windows=()
-for w in $(tmux list-windows -t "$SESSION_NAME" -F "#{window_name}" 2>/dev/null); do
+for w in $(tmux list-windows -t "$_jobs_session_name" -F "#{window_name}" 2>/dev/null); do
   windows+=("$w")
 done
 
