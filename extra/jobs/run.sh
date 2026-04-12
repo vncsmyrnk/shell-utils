@@ -16,8 +16,9 @@ if [[ -z "$job_task" ]]; then
   exit 1
 fi
 
+d=$(date +'%Y%m%d%H%M%S')
 if ! tmux list-windows -t "$SESSION_NAME" >/dev/null 2>&1; then
-  tmux new-session -d -s "$SESSION_NAME" -n "$job_name" "$job_task"
+  tmux new-session -d -s "$SESSION_NAME" -n "$job_name" "($job_task) | tee /tmp/$job_name-$d.log"
   exit 0
 fi
 
@@ -25,4 +26,4 @@ if tmux list-windows -t "$SESSION_NAME" -F "#{m:$job_name,#{window_name}}" | gre
   exit 1
 fi
 
-tmux new-window -t "$SESSION_NAME" -n "$job_name" "$job_task"
+tmux new-window -t "$SESSION_NAME" -n "$job_name" "($job_task) | tee /tmp/$job_name-$d.log"
