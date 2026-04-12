@@ -17,7 +17,7 @@ import (
 )
 
 func main() {
-	scriptsLookupPaths := []string{internal.BaseDefaultScriptsPath, internal.ConfigUserScriptsPath}
+	scriptsLookupPaths := []string{internal.ConfigUserScriptsPath, internal.BaseDefaultScriptsPath}
 
 	var (
 		path, currentRelativePathArg string
