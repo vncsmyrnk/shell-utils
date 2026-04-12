@@ -1,5 +1,5 @@
 ![shell](https://img.shields.io/badge/Shell-121011?style=plastic&logo=gnu-bash&logoColor=white)
-[![Go Version](https://img.shields.io/badge/Go-1.26-blue?style=plastic&logo=go)](https://go.dev/)
+[![Go Version](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fraw.githubusercontent.com%2Fvncsmyrnk%2Fshell-utils%2Frefs%2Fheads%2Fmain%2Fgo.mod&search=go%20(.*)&replace=%241&style=plastic&logo=go&label=Go&color=blue)](https://go.dev/)
 [![AUR Version](https://img.shields.io/aur/version/shell-utils-git?style=plastic&label=AUR)](https://aur.archlinux.org/packages/shell-utils-git)
 [![contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=plastic)](https://github.com/vncsmyrnk/shell-utils/issues)
 [![Issue count](https://img.shields.io/github/issues-search?style=plastic&query=repo%3Avncsmyrnk%2Fshell-utils%20is%3Aopen&label=open%20issues)](https://github.com/vncsmyrnk/shell-utils/issues)
