@@ -3,7 +3,7 @@
 # [help]
 # Pages the job standard output
 #
-# Usage: util jobs logs <name>
+# Usage: util jobs log <name>
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 \. "$DIR/_variables"
