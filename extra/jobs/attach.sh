@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # [help]
-# Attaches to the TMUX session and window of a job
+# Attaches to the tmux session and window of a job
 #
 # Usage: util jobs attach <name>
 
