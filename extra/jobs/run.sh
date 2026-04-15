@@ -18,7 +18,7 @@ fi
 
 d=$(date +'%Y%m%d%H%M%S')
 if ! tmux list-windows -t "$_jobs_session_name" >/dev/null 2>&1; then
-  tmux new-session -d -s "$_jobs_session_name" -n "$job_name" "($job_task) | tee /tmp/$job_name-$d.log"
+  tmux new-session -d -s "$_jobs_session_name" -n "$job_name" "($job_task 2>&1) | tee /tmp/$job_name-$d.log"
   exit 0
 fi
 
