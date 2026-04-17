@@ -26,4 +26,4 @@ if tmux list-windows -t "$_jobs_session_name" -F "#{m:$job_name,#{window_name}}"
   exit 1
 fi
 
-tmux new-window -t "$_jobs_session_name" -n "$job_name" "($job_task) | tee /tmp/$job_name-$d.log"
+tmux new-window -t "$_jobs_session_name" -n "$job_name" "($job_task 2>&1) | tee /tmp/$job_name-$d.log"
