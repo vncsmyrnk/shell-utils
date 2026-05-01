@@ -3,7 +3,7 @@
 [![AUR Version](https://img.shields.io/aur/version/shell-utils-git?style=plastic&label=AUR)](https://aur.archlinux.org/packages/shell-utils-git)
 [![APT Version](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fapt.fury.io%2Fvncsmyrnk%2FPackages&search=.*Filename%3A%20.*%2Fshell-utils_(%5Ba-z0-9%5C.%5C%2B%5D*)_&replace=%241&flags=s&style=plastic&logo=debian&label=apt&color=d70a53)](https://repo.fury.io/vncsmyrnk/)
 <br>
-[![CI workflow](https://github.com/vncsmyrnk/shell-utils/actions/workflows/ci.yaml/badge.svg)](https://github.com/vncsmyrnk/shell-utils/actions/workflows/ci.yaml)
+[![CI/CD workflow](https://github.com/vncsmyrnk/shell-utils/actions/workflows/ci-cd.yaml/badge.svg)](https://github.com/vncsmyrnk/shell-utils/actions/workflows/ci-cd.yaml)
 [![contributions](https://img.shields.io/badge/contributions-welcome-brightgreen?labelColor=384047&color=33cb56)](https://github.com/vncsmyrnk/shell-utils/issues)
 
 # shell-utils 🛠️
