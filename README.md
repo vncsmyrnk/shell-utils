@@ -1,9 +1,10 @@
 ![shell](https://img.shields.io/badge/Shell-121011?style=plastic&logo=gnu-bash&logoColor=white)
 [![Go Version](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fraw.githubusercontent.com%2Fvncsmyrnk%2Fshell-utils%2Frefs%2Fheads%2Fmain%2Fgo.mod&search=go%20(.*)&replace=%241&style=plastic&logo=go&label=Go&color=blue)](https://go.dev/)
 [![AUR Version](https://img.shields.io/aur/version/shell-utils-git?style=plastic&label=AUR)](https://aur.archlinux.org/packages/shell-utils-git)
-[![contributions](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=plastic)](https://github.com/vncsmyrnk/shell-utils/issues)
-[![Issue count](https://img.shields.io/github/issues-search?style=plastic&query=repo%3Avncsmyrnk%2Fshell-utils%20is%3Aopen&label=open%20issues)](https://github.com/vncsmyrnk/shell-utils/issues)
+[![APT Version](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fapt.fury.io%2Fvncsmyrnk%2FPackages&search=.*Filename%3A%20.*%2Fshell-utils_(%5Ba-z0-9%5C.%5C%2B%5D*)_&replace=%241&flags=s&style=plastic&logo=debian&label=apt&color=d70a53)](https://repo.fury.io/vncsmyrnk/)
+<br>
 [![CI workflow](https://github.com/vncsmyrnk/shell-utils/actions/workflows/ci.yaml/badge.svg)](https://github.com/vncsmyrnk/shell-utils/actions/workflows/ci.yaml)
+[![contributions](https://img.shields.io/badge/contributions-welcome-brightgreen?labelColor=384047&color=33cb56)](https://github.com/vncsmyrnk/shell-utils/issues)
 
 # shell-utils 🛠️
 
@@ -67,6 +68,13 @@ Install it with your favorite AUR helper.
 
 ```sh
 yay -S shell-utils-git
+```
+
+### APT (Debian and its derivatives)
+
+```sh
+echo "deb [trusted=yes] https://apt.fury.io/vncsmyrnk /" | sudo tee /etc/apt/sources.list.d/vncsmyrnk.list
+sudo apt update && sudo apt install shell-utils
 ```
 
 ### Nix

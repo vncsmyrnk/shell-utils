@@ -1,0 +1,71 @@
+name: APT Gemfury package update
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.26'
+
+      - name: Build
+        run: |
+          mkdir -p dist
+          CGO_ENABLED=0 go build \
+            -ldflags="-s -w -X 'shellutils/internal.BaseDefaultScriptsPath=/usr/share/shell-utils/scripts'" \
+            -trimpath \
+            -o ./dist/util \
+            ./cmd/runner/main.go
+          CGO_ENABLED=0 go build \
+            -ldflags="-s -w" \
+            -trimpath \
+            -o ./dist/config \
+            ./cmd/config/main.go
+          CGO_ENABLED=0 go build \
+            -ldflags="-s -w -X 'shellutils/internal.BaseDefaultScriptsPath=/usr/share/shell-utils/scripts'" \
+            -trimpath \
+            -o ./dist/util-complete \
+            ./cmd/completion/main.go
+
+
+      - name: Install fpm dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y ruby ruby-dev rubygems build-essential
+          sudo gem install fpm
+
+      - name: Package it using fpm
+        run: |
+          COMMIT_COUNT=$(git rev-list --count HEAD)
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          DYNAMIC_VERSION="1.0.0+git${COMMIT_COUNT}.${COMMIT_HASH}"
+
+          mkdir -p staging-root/usr/bin staging-root/usr/share/shell-utils/scripts \
+            staging-root/usr/share/zsh/vendor-completions staging-root/usr/share/man/man1
+
+          cp ./dist/* staging-root/usr/bin/
+          cp -a extra/* staging-root/usr/share/shell-utils/scripts/
+          cp -a completions/zsh/_util staging-root/usr/share/zsh/vendor-completions/
+          cp -a completions/zsh/*.completions.zsh staging-root/usr/share/shell-utils/scripts/
+          cp -a man/* staging-root/usr/share/man/man1/
+
+          fpm -s dir -t deb \
+            -n shell-utils \
+            -v $DYNAMIC_VERSION \
+            -a amd64 \
+            --maintainer "Vinicius Mayrink <vncsmyrnk@gmail.com>" \
+            --description "An attempt to be a shell-agnostic custom utilities tool." \
+            --license "GPL-3.0" \
+            --url "https://github.com/vncsmyrnk/shell-utils" \
+            -C staging-root .
+
+      - name: Upload to Gemfury
+        run: |
+          DEB_FILE=$(find . -name '*.deb' -type f | head -n 1)
+          curl -F package=@$DEB_FILE https://${{ secrets.GEMFURY_PUSH_TOKEN }}@push.fury.io/vncsmyrnk
