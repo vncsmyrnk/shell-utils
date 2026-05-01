@@ -17,8 +17,19 @@ if [[ -z "$job_task" ]]; then
 fi
 
 d=$(date +'%Y%m%d%H%M%S')
+log_file="/tmp/$job_name-$d.log"
+
+regex='^((trap[[:space:]]+"[^"]+"[[:space:]]+[A-Z]+;[[:space:]]*)+)(.*)'
+if [[ "$job_task" =~ $regex ]]; then
+  job_trap="${BASH_REMATCH[1]}"
+  job_cmd="${BASH_REMATCH[3]}"
+  job_exec="$job_trap ($job_cmd 2>&1) | tee \"$log_file\""
+else
+  job_exec="($job_task 2>&1) | tee \"$log_file\""
+fi
+
 if ! tmux list-windows -t "$_jobs_session_name" >/dev/null 2>&1; then
-  tmux new-session -d -s "$_jobs_session_name" -n "$job_name" "($job_task 2>&1) | tee /tmp/$job_name-$d.log"
+  tmux new-session -d -s "$_jobs_session_name" -n "$job_name" "$job_exec"
   exit 0
 fi
 
@@ -26,4 +37,4 @@ if tmux list-windows -t "$_jobs_session_name" -F "#{m:$job_name,#{window_name}}"
   exit 1
 fi
 
-tmux new-window -t "$_jobs_session_name" -n "$job_name" "($job_task 2>&1) | tee /tmp/$job_name-$d.log"
+tmux new-window -t "$_jobs_session_name" -n "$job_name" "$job_exec"
