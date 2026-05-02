@@ -19,7 +19,7 @@ fi
 d=$(date +'%Y%m%d%H%M%S')
 log_file="/tmp/$job_name-$d.log"
 
-regex='^((trap[[:space:]]+"[^"]+"[[:space:]]+[A-Z]+;[[:space:]]*)+)(.*)'
+regex='^(([[:space:]]*trap[[:space:]]+"[^"]+"[[:space:]]+[A-Z]+;[[:space:]]*)+)(.*)'
 if [[ "$job_task" =~ $regex ]]; then
   job_trap="${BASH_REMATCH[1]}"
   job_cmd="${BASH_REMATCH[3]}"
