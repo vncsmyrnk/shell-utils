@@ -17,15 +17,16 @@ if [[ -z "$job_task" ]]; then
 fi
 
 d=$(date +'%Y%m%d%H%M%S')
-log_file="/tmp/$job_name-$d.log"
+job_log_file="/tmp/$job_name.log"
+instance_log_file="/tmp/$job_name-$d.log"
 
 regex='^(([[:space:]]*trap[[:space:]]+"[^"]+"[[:space:]]+[A-Z]+;[[:space:]]*)+)(.*)'
 if [[ "$job_task" =~ $regex ]]; then
   job_trap="${BASH_REMATCH[1]}"
   job_cmd="${BASH_REMATCH[3]}"
-  job_exec="$job_trap ($job_cmd 2>&1) | tee \"$log_file\""
+  job_exec="$job_trap ($job_cmd 2>&1) | tee \"$job_log_file\" \"$instance_log_file\""
 else
-  job_exec="($job_task 2>&1) | tee \"$log_file\""
+  job_exec="($job_task 2>&1) | tee \"$job_log_file\" \"$instance_log_file\""
 fi
 
 if ! tmux list-windows -t "$_jobs_session_name" >/dev/null 2>&1; then
