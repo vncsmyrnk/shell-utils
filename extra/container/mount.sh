@@ -24,9 +24,8 @@ if [[ -e "$dest" ]]; then
   exit 1
 fi
 
-block_uuid=$(lsblk -no UUID /dev/loop0 | head -n 1)
+block_uuid=$(lsblk -no UUID "$loop_dev" | head -n 1)
 mapper="/dev/mapper/luks-$block_uuid"
-echo "$mapper"
 
 if [[ ! -b "$mapper" ]]; then
   inotifywait -qq -t 30 -e create "/dev/mapper/"
