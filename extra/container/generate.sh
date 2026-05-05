@@ -20,3 +20,5 @@ sudo mkfs.ext4 "/dev/mapper/$name"
 sudo mount "/dev/mapper/$name" /mnt
 sudo chown -R "$(whoami):$(whoami)" /mnt
 sudo umount /mnt
+
+sudo cryptsetup luksClose "$name"
