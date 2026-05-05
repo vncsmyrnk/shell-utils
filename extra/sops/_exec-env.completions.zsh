@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
-_arguments \
-  '--all' \
-  "${common_flags[@]}"
+subcommand_level=2
+shift "$subcommand_level" words
+((CURRENT -= "$subcommand_level"))
 
 _precommand "$@"
