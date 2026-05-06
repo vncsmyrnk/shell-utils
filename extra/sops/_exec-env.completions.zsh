@@ -2,7 +2,7 @@
 
 subcommand_level=2
 
-if [[ -z "$2" ]] || [[ "$1" = "--file" ]]; then
+if [[ -z "$2" ]] || [[ "$1" = "--file" ]] || [ "$1" = "-f" ]; then
   if [[ "$#" -lt 3 ]]; then # Skips flag suggestions when `--file` is filled
     _arguments \
       '(-f --file)'{-f,--file}'[sops file]:path:_files -/' \
@@ -11,7 +11,7 @@ if [[ -z "$2" ]] || [[ "$1" = "--file" ]]; then
   subcommand_level=4 # Shifts all user prompt and avoids suggesting existing commands
 fi
 
-if [[ -z "$1" ]]; then
+if [[ -z "$1" ]] || [ "$1" = "-" ]; then
   subcommand_level=2 # Suggests existing commands when prompt is empty
 fi
 

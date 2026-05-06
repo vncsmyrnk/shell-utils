@@ -23,6 +23,8 @@ func main() {
 		validArgs = strings.Split(os.Args[1], " ")
 	}
 
+	var exactMatch bool
+
 	i := len(validArgs)
 	for pathGlob := fmt.Sprint(filepath.Join(validArgs...), "*"); i > 0; pathGlob = fmt.Sprint(filepath.Join(validArgs[:i]...), "*") {
 		i--
@@ -32,16 +34,20 @@ func main() {
 			if f, err := os.Stat(filepath.Join(p, path)); err == nil && !f.IsDir() {
 				stringArgs := strings.Join(validArgs[i+1:], " ")
 				fmt.Print("match;", filepath.Join(p, path), ";", stringArgs, "\n") // Found exact match
-				return
+				exactMatch = true
 			}
 			if m, err := filepath.Glob(filepath.Join(p, fmt.Sprint(path, ".*"))); err == nil && len(m) > 0 {
 				for _, exactPath := range m {
 					stringArgs := strings.Join(validArgs[i+1:], " ")
 					if relP, err := filepath.Abs(exactPath); err == nil {
 						fmt.Print("match;", relP, ";", stringArgs, "\n") // Found exact matches with extensions
+						exactMatch = true
 					}
 				}
-				return
+			}
+
+			if exactMatch && (i < len(validArgs)-1 || validArgs[len(validArgs)-1] == "") {
+				return // Skips suggestions as a space or any subcommand was detected just after the exact match
 			}
 
 			if f, err := os.Stat(filepath.Join(p, path)); err == nil && f.IsDir() {

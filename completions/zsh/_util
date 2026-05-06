@@ -14,7 +14,7 @@ _util() {
   )
 
   local candidate_script=$(awk -F';' 'NR==1 { print $2 }' <<<"$result")
-  if [ -f "$candidate_script" ]; then
+  if [ -f "$candidate_script" ] && [ $(wc -l <<<"$result") -eq 1 ]; then
     # Sources completions directly from the script config located at
     # `_[script_basename].completions.zsh`
     local script_file_basename=$(basename "$candidate_script" | rev | cut -f2- -d "." | rev)
@@ -31,7 +31,7 @@ _util() {
   fi
 
   local paths=($(
-    awk -F';' '{ print $2 }' <<<"$result"
+    awk -F';' '{ if ($1 == "match") next; print $2 }' <<<"$result"
   ))
 
   _describe 'subcommand' paths
