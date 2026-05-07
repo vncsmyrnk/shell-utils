@@ -16,3 +16,5 @@ udisksctl lock -b "$dev"
 
 dest="$HOME/$(basename "$src" | rev | cut -f2- -d "." | rev)"
 rm -rf "$dest"
+mkdir "$dest"
+chmod 000 "$dest" # Avoids the poisoning of the destinatio

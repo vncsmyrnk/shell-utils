@@ -15,14 +15,21 @@ if [[ -z "$src" ]]; then
   exit 1
 fi
 
+dest="$HOME/$(basename "$src" | rev | cut -f2- -d "." | rev)"
+if [[ -L "$dest" ]]; then
+  echo "destination already exists"
+  exit 1
+fi
+
+dest_perms=$(stat -c "%a" "$dest" 2>/dev/null)
+if [[ -n "$dest_perms" ]] && [[ "$dest_perms" != "0" ]]; then
+  echo "destination was not safely unmounted, remove it and try again."
+  exit 1
+fi
+
 loop_dev=$(
   udisksctl loop-setup -f "$src" | grep -oP '/dev/loop\d+'
 )
-
-dest="$HOME/$(basename "$src" | rev | cut -f2- -d "." | rev)"
-if [[ -e "$dest" ]]; then
-  exit 1
-fi
 
 block_uuid=$(lsblk -no UUID "$loop_dev" | head -n 1)
 mapper="/dev/mapper/luks-$block_uuid"
@@ -37,5 +44,6 @@ if [[ ! -b "$mapper" ]]; then
 fi
 
 sleep 1
+rmdir "$dest" 2>/dev/null
 mounted_path=$(findmnt -rn -o TARGET "$mapper")
 ln -s "$mounted_path" "$dest"
