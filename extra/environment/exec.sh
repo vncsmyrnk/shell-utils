@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 
 # [help]
-# Exec a command setting sops secrets on the environent
+# Exec a command setting sops secrets on the environment
 #
 # This allows the secrets to never be decrypted on physical drive.
+#
+# If no argument is specified, a new shell is launched with the provided secrets.
 #
 # The default secret path is `$HOME/.secrets/sops/secrets.env` but it can be
 # overriden with `-f|--file`.
@@ -27,4 +29,9 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-sops exec-env "$secrets_path" "$*"
+exec_args="$*"
+if [[ -z "$exec_args" ]]; then
+  exec_args="$SHELL"
+fi
+
+sops exec-env "$secrets_path" "$exec_args"
