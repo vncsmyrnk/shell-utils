@@ -19,29 +19,34 @@ unmount_container() {
       tail -n 1
   )
   if [[ -z "$mapper" ]]; then
-    echo "failed to find container mapper path."
+    echo "failed to find container mapper path." >"$_log_file"
     return 1
   fi
 
   mounted_path=$(findmnt -rn -o TARGET "/dev/mapper/$mapper" 2>"$_log_file")
   if [[ -z "$mounted_path" ]]; then
-    echo "failed to find container mounted path."
+    echo "failed to find container mounted path." >"$_log_file"
     return 1
   fi
 
   mounted_path_dirname=$(dirname "$mounted_path")
   mounted_path_basename=$(basename "$mounted_path")
   stow -D -d "$mounted_path_dirname" -t "$HOME" "$mounted_path_basename" || {
-    echo "failed to unstow"
-    exit 1
+    echo "failed to unstow" >"$_log_file"
+    return 1
   }
 
   {
     udisksctl unmount -b "/dev/mapper/$mapper"
     udisksctl lock -b "$dev"
   } || {
-    echo "files were unstowed but the unmount failed."
-    exit 1
+    echo "files were unstowed but the unmount failed." >"$_log_file"
+    return 1
+  }
+
+  ssh-add -D >/dev/null 2>&1 || {
+    echo "failed to clear ssh entities." >"$_log_file"
+    return 1
   }
 }
 

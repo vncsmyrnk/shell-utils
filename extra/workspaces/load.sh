@@ -37,7 +37,7 @@ mount_container_blocking() {
   fi
 
   if [[ ! -b "$mapper" ]]; then
-    echo "failed to mount container."
+    echo "failed to mount container." >"$_log_file"
     udisksctl loop-delete -b "$loop_dev"
     return 1
   fi
@@ -54,8 +54,8 @@ stow_home() {
       awk 'NF'
   )
   if [[ -z "$mountpoint" ]]; then
-    echo "container not mounted"
-    exit 1
+    echo "container not mounted" >"$_log_file"
+    return 1
   fi
 
   block_uuid=$(
@@ -76,6 +76,22 @@ stow_home() {
   }
 
   return 0
+}
+
+add_ssh_key() {
+  key=$(
+    find ~/.ssh/ -maxdepth 2 \
+      -type f -name "id_*" -not -name "*.pub"
+  )
+  if [[ -z "$key" ]]; then
+    echo "ssh key not found" >"$_log_file"
+    return 1
+  fi
+
+  ssh-add "$key" >/dev/null 2>&1 || {
+    echo "failed to add ssh key" >"$_log_file"
+    return 1
+  }
 }
 
 main() {
@@ -105,6 +121,11 @@ main() {
     fi
     exit 1
   }
+
+  if ! add_ssh_key; then
+    cat "$_log_file"
+    exit 1
+  fi
 }
 
 main "$@"
