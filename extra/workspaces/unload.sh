@@ -5,9 +5,9 @@
 #
 # Unmounts all containers from a directory if a directory is used.
 #
-# Usage: util container unmount <path/to/container/or/dir/of/containers>
+# Usage: util workspaces unload <path/to/container>
 
-_log_file="$HOME/.cache/shell-utils/container/unmount-$(date +'%Y%m%d%H%M%S').log"
+_log_file="$HOME/.cache/shell-utils/container/unload-$(date +'%Y%m%d%H%M%S').log"
 mkdir -p "$(dirname "$_log_file")"
 
 unmount_container() {

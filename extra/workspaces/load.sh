@@ -3,9 +3,9 @@
 # [help]
 # Mounts an encrypted container from a file and stows it on $HOME.
 #
-# Usage: util container mount <path/to/container> [-f|--force]
+# Usage: util workspaces load <path/to/container>
 
-_log_file="$HOME/.cache/shell-utils/container/mount-$(date +'%Y%m%d%H%M%S').log"
+_log_file="$HOME/.cache/shell-utils/container/load-$(date +'%Y%m%d%H%M%S').log"
 mkdir -p "$(dirname "$_log_file")"
 
 if ! command -v inotifywait stow >/dev/null 2>&1; then
