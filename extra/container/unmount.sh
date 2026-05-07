@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 # [help]
-# Umnounts a previously mounted container.
+# Umnounts a previously mounted container
+#
+# Usage: util container unmount <path/to/container>
 
 src="$1"
 if [[ -z "$src" ]]; then
