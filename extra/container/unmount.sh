@@ -7,18 +7,42 @@
 #
 # Usage: util container unmount <path/to/container/or/dir/of/containers>
 
-unmount() {
+_log_file="$HOME/.cache/shell-utils/container/unmount-$(date +'%Y%m%d%H%M%S').log"
+mkdir -p "$(dirname "$_log_file")"
+
+unmount_container() {
   src="$1"
+
   dev=$(losetup -n -O NAME -j "$src" | head -n 1)
-  mapper=$(lsblk -nlo NAME "$dev" | tail -n 1)
+  mapper=$(
+    lsblk -nlo NAME "$dev" 2>"$_log_file" |
+      tail -n 1
+  )
+  if [[ -z "$mapper" ]]; then
+    echo "failed to find container mapper path."
+    return 1
+  fi
 
-  udisksctl unmount -b "/dev/mapper/$mapper"
-  udisksctl lock -b "$dev"
+  mounted_path=$(findmnt -rn -o TARGET "/dev/mapper/$mapper" 2>"$_log_file")
+  if [[ -z "$mounted_path" ]]; then
+    echo "failed to find container mounted path."
+    return 1
+  fi
 
-  dest="$HOME/$(basename "$src" | rev | cut -f2- -d "." | rev)"
-  rm -rf "$dest"
-  mkdir "$dest"
-  chmod 000 "$dest" # Avoids the poisoning of the destinatio
+  mounted_path_dirname=$(dirname "$mounted_path")
+  mounted_path_basename=$(basename "$mounted_path")
+  stow -D -d "$mounted_path_dirname" -t "$HOME" "$mounted_path_basename" || {
+    echo "failed to unstow"
+    exit 1
+  }
+
+  {
+    udisksctl unmount -b "/dev/mapper/$mapper"
+    udisksctl lock -b "$dev"
+  } || {
+    echo "files were unstowed but the unmount failed."
+    exit 1
+  }
 }
 
 main() {
@@ -29,12 +53,22 @@ main() {
 
   if [[ -d "$src" ]]; then
     for f in "$src"/*; do
-      unmount "$f"
+      unmount_container "$f" || {
+        if [[ -f "$_log_file" ]]; then
+          cat "$_log_file"
+        fi
+        exit 1
+      }
     done
     exit 0
   fi
 
-  unmount "$src"
+  unmount_container "$src" || {
+    if [[ -f "$_log_file" ]]; then
+      cat "$_log_file"
+    fi
+    exit 1
+  }
 }
 
 main "$@"
