@@ -13,21 +13,36 @@ if ! command -v inotifywait stow >/dev/null 2>&1; then
   exit 1
 fi
 
-mount_container_blocking() {
+_mount() {
+  local src
   src="$1"
-  loop_dev=$(
-    udisksctl loop-setup -f "$src" 2>"$_log_file" |
-      grep -oP '/dev/loop\d+'
+
+  local loop_device
+  loop_device=$(
+    udisksctl loop-setup -f "$src" 2>>"$_log_file"
   )
-  if [[ -z "$loop_dev" ]]; then
+  if [[ "$?" -ne 0 ]]; then
+    echo "failed to create loop." >>"$_log_file"
+    return 1
+  fi
+  loop_device=$(grep -oP '/dev/loop\d+' <<<"$loop_device")
+  if [[ -z "$loop_device" ]]; then
+    udisksctl loop-delete -b "$loop_device"
     return 1
   fi
 
+  local block_uuid
   block_uuid=$(
-    lsblk -no UUID "$loop_dev" 2>"$_log_file" |
-      head -n 1
+    lsblk -no UUID "$loop_device" 2>>"$_log_file"
   )
+  if [[ "$?" -ne 0 ]]; then
+    echo "failed to get block uuid"
+    udisksctl loop-delete -b "$loop_device"
+    return 1
+  fi
+  block_uuid=$(head -n 1 <<<"$block_uuid")
   if [[ -z "$block_uuid" ]]; then
+    udisksctl loop-delete -b "$loop_device"
     return 1
   fi
 
@@ -37,93 +52,110 @@ mount_container_blocking() {
   fi
 
   if [[ ! -b "$mapper" ]]; then
-    echo "failed to mount container." >"$_log_file"
-    udisksctl loop-delete -b "$loop_dev"
+    echo "failed to mount container." >>"$_log_file"
+    udisksctl loop-delete -b "$loop_device"
     return 1
   fi
 
   return 0
 }
 
-stow_home() {
+_stow() {
+  local src
   src="$1"
-  mountpoint=$(
-    losetup -j "$src" |
-      cut -d: -f1 |
-      xargs -I {} lsblk -n -o MOUNTPOINT {} |
-      awk 'NF'
+
+  local loop_device
+  loop_device=$(
+    losetup -j "$src"
   )
-  if [[ -z "$mountpoint" ]]; then
-    echo "container not mounted" >"$_log_file"
+  loop_device=$(cut -d: -f1 <<<"$loop_device")
+  if [[ "$?" -ne 0 ]]; then
+    echo "container not mounted" >>"$_log_file"
     return 1
   fi
 
+  local block_uuid
   block_uuid=$(
-    lsblk -no UUID "$loop_dev" |
-      head -n 1
+    lsblk -no UUID "$loop_device"
   )
-  mapper="/dev/mapper/luks-$block_uuid"
+  block_uuid=$(head -n 1 <<<"$block_uuid")
+  if [[ "$?" -ne 0 ]]; then
+    echo "failed to get block uuid" >>"$_log_file"
+  fi
 
-  local mount_dir mount_name
-  mount_dir=$(dirname "$mountpoint")
-  mount_name=$(basename "$mountpoint")
+  local mapper_device
+  mapper_device="/dev/mapper/luks-$block_uuid"
 
-  stow -d "$mount_dir" -t "$HOME" "$mount_name" || {
-    echo "stow failed, unmounting..."
-    udisksctl unmount -b "$mapper"
-    udisksctl lock -b "$loop_dev"
+  target_path=$(
+    findmnt -rn -o TARGET "$mapper_device" 2>>"$_log_file"
+  )
+  local target_path_dir
+  target_path_dir=$(dirname "$target_path")
+
+  local target_name
+  target_name=$(basename "$target_path")
+
+  stow -d "$target_path_dir" -t "$HOME" "$target_name" || {
+    udisksctl unmount -b "$mapper_device"
+    udisksctl lock -b "$loop_device"
     return 1
   }
 
   return 0
 }
 
-add_ssh_key() {
+_ssh_key_add() {
   key=$(
     find ~/.ssh/ -maxdepth 2 \
       -type f -name "id_*" -not -name "*.pub"
   )
   if [[ -z "$key" ]]; then
-    echo "ssh key not found" >"$_log_file"
+    echo "ssh key not found" >>"$_log_file"
     return 1
   fi
 
-  ssh-add "$key" >/dev/null 2>&1 || {
-    echo "failed to add ssh key" >"$_log_file"
+  ssh-add "$key" || {
+    echo "failed to add ssh key" >>"$_log_file"
     return 1
   }
 }
 
+_log_print() {
+  if [[ -f "$_log_file" ]]; then
+    cat "$_log_file"
+  fi
+}
+
 main() {
+  local src
   src="$1"
   if [[ -z "$src" ]]; then
     exit 1
   fi
 
-  mountpoint=$(
+  local target
+  target=$(
     losetup -j "$src" |
       cut -d: -f1 |
       xargs -I {} lsblk -n -o MOUNTPOINT {} |
       awk 'NF'
   )
-  if [[ -e "$mountpoint" ]]; then
-    echo "this container is already mounted at $mountpoint."
+  if [[ -n "$target" ]]; then
+    echo "this container is already mounted at $target"
     exit 1
   fi
 
   {
-    mount_container_blocking "$src"
+    _mount "$src"
     sleep 1
-    stow_home "$src"
+    _stow "$src"
   } || {
-    if [[ -f "$_log_file" ]]; then
-      cat "$_log_file"
-    fi
+    _log_print
     exit 1
   }
 
-  if ! add_ssh_key; then
-    cat "$_log_file"
+  if ! _ssh_key_add; then
+    _log_print
     exit 1
   fi
 }
