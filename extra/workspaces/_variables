@@ -1,0 +1,3 @@
+# vim: set ft=sh:
+
+_workspaces_vault_path="$HOME/.vault"
