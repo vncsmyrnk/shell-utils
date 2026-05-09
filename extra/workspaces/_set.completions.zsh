@@ -5,4 +5,5 @@ shift "$subcommand_level" words
 ((CURRENT -= "$subcommand_level"))
 
 _arguments \
-  '*:file:_files'
+  '1:file:_files' \
+  "${common_flags[@]}"
