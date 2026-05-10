@@ -7,6 +7,7 @@
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 \. "$DIR/_lib.sh"
+\. "$DIR/_variables.sh"
 
 src="$1"
 target="$2"
@@ -21,4 +22,5 @@ if _container_mounted "$src" 2>/dev/null; then
 fi
 
 target_name=$(basename "$target" | rev | cut -f2- -d "." | rev)
+target_name="$_containers_target_name_prefix$target_name"
 _container_mount "$src" "$target_name" "$target"
