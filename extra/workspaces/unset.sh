@@ -3,11 +3,15 @@
 # [help]
 # Unmounts an existent workspace container after its content is unstowed
 #
+# A default workspace can be set as `$SHELL_UTILS_WORKSPACES_DEFAULT`.
+#
 # Usage: util workspaces unset <path/to/container>
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 \. "$DIR/../containers/_lib.sh"
 \. "$DIR/_variables.sh"
+
+SHELL_UTILS_WORKSPACES_DEFAULT=${SHELL_UTILS_WORKSPACES_DEFAULT:-}
 
 ssh_key_remove() {
   result=$(ssh-add -D)
@@ -20,7 +24,11 @@ ssh_key_remove() {
 main() {
   src="$1"
   if [[ -z "$src" ]]; then
-    exit 1
+    if [[ ! -f "$SHELL_UTILS_WORKSPACES_DEFAULT" ]]; then
+      echo "default workspace not found."
+      exit 1
+    fi
+    src="$SHELL_UTILS_WORKSPACES_DEFAULT"
   fi
 
   if ! _container_mounted "$src" >/dev/null 2>&1; then

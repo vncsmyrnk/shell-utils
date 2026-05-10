@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 
 # [help]
-# Mounts an encrypted container from a file and stows it on $HOME.
+# Mounts an encrypted container from a file and stows it on $HOME
+#
+# A default workspace can be set as `$SHELL_UTILS_WORKSPACES_DEFAULT`.
 #
 # Usage: util workspaces set <path/to/container>
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 \. "$DIR/../containers/_lib.sh"
 \. "$DIR/_variables.sh"
+
+SHELL_UTILS_WORKSPACES_DEFAULT=${SHELL_UTILS_WORKSPACES_DEFAULT:-}
 
 _ssh_key_add() {
   local key
@@ -31,7 +35,11 @@ _ssh_key_add() {
 main() {
   src="$1"
   if [[ -z "$src" ]]; then
-    exit 1
+    if [[ ! -f "$SHELL_UTILS_WORKSPACES_DEFAULT" ]]; then
+      echo "default workspace not found."
+      exit 1
+    fi
+    src="$SHELL_UTILS_WORKSPACES_DEFAULT"
   fi
 
   if _container_mounted "$src" >/dev/null 2>&1; then
