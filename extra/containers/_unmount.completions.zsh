@@ -7,3 +7,15 @@ shift "$subcommand_level" words
 _arguments \
   '1:source:_files' \
   "${common_flags[@]}"
+
+containers_result=$(util containers list)
+if [[ "$?" -ne 0 ]]; then
+  return
+fi
+
+containers_relative_dirs=$(
+  xargs -I{} realpath {} --relative-to=. <<<"$containers_result"
+)
+
+containers=(${(f)"$(echo $containers_relative_dirs)"})
+_describe 'containers' containers

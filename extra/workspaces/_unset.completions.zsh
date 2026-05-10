@@ -7,3 +7,15 @@ shift "$subcommand_level" words
 _arguments \
   '1:file:_files' \
   "${common_flags[@]}"
+
+workspaces_result=$(util workspaces list)
+if [[ "$?" -ne 0 ]]; then
+  return
+fi
+
+workspaces_relative_dirs=$(
+  xargs -I{} realpath {} --relative-to=. <<<"$workspaces_result"
+)
+
+workspaces=(${(f)"$(echo $workspaces_relative_dirs)"})
+_describe 'workspaces' workspaces
