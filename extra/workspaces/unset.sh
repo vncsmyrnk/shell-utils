@@ -7,6 +7,7 @@
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 \. "$DIR/../containers/_lib.sh"
+\. "$DIR/_variables.sh"
 
 ssh_key_remove() {
   result=$(ssh-add -D)
@@ -28,7 +29,7 @@ main() {
   fi
 
   target_name=$(basename "$src" | rev | cut -f2- -d "." | rev)
-  target="/tmp/shell-utils.$(whoami)/$target_name"
+  target="$_workspaces_mount_path/$target_name"
 
   stow_result=$(
     stow -D -d "$target" -t "$HOME" .

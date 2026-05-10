@@ -7,6 +7,7 @@
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 \. "$DIR/../containers/_lib.sh"
+\. "$DIR/_variables.sh"
 
 _ssh_key_add() {
   local key
@@ -39,7 +40,7 @@ main() {
   fi
 
   target_name=$(basename "$src" | rev | cut -f2- -d "." | rev)
-  target="/tmp/shell-utils.$(whoami)/$target_name"
+  target="$_workspaces_mount_path/$target_name"
 
   _container_mount "$src" "$target_name" "$target" || exit 1
 
