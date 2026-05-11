@@ -5,7 +5,6 @@ shift "$subcommand_level" words
 ((CURRENT -= "$subcommand_level"))
 
 _arguments \
-  '1:file:_files' \
   "${common_flags[@]}"
 
 workspaces_result=$(util workspaces list)

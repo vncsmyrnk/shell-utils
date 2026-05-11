@@ -5,7 +5,6 @@ shift "$subcommand_level" words
 ((CURRENT -= "$subcommand_level"))
 
 _arguments \
-  '1:source:_files' \
   "${common_flags[@]}"
 
 containers_result=$(util containers list)
