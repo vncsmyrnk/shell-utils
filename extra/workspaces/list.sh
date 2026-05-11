@@ -9,7 +9,7 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 \. "$DIR/_variables.sh"
 
 loop_devices_result=$(
-  lsblk -Q "MOUNTPOINT =~ '$_workspaces_mount_path'" -n -o PKNAME 2>&1
+  lsblk -Q "MOUNTPOINT =~ '$_workspaces_mount_path'" -np -o PKNAME 2>&1
 )
 if [[ "$?" -ne 0 ]]; then
   echo "failed to list mounted devices."
@@ -23,10 +23,9 @@ if [[ -z "$loop_devices_result" ]]; then
 fi
 
 readarray -t loop_devices <<<"$loop_devices_result"
-for loop_device in "$loop_devices"; do
-  loop_device_path="/dev/$loop_device"
+for loop_device in "${loop_devices[@]}"; do
   back_file=$(
-    losetup "$loop_device_path" -O BACK-FILE -n
+    losetup "$loop_device" -O BACK-FILE -n
   )
   echo "$back_file"
 done
