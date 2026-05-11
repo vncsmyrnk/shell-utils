@@ -1,7 +1,7 @@
 ![shell](https://img.shields.io/badge/Shell-121011?style=plastic&logo=gnu-bash&logoColor=white)
 [![Go Version](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fraw.githubusercontent.com%2Fvncsmyrnk%2Fshell-utils%2Frefs%2Fheads%2Fmain%2Fgo.mod&search=go%20(.*)&replace=%241&style=plastic&logo=go&label=Go&color=blue)](https://go.dev/)
 [![AUR Version](https://img.shields.io/aur/version/shell-utils-git?style=plastic&label=AUR&logo=archlinux)](https://aur.archlinux.org/packages/shell-utils-git)
-[![APT Version](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fapt.fury.io%2Fvncsmyrnk%2FPackages&search=.*Filename%3A%20.*%2Fshell-utils_(%5Ba-z0-9%5C.%5C%2B%5D*)_&replace=%241&flags=s&style=plastic&logo=debian&label=apt&color=d70a53)](https://repo.fury.io/vncsmyrnk/)
+[![APT Version](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Ffuryous.vncsmyrnk.dev%2F%3Fuser%3Dvncsmyrnk%26pkg%3Dshell-utils&search=.*&style=plastic&logo=debian&label=apt&color=d70a53)](https://repo.fury.io/vncsmyrnk/)
 <br>
 [![CI/CD workflow](https://github.com/vncsmyrnk/shell-utils/actions/workflows/ci-cd.yaml/badge.svg)](https://github.com/vncsmyrnk/shell-utils/actions/workflows/ci-cd.yaml)
 [![contributions](https://img.shields.io/badge/contributions-welcome-brightgreen?labelColor=384047&color=33cb56)](https://github.com/vncsmyrnk/shell-utils/issues)
