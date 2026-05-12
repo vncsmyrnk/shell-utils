@@ -1,3 +1,5 @@
 #!/usr/bin/env zsh
 
-# This command has no completions.
+_arguments \
+  '(-f --file)'{-f,--file}'[sops file]:path:_files -/' \
+  "${common_flags[@]}"

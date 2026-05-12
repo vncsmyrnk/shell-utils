@@ -10,7 +10,7 @@
 # The default secret path is `$HOME/.secrets/sops/secrets.env` but it can be
 # overriden with `-f|--file`.
 #
-# Usage: util sops exec-env [-f file] <command>
+# Usage: util environment exec [-f file] <command>
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 \. "$DIR/_variables"
