@@ -40,8 +40,22 @@ jobs:
         with:
           namcap: true
 
+  ci-scripts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get install -y ripgrep
+
+      - uses: extractions/setup-just@v1
+
+      - name: Shellcheck
+        run: just shellcheck error
+
   update-pkgbuild:
-    needs: ci-pkgbuild
+    needs: [ci-pkgbuild, ci-scripts]
     if: ${{ needs.ci-pkgbuild.outputs.pkgbuild == 'true' && !contains(github.event.head_commit.message, '[skip-cd]') }}
     runs-on: ubuntu-latest
     steps:
@@ -69,7 +83,7 @@ jobs:
           ssh_keyscan_types: rsa,ecdsa,ed25519
 
   update-apt:
-    needs: ci-nix
+    needs: [ci-nix, ci-scripts]
     if: ${{ !contains(github.event.head_commit.message, '[skip-cd]') }}
     runs-on: ubuntu-latest
     steps:
