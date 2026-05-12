@@ -25,7 +25,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 block_devices_result=$(
-  lsblk -Q "NAME =~ '$_containers_target_name_prefix.*'" -np -o PKNAME,FSUSED,FSSIZE,FSUSE% 2>&1
+  lsblk -Q "NAME =~ '$_containers_target_name_prefix.*'" -np -o PKNAME,MOUNTPOINT,FSUSED,FSSIZE,FSUSE% 2>&1
 )
 if [[ "$?" -ne 0 ]]; then
   echo "failed to list mounted devices."
@@ -39,7 +39,7 @@ if [[ -z "$block_devices_result" ]]; then
 fi
 
 rows=""
-while read -r loop_device fs_used fs_size fs_usage; do
+while read -r loop_device mountpoint fs_used fs_size fs_usage; do
   back_file=$(
     losetup "$loop_device" -O BACK-FILE -n 2>&1
   )
@@ -47,12 +47,12 @@ while read -r loop_device fs_used fs_size fs_usage; do
     echo "$back_file" >&2
     exit 1
   fi
-  rows+="$back_file $fs_used $fs_size $fs_usage"
+  rows+="$back_file $mountpoint $fs_used $fs_size $fs_usage"
 done <<<"$block_devices_result"
 
 column_flags=()
 if [[ "$no_headings" = false ]]; then
-  column_flags+=("-N" "FILE,USED,SIZE,USAGE")
+  column_flags+=("-N" "FILE,MOUNTPOINT,USED,SIZE,USAGE")
 fi
 
 column -t "${column_flags[@]}" <<<"$rows"
