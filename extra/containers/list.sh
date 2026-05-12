@@ -52,7 +52,7 @@ done <<<"$block_devices_result"
 
 column_flags=()
 if [[ "$no_headings" = false ]]; then
-  column_flags+=("-N" "File,Used,Size,Usage")
+  column_flags+=("-N" "FILE,USED,SIZE,USAGE")
 fi
 
 column -t "${column_flags[@]}" <<<"$rows"
