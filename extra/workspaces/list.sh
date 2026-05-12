@@ -4,28 +4,55 @@
 # Lists currently mounted workspace containers
 #
 # Usage: util workspaces list
+#
+# Options:
+#  -n, --noheadings    hides headings
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 \. "$DIR/_variables.sh"
 
-loop_devices_result=$(
-  lsblk -Q "MOUNTPOINT =~ '$_workspaces_mount_path'" -np -o PKNAME 2>&1
+no_headings=false
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  -n | --noheadings)
+    no_headings=true
+    shift
+    ;;
+  *)
+    break
+    ;;
+  esac
+done
+
+block_devices_result=$(
+  lsblk -Q "MOUNTPOINT =~ '$_workspaces_mount_path'" -np -o PKNAME,FSUSED,FSSIZE,FSUSE% 2>&1
 )
 if [[ "$?" -ne 0 ]]; then
   echo "failed to list mounted devices."
-  echo "$loop_devices_result"
+  echo "$block_devices_result"
   exit 1
 fi
 
-if [[ -z "$loop_devices_result" ]]; then
+if [[ -z "$block_devices_result" ]]; then
   echo "no active workspace found."
   exit 1
 fi
 
-readarray -t loop_devices <<<"$loop_devices_result"
-for loop_device in "${loop_devices[@]}"; do
+rows=""
+while read -r loop_device fs_used fs_size fs_usage; do
   back_file=$(
-    losetup "$loop_device" -O BACK-FILE -n
+    losetup "$loop_device" -O BACK-FILE -n 2>&1
   )
-  echo "$back_file"
-done
+  if [[ "$?" -ne 0 ]]; then
+    echo "$back_file" >&2
+    exit 1
+  fi
+  rows+="$back_file $fs_used $fs_size $fs_usage"
+done <<<"$block_devices_result"
+
+column_flags=()
+if [[ "$no_headings" = false ]]; then
+  column_flags+=("-N" "File,Used,Size,Usage")
+fi
+
+column -t "${column_flags[@]}" <<<"$rows"
