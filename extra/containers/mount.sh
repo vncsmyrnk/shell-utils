@@ -6,8 +6,13 @@
 # Usage: util containers mount <path/to/container> <path/to/target>
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/containers/_lib.sh
 \. "$DIR/_lib.sh"
+
+# shellcheck source=extra/containers/_variables.sh
 \. "$DIR/_variables.sh"
+: "${_containers_target_name_prefix:=}"
 
 src="$1"
 target="$2"

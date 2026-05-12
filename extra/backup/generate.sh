@@ -36,8 +36,8 @@ main() {
     printf "backup failed for unknown reasons\n" >&2
   fi
 
-  backup_size=$(ls -lh "$SHELL_UTILS_BACKUP_ZIP_FILE_PATH" | awk '{ print $5 }')
-  printf "Backup file generated at $SHELL_UTILS_BACKUP_ZIP_FILE_PATH [$backup_size]\n"
+  backup_size=$(du -h "$SHELL_UTILS_BACKUP_ZIP_FILE_PATH" | awk '{ print $1 }')
+  echo "Backup file generated at $SHELL_UTILS_BACKUP_ZIP_FILE_PATH [$backup_size]"
 
   encrypt_backup_zip
 
@@ -49,15 +49,15 @@ compress_files() {
   IFS=' '
   for file_path in $SHELL_UTILS_BKP_PATHS; do
     if [ -d "$file_path" ]; then
-      dir_size=$(du -sh $file_path | awk '{ print $1 }')
-      printf "Adding $file_path to be compressed [$dir_size]\n"
+      dir_size=$(du -sh "$file_path" | awk '{ print $1 }')
+      echo "Adding $file_path to be compressed [$dir_size]"
       zip -rq "$SHELL_UTILS_BACKUP_ZIP_FILE_PATH" "$file_path"
     elif [ -f "$file_path" ]; then
-      file_size=$(ls -lh "$file_path" | awk '{ print $5 }')
-      printf "Adding $file_path to be compressed [$file_size]\n"
+      file_size=$(du -h "$file_path" | awk '{ print $1 }')
+      echo "Adding $file_path to be compressed [$file_size]"
       zip -q "$SHELL_UTILS_BACKUP_ZIP_FILE_PATH" "$file_path"
     else
-      printf "Failed to add $file_path. It does not exist\n"
+      echo "Failed to add $file_path. It does not exist"
     fi
   done
 
@@ -94,11 +94,10 @@ encrypt_backup_zip() {
     return
   fi
 
-  openssl enc -aes-256-cbc -pbkdf2 -iter 100000 -salt \
+  if ! openssl enc -aes-256-cbc -pbkdf2 -iter 100000 -salt \
     -in "$SHELL_UTILS_BACKUP_ZIP_FILE_PATH" \
     -out "$SHELL_UTILS_BACKUP_ENCRYPTED_FILE_PATH" \
-    -pass env:SHELL_UTILS_BACKUP_ENCRYPT_PASSWORD
-  if [ $? -ne 0 ]; then
+    -pass env:SHELL_UTILS_BACKUP_ENCRYPT_PASSWORD; then
     printf "encryption failed\n" >&2
     exit 1
   fi

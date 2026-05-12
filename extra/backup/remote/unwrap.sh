@@ -34,14 +34,13 @@ check_dependencies() {
 
 decrypt_backup() {
   dest_decrypted_file=$(basename "$1" | cut -d '.' -f1)
-  dest_decrypted_file="$dest_decrypted_file.$(printf "$1" | cut -d '.' -f2)"
+  dest_decrypted_file="$dest_decrypted_file.$(cut -d '.' -f2 <<<"$dest_decrypted_file")"
   dest_backup_file="$SHELL_UTILS_REMOTE_UNWRAP_DEST/$dest_decrypted_file"
 
-  openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -salt \
+  if ! openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -salt \
     -in "$1" \
     -out "$dest_backup_file" \
-    -pass env:SHELL_UTILS_BACKUP_ENCRYPT_PASSWORD
-  if [ $? -ne 0 ]; then
+    -pass env:SHELL_UTILS_BACKUP_ENCRYPT_PASSWORD; then
     echo "decryption failed" >&2
     exit 1
   fi

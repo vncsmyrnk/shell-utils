@@ -8,8 +8,13 @@
 # Usage: util workspaces set <path/to/container>
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/containers/_lib.sh
 \. "$DIR/../containers/_lib.sh"
+
+# shellcheck source=extra/workspaces/_variables.sh
 \. "$DIR/_variables.sh"
+: "${_workspaces_mount_path:=}"
 
 SHELL_UTILS_WORKSPACES_DEFAULT=${SHELL_UTILS_WORKSPACES_DEFAULT:-}
 
@@ -25,8 +30,7 @@ _ssh_key_add() {
   fi
 
   local ssh_result
-  ssh_result=$(ssh-add "$key")
-  if [[ "$?" -ne 0 ]]; then
+  if ! ssh_result=$(ssh-add "$key"); then
     echo "$ssh_result" >&2
     return 1
   fi
@@ -52,18 +56,18 @@ main() {
 
   _container_mount "$src" "$target_name" "$target" || exit 1
 
-  stow_result=$(
+  local stow_result
+  if ! stow_result=$(
     stow -d "$target" -t "$HOME" .
-  )
-  if [[ "$?" -ne 0 ]]; then
+  ); then
     echo "failed to stow workspace." >&2
     echo "$stow_result" >&2
     _container_unmount "$target_name" "$target"
     exit 1
   fi
 
-  ssh_result=$(_ssh_key_add)
-  if [[ "$?" -ne 0 ]]; then
+  local ssh_result
+  if ! ssh_result=$(_ssh_key_add); then
     echo "$ssh_result" >&2
   fi
 }

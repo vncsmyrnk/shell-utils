@@ -20,8 +20,8 @@ if [ -z "$path_to_mo_file" ] || [ -z "$message_id" ]; then
   exit 1
 fi
 
-path_to_mo_file="$(realpath $path_to_mo_file)"
-if [ ! -f $path_to_mo_file ]; then
+path_to_mo_file="$(realpath "$path_to_mo_file")"
+if [ ! -f "$path_to_mo_file" ]; then
   printf "file not found\n" >&2
   exit 1
 fi

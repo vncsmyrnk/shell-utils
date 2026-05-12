@@ -9,7 +9,10 @@
 #  -n, --noheadings    hides headings
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/containers/_variables.sh
 \. "$DIR/_variables.sh"
+: "${_containers_target_name_prefix:=}"
 
 no_headings=false
 while [[ $# -gt 0 ]]; do
@@ -24,10 +27,9 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-block_devices_result=$(
+if ! block_devices_result=$(
   lsblk -Q "NAME =~ '$_containers_target_name_prefix.*'" -np -o PKNAME,MOUNTPOINT,FSUSED,FSSIZE,FSUSE% 2>&1
-)
-if [[ "$?" -ne 0 ]]; then
+); then
   echo "failed to list mounted devices."
   echo "$block_devices_result"
   exit 1
@@ -40,14 +42,13 @@ fi
 
 rows=""
 while read -r loop_device mountpoint fs_used fs_size fs_usage; do
-  back_file=$(
+  if ! back_file=$(
     losetup "$loop_device" -O BACK-FILE -n 2>&1
-  )
-  if [[ "$?" -ne 0 ]]; then
+  ); then
     echo "$back_file" >&2
     exit 1
   fi
-  rows+="$back_file $mountpoint $fs_used $fs_size $fs_usage"
+  rows+="$back_file $mountpoint $fs_used $fs_size $fs_usage"$'\n'
 done <<<"$block_devices_result"
 
 column_flags=()

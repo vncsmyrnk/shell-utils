@@ -6,7 +6,10 @@
 # Usage: util jobs run <name> <command>
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/jobs/_variables
 \. "$DIR/_variables"
+: "${_jobs_session_name:=}"
 
 job_name="$1"
 shift

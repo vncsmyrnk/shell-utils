@@ -8,14 +8,18 @@
 # Usage: util workspaces unset <path/to/container>
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/containers/_lib.sh
 \. "$DIR/../containers/_lib.sh"
+
+# shellcheck source=extra/containers/_lib.sh
 \. "$DIR/_variables.sh"
+: "${_workspaces_mount_path:=}"
 
 SHELL_UTILS_WORKSPACES_DEFAULT=${SHELL_UTILS_WORKSPACES_DEFAULT:-}
 
 ssh_key_remove() {
-  result=$(ssh-add -D)
-  if [[ "$?" -ne 0 ]]; then
+  if ! result=$(ssh-add -D); then
     echo "$result" >&2
     return 1
   fi
@@ -39,10 +43,9 @@ main() {
   target_name=$(basename "$src" | rev | cut -f2- -d "." | rev)
   target="$_workspaces_mount_path/$target_name"
 
-  stow_result=$(
+  if ! stow_result=$(
     stow -D -d "$target" -t "$HOME" .
-  )
-  if [[ "$?" -ne 0 ]]; then
+  ); then
     echo "failed to unstow workspace." >&2
     echo "$stow_result" >&2
     exit 1

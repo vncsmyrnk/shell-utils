@@ -12,8 +12,7 @@ _container_mount() {
 
   sudo -v
 
-  open_result=$(sudo cryptsetup open "$src" "$target_name")
-  if [[ "$?" -ne 0 ]]; then
+  if ! open_result=$(sudo cryptsetup open "$src" "$target_name"); then
     echo "failed to open container." >&2
     echo "$open_result" >&2
     return 1
@@ -22,8 +21,7 @@ _container_mount() {
   mkdir -p "$target"
   mapper_path="/dev/mapper/$target_name"
 
-  mount_result=$(sudo mount "$mapper_path" "$target")
-  if [[ "$?" -ne 0 ]]; then
+  if ! mount_result=$(sudo mount "$mapper_path" "$target"); then
     echo "failed to mount container." >&2
     echo "$mount_result" >&2
     sudo cryptsetup close "$target_name"
@@ -36,8 +34,7 @@ _container_mounted() {
   src="$1"
 
   local loop_device
-  loop_device=$(losetup -j "$src" 2>&1)
-  if [[ "$?" -ne 0 ]]; then
+  if ! loop_device=$(losetup -j "$src" 2>&1); then
     echo "failed to fetch loop device." >&2
     echo "$target" >&2
     return 1
@@ -48,11 +45,10 @@ _container_mounted() {
     return 1
   fi
 
-  mountpoint=$(
+  if ! mountpoint=$(
     lsblk -n -o MOUNTPOINT "$(cut -d: -f1 <<<"$loop_device")" 2>&1 |
       awk 'NF'
-  )
-  if [[ "$?" -ne 0 ]]; then
+  ); then
     echo "failed to fetch mountpoint." >&2
     echo "$mountpoint" >&2
   fi
@@ -67,15 +63,13 @@ _container_unmount() {
 
   sudo -v
 
-  unmount_result=$(sudo umount "$target")
-  if [[ "$?" -ne 0 ]]; then
+  if ! unmount_result=$(sudo umount "$target"); then
     echo "failed to unmount container." >&2
     echo "$unmount_result" >&2
     return 1
   fi
 
-  close_result=$(sudo cryptsetup close "$target_name")
-  if [[ "$?" -ne 0 ]]; then
+  if ! close_result=$(sudo cryptsetup close "$target_name"); then
     echo "failed to close container." >&2
     echo "$close_result" >&2
     return 1

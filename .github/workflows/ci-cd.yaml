@@ -52,7 +52,7 @@ jobs:
       - uses: extractions/setup-just@v1
 
       - name: Shellcheck
-        run: just shellcheck error
+        run: just shellcheck
 
   update-pkgbuild:
     needs: [ci-pkgbuild, ci-scripts]

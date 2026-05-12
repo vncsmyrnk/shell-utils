@@ -13,7 +13,10 @@
 # Usage: util environment exec [-f file] <command>
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/environment/_variables
 \. "$DIR/_variables"
+: "${_secrets_path:=}"
 
 secrets_path="$_secrets_path"
 

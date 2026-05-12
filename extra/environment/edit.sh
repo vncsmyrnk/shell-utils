@@ -9,7 +9,10 @@
 # Usage: util environments edit [-f file]
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/workspaces/_variables.sh
 \. "$DIR/_variables"
+: "${_secrets_path:=}"
 
 secrets_path="$_secrets_path"
 

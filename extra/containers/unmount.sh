@@ -6,8 +6,13 @@
 # Usage: util containers unmount <mountpoint>
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/containers/_lib.sh
 \. "$DIR/_lib.sh"
+
+# shellcheck source=extra/containers/_variables.sh
 \. "$DIR/_variables.sh"
+: "${_containers_target_name_prefix:=}"
 
 src="$1"
 if [[ -z "$src" ]]; then
@@ -15,8 +20,7 @@ if [[ -z "$src" ]]; then
   exit 1
 fi
 
-target=$(_container_mounted "$src")
-if [[ "$?" -ne 0 ]]; then
+if ! target=$(_container_mounted "$src"); then
   echo "$target" >&2
   exit 1
 fi
