@@ -7,11 +7,12 @@ shift "$subcommand_level" words
 _arguments \
   "${common_flags[@]}"
 
-containers_result=$(util containers list)
+containers_result=$(util containers list --noheadings)
 if [[ "$?" -ne 0 ]]; then
   return
 fi
 
+containers_result=$(awk '{ print $1 }' <<<"$containers_result")
 containers_relative_dirs=$(
   xargs -I{} realpath {} --relative-to=. <<<"$containers_result"
 )

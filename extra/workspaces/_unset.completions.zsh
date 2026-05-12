@@ -7,11 +7,12 @@ shift "$subcommand_level" words
 _arguments \
   "${common_flags[@]}"
 
-workspaces_result=$(util workspaces list)
+workspaces_result=$(util workspaces list --noheadings)
 if [[ "$?" -ne 0 ]]; then
   return
 fi
 
+workspaces_result=$(awk '{ print $1 }' <<<"$workspaces_result")
 workspaces_relative_dirs=$(
   xargs -I{} realpath {} --relative-to=. <<<"$workspaces_result"
 )
