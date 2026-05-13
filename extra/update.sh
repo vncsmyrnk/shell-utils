@@ -18,7 +18,7 @@ main() {
   printf "[UTIL] Package managers OK\n"
 
   # Checks for global update scripts on utils folder
-  [ -x "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" ] && {
+  [[ -x "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" ]] && {
     printf "\n[UTIL] Now updating on-update scripts\n"
     find "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" \
       -type f \
@@ -29,7 +29,7 @@ main() {
   }
 
   # Checks for global update script
-  [ -x "$UPDATE_GLOBAL_SCRIPT" ] && {
+  [[ -x "$UPDATE_GLOBAL_SCRIPT" ]] && {
     printf "\n[UTIL] Now using the global update script\n"
     "$UPDATE_GLOBAL_SCRIPT"
   }

@@ -1,15 +1,26 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # [help]
 # Lists backups uploaded to the current set rclone remote
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/_lib.sh
+\. "$DIR/../../_lib.sh"
+
+# shellcheck source=extra/_error.sh
+\. "$DIR/../../_error.sh"
 
 SHELL_UTILS_BACKUP_RCLONE_REMOTE=${SHELL_UTILS_BACKUP_RCLONE_REMOTE:-"gdrive"}
 SHELL_UTILS_BACKUP_RCLONE_FOLDER=${SHELL_UTILS_BACKUP_RCLONE_FOLDER:-"bkp"}
 
 if ! command -v rclone >/dev/null; then
-  echo "list failed: rclone not found." >&2
-  exit 1
+  _lib_fatal "list failed: rclone not found."
 fi
 
-rclone ls "$SHELL_UTILS_BACKUP_RCLONE_REMOTE:$SHELL_UTILS_BACKUP_RCLONE_FOLDER" |
-  awk '{ print $2 }'
+files=$(rclone ls "$SHELL_UTILS_BACKUP_RCLONE_REMOTE:$SHELL_UTILS_BACKUP_RCLONE_FOLDER")
+if [[ -z "$files" ]]; then
+  echo "no files found." >&2
+fi
+
+awk '{ print $2 }' <<<"$files"

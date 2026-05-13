@@ -11,43 +11,51 @@
 # The TOTP duration can be defined with $TOTP_CURRENT_TIME.
 #
 # Entities can be created with `$ util totp add`
+#
+# Usage: totp generate [ENTITY]
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/_lib.sh
+\. "$DIR/../_lib.sh"
+
+# shellcheck source=extra/_error.sh
+\. "$DIR/../_error.sh"
 
 TOTP_SECRETS_DIR=${TOTP_SECRETS_DIR:-"$HOME/.secrets/totp"}
 TOTP_CURRENT_TIME=${TOTP_CURRENT_TIME:-"5 seconds"}
 
 error() {
-  printf "%s\n" "$1"
-  exit 1
-}
-
-usage() {
-  printf "%s\n" "$1"
-  echo "usage: totp generate [ENTITY]"
+  echo -e "$1" >&2
   exit 1
 }
 
 main() {
+  local entity
   entity="$1"
   if [[ -z "$entity" ]]; then
-    usage "entity argument is required."
+    _lib_fatal "entity argument is required."
   fi
 
   if ! command -v oathtool &>/dev/null; then
-    error "oath-toolkit is required for this script."
+    _lib_fatal "oath-toolkit is required for this script."
   fi
 
+  local secret_file
   secret_file="$TOTP_SECRETS_DIR/$entity.gpg"
   if [[ ! -f "$secret_file" ]]; then
-    error "secret not found for entity.\n\nPlace them at \033[4m$TOTP_SECRETS_DIR\033[0m"
+    _lib_fatal "secret not found for entity.\n\nPlace them at \033[4m$TOTP_SECRETS_DIR\033[0m" >&2
   fi
 
-  totp_code=$(
-    gpg -d -q "$secret_file" | oathtool --totp -b --now "$TOTP_CURRENT_TIME" - || echo "-1"
+  local totp_key
+  totp_key=$(
+    gpg -d -q "$secret_file"
   )
 
-  if [[ "$totp_code" = "-1" ]]; then
-    exit 1
-  fi
+  local totp_code
+  totp_code=$(
+    oathtool --totp -b --now "$TOTP_CURRENT_TIME" - <<<"$totp_key"
+  )
 
   echo "$totp_code"
   if command -v wl-copy &>/dev/null; then

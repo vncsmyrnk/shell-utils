@@ -5,9 +5,22 @@
 #
 # This is useful when storing the username and password as the second and first lines
 # of a pass password to use them on the login page.
+#
+# Usage: util pass cp2l
+#
+# Options:
+#  -t, --first-copy-timeout   Time waited after the user is copied before
+#                             copying the password to the clipboard
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/_lib.sh
+\. "$DIR/../_lib.sh"
+
+# shellcheck source=extra/_error.sh
+\. "$DIR/../_error.sh"
 
 first_copy_timeout=1
-
 while [[ $# -gt 0 ]]; do
   case $1 in
   -t | --first-copy-timeout)
@@ -25,16 +38,12 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$1" ]]; then
-  printf "usage: util pass cp2l <pass-name>\n"
-  exit 1
+  _lib_fatal "an entity is required"
 fi
 
-main() {
-  pass -c2 "$1" >/dev/null || exit 1
-  {
-    sleep "$first_copy_timeout"
-    pass -c "$1" >/dev/null
-  } &
-}
+pass -c2 "$1" >/dev/null
 
-main "$@"
+{
+  sleep "$first_copy_timeout"
+  pass -c "$1" >/dev/null
+} &

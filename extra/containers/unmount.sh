@@ -3,12 +3,18 @@
 # [help]
 # Unmounts an encrypted container
 #
-# Usage: util containers unmount <mountpoint>
+# Usage: util containers unmount <path/to/container>
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # shellcheck source=extra/containers/_lib.sh
 \. "$DIR/_lib.sh"
+
+# shellcheck source=extra/_lib.sh
+\. "$DIR/../_lib.sh"
+
+# shellcheck source=extra/_error.sh
+\. "$DIR/../_error.sh"
 
 # shellcheck source=extra/containers/_variables.sh
 \. "$DIR/_variables.sh"
@@ -16,15 +22,18 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 src="$1"
 if [[ -z "$src" ]]; then
-  echo "source and target are required." >&2
-  exit 1
+  _lib_fatal "source is required."
 fi
 
-if ! target=$(_container_mounted "$src"); then
-  echo "$target" >&2
-  exit 1
-fi
+target=$(
+  set -e
+  _container_mounted "$src"
+)
 
-target_name=$(basename "$target" | rev | cut -f2- -d "." | rev)
+target_name=$(
+  set -e
+  _lib_files_filename_noext "$target"
+)
+
 target_name="$_containers_target_name_prefix$target_name"
 _container_unmount "$target_name" "$target"

@@ -16,60 +16,55 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 \. "$DIR/_variables.sh"
 : "${_workspaces_mount_path:=}"
 
+# shellcheck source=extra/_lib.sh
+\. "$DIR/../_lib.sh"
+
+# shellcheck source=extra/_error.sh
+\. "$DIR/../_error.sh"
+
 SHELL_UTILS_WORKSPACES_DEFAULT=${SHELL_UTILS_WORKSPACES_DEFAULT:-}
 
 _ssh_key_add() {
   local key
-  key=$(
+  if ! key=$(
     find ~/.ssh/ -maxdepth 2 \
       -type f -name "id_*" -not -name "*.pub"
-  )
-  if [[ -z "$key" ]]; then
+  ); then
     echo "ssh key not found" >&2
     return 1
   fi
 
-  local ssh_result
-  if ! ssh_result=$(ssh-add "$key"); then
-    echo "$ssh_result" >&2
-    return 1
-  fi
+  ssh-add "$key"
 }
 
 main() {
   src="$1"
   if [[ -z "$src" ]]; then
     if [[ ! -f "$SHELL_UTILS_WORKSPACES_DEFAULT" ]]; then
-      echo "default workspace not found."
-      exit 1
+      _lib_fatal "default workspace not found."
     fi
     src="$SHELL_UTILS_WORKSPACES_DEFAULT"
   fi
 
-  if _container_mounted "$src" >/dev/null 2>&1; then
-    echo "container is already mounted." >&2
-    exit 1
+  # shellcheck disable=SC2310
+  if _container_mounted "$src" >/dev/null; then
+    _lib_fatal "container is already mounted."
   fi
 
-  target_name=$(basename "$src" | rev | cut -f2- -d "." | rev)
+  target_name=$(
+    set -e
+    _lib_files_filename_noext "$src"
+  )
   target="$_workspaces_mount_path/$target_name"
 
-  _container_mount "$src" "$target_name" "$target" || exit 1
+  _container_mount "$src" "$target_name" "$target"
 
-  local stow_result
-  if ! stow_result=$(
-    stow -d "$target" -t "$HOME" .
-  ); then
-    echo "failed to stow workspace." >&2
-    echo "$stow_result" >&2
+  if ! stow -d "$target" -t "$HOME" .; then
     _container_unmount "$target_name" "$target"
     exit 1
   fi
 
-  local ssh_result
-  if ! ssh_result=$(_ssh_key_add); then
-    echo "$ssh_result" >&2
-  fi
+  _ssh_key_add
 }
 
 main "$@"

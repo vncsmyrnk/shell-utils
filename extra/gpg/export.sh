@@ -2,6 +2,16 @@
 
 # [help]
 # Exports the public and private gpg keys for an ID
+#
+# Usage: util gpg export <gpg-email>
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/_lib.sh
+\. "$DIR/../_lib.sh"
+
+# shellcheck source=extra/_error.sh
+\. "$DIR/../_error.sh"
 
 SHELL_UTILS_GPG_EXPORT_TARGET_PATH=${SHELL_UTILS_GPG_EXPORT_TARGET_PATH:-/tmp}
 SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD=${SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD-:}
@@ -10,7 +20,6 @@ SHELL_UTILS_GPG_RCLONE_FOLDER=${SHELL_UTILS_GPG_RCLONE_FOLDER:-}
 
 remote=false
 gpg_email=""
-
 while [[ $# -gt 0 ]]; do
   case $1 in
   --remote)
@@ -18,13 +27,11 @@ while [[ $# -gt 0 ]]; do
     shift
     ;;
   -*)
-    echo "Unknown option: $1"
-    exit 1
+    _lib_fatal "Unknown option: $1"
     ;;
   *)
     if [[ -n "$gpg_email" ]]; then
-      echo "Error: Multiple arguments provided."
-      exit 1
+      _lib_fatal "Error: Multiple arguments provided."
     fi
     gpg_email="$1"
     shift
@@ -32,9 +39,8 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [ -z "$gpg_email" ]; then
-  echo "Usage: util gpg export <gpg-email>"
-  exit 1
+if [[ -z "$gpg_email" ]]; then
+  _lib_fatal "email is required."
 fi
 
 timestamp=$(date +"%Y%m%d%H%M%S")
@@ -51,13 +57,13 @@ export_gpg_key() {
 }
 
 zip_and_upload_key() {
-  if [ -z "$SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD" ]; then
-    printf "Define the \$SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD variable to properly encrypt the key compressed file."
+  if [[ -z "$SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD" ]]; then
+    echo "Define the \$SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD variable to properly encrypt the key compressed file." >&2
     return 1
   fi
 
-  if [ -z "$SHELL_UTILS_GPG_RCLONE_REMOTE" ] || [ -z "$SHELL_UTILS_GPG_RCLONE_FOLDER" ]; then
-    printf "Define \$SHELL_UTILS_GPG_RCLONE_REMOTE and \$SHELL_UTILS_GPG_RCLONE_FOLDER variables to properly upload the key compressed file."
+  if [[ -z "$SHELL_UTILS_GPG_RCLONE_REMOTE" ]] || [[ -z "$SHELL_UTILS_GPG_RCLONE_FOLDER" ]]; then
+    echo "Define \$SHELL_UTILS_GPG_RCLONE_REMOTE and \$SHELL_UTILS_GPG_RCLONE_FOLDER variables to properly upload the key compressed file." >&2
     return 1
   fi
 
@@ -78,7 +84,7 @@ zip_and_upload_key() {
 main() {
   export_gpg_key "$gpg_email"
 
-  if [ "$remote" = true ]; then
+  if [[ "$remote" = true ]]; then
     zip_and_upload_key
   fi
 }

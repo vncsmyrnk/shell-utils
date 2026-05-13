@@ -2,7 +2,19 @@
 
 # [help]
 # Generates random hex based pseudo-random strings using openssl
+#
+# Usage: util random generate
+#
+# Options:
+#  -l, --length   Length of the random string being generated (default: 10)
 
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/_lib.sh
+\. "$DIR/../_lib.sh"
+
+# shellcheck source=extra/_error.sh
+\. "$DIR/../_error.sh"
 if ! command -v openssl >/dev/null; then
   exit 1
 fi
@@ -25,10 +37,5 @@ while [[ $# -gt 0 ]]; do
 done
 
 bytes=$((("$length" / 2) + 1))
-random_string=$(openssl rand -hex "$bytes" 2>/dev/null || echo -n "")
-output="${random_string:0:$length}"
-if [[ -z "$output" ]]; then
-  echo "failed to generate random string using openssl"
-  exit 1
-fi
-echo "$output"
+random_string=$(openssl rand -hex "$bytes")
+echo "${random_string:0:$length}"

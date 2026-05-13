@@ -3,21 +3,25 @@
 # [help]
 # Stops docker containers
 
-if ! command -v ifne >/dev/null; then
-  echo "The \`moreutils\` is necessary for this script to work properly."
-  exit 1
-fi
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# shellcheck source=extra/_lib.sh
+\. "$DIR/../_lib.sh"
+
+# shellcheck source=extra/_error.sh
+\. "$DIR/../_error.sh"
 
 if [[ " $* " == *" --all "* ]]; then
-  docker ps |
-    awk 'NR!=1 { print $1 }' |
-    ifne xargs docker stop
+  container_ids=$(docker ps -q)
+  if [[ -z "$container_ids" ]]; then
+    _lib_fatal "no container is running."
+  fi
+  xargs -P 5 docker stop <<<"$container_ids"
   exit 0
 fi
 
 if [[ -z "$1" ]]; then
-  echo "An ID or \`-all\` is required."
-  exit 1
+  _lib_fatal "an ID or \`-all\` is required."
 fi
 
 docker stop "$1"

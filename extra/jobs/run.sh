@@ -37,8 +37,7 @@ if ! tmux list-windows -t "$_jobs_session_name" >/dev/null 2>&1; then
   exit 0
 fi
 
-if tmux list-windows -t "$_jobs_session_name" -F "#{m:$job_name,#{window_name}}" | grep -q 1; then
-  exit 1
-fi
+tmux_windows=$(tmux list-windows -t "$_jobs_session_name" -F "#{m:$job_name,#{window_name}}")
+grep -q 1 <<<"$tmux_windows"
 
 tmux new-window -t "$_jobs_session_name" -n "$job_name" "$job_exec"
