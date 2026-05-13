@@ -2,7 +2,7 @@ name: CI/CD workflow
 
 on:
   push:
-    branches: [ "main" ]
+  pull_request:
 
 jobs:
   ci-nix:
@@ -54,9 +54,9 @@ jobs:
       - name: Shellcheck
         run: just shellcheck
 
-  update-pkgbuild:
+  cd-pkgbuild:
     needs: [ci-pkgbuild, ci-scripts]
-    if: ${{ needs.ci-pkgbuild.outputs.pkgbuild == 'true' && !contains(github.event.head_commit.message, '[skip-cd]') }}
+    if: ${{ github.ref == 'refs/heads/main' && needs.ci-pkgbuild.outputs.pkgbuild == 'true' && !contains(github.event.head_commit.message, '[skip-cd]') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -82,9 +82,9 @@ jobs:
           commit_message: "Update AUR package"
           ssh_keyscan_types: rsa,ecdsa,ed25519
 
-  update-apt:
+  cd-apt:
     needs: [ci-nix, ci-scripts]
-    if: ${{ !contains(github.event.head_commit.message, '[skip-cd]') }}
+    if: ${{ github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip-cd]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
