@@ -33,6 +33,5 @@ run *args:
 run-config *args:
   @go run ./cmd/config/main.go {{args}}
 
-shellcheck severity="style":
-  @shellcheck -x -s bash -S {{severity}} $(rg "^#.*bash.*" extra -l)
-  @shellcheck -x -s sh   -S {{severity}} $(rg "^#.*\/sh.*" extra -l)
+shellcheck *flags:
+  @shellcheck {{flags}} $(rg "^#.*(bash|\/sh).*" extra -l)
