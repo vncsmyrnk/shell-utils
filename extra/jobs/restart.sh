@@ -3,7 +3,7 @@
 # [help]
 # Restarts a currently running job
 #
-# Usage: util jobs restart <name>
+# Usage: util jobs restart [NAME]
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

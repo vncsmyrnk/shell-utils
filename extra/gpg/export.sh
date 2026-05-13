@@ -3,7 +3,10 @@
 # [help]
 # Exports the public and private gpg keys for an ID
 #
-# Usage: util gpg export <gpg-email>
+# Usage: util gpg export [EMAIL] [OPTIONS]
+#
+# Options:
+#  --remote   Push the encrypted backup to a rclone remote
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

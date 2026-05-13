@@ -3,7 +3,7 @@
 # [help]
 # Executes a command on a new window in the default session
 #
-# Usage: util jobs run <name> <command>
+# Usage: util jobs run [NAME] [COMMAND]
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

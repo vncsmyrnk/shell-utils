@@ -3,7 +3,7 @@
 # [help]
 # List all running jobs
 #
-# Usage: util jobs list [--all]
+# Usage: util jobs list
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

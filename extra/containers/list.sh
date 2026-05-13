@@ -3,10 +3,10 @@
 # [help]
 # Lists currently mounted containers
 #
-# Usage: util containers list
+# Usage: util containers list [OPTIONS]
 #
 # Options:
-#  -n, --noheadings    hides headings
+#  -n, --noheadings   Hide heading
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

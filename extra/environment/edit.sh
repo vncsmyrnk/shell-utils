@@ -6,7 +6,10 @@
 # The default secret path is `$HOME/.secrets/sops/secrets.env` but it can be
 # overriden with `-f|--file`.
 #
-# Usage: util environments edit [-f file]
+# Usage: util environments edit [OPTIONS]
+#
+# Options:
+#  -f, --file [FILE]   Secret file
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

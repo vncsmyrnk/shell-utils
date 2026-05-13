@@ -3,7 +3,7 @@
 # [help]
 # Mounts an encrypted container from a file
 #
-# Usage: util containers mount <path/to/container> <path/to/target>
+# Usage: util containers mount [CONTAINER] [MOUNTPOINT]
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

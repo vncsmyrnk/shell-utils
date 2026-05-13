@@ -3,7 +3,10 @@
 # [help]
 # Pages the job standard output
 #
-# Usage: util jobs log <name>
+# Usage: util jobs log [NAME] [OPTIONS]
+#
+# Options
+#  -f   Follow output on the current prompt
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

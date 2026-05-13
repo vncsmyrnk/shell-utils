@@ -3,7 +3,7 @@
 # [help]
 # Attaches to the tmux session and window of a job
 #
-# Usage: util jobs attach <name>
+# Usage: util jobs attach [NAME]
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

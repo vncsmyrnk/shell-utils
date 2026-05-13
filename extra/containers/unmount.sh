@@ -3,7 +3,7 @@
 # [help]
 # Unmounts an encrypted container
 #
-# Usage: util containers unmount <path/to/container>
+# Usage: util containers unmount [CONTAINER]
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

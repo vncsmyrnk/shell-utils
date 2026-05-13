@@ -3,7 +3,7 @@
 # [help]
 # Generates an encrypted container file formated using ext4
 #
-# Usage: util container generate <path/to/img> <size>
+# Usage: util container generate [FILE] [SIZE]
 #
 # Example: util container generate containter.img 2G
 

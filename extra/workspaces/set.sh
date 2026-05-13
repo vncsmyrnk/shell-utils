@@ -5,7 +5,7 @@
 #
 # A default workspace can be set as `$SHELL_UTILS_WORKSPACES_DEFAULT`.
 #
-# Usage: util workspaces set <path/to/container>
+# Usage: util workspaces set [CONTAINER]
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

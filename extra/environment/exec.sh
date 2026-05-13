@@ -10,7 +10,12 @@
 # The default secret path is `$HOME/.secrets/sops/secrets.env` but it can be
 # overriden with `-f|--file`.
 #
-# Usage: util environment exec [-f file] <command>
+# Usage: util environment exec [OPTIONS] [COMMAND]
+#
+# Options:
+#  -f, --file [FILE]   Secret file
+#
+# Example: util environment exec -f /tmp/file.env gcloud project list
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 

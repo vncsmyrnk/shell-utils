@@ -3,7 +3,10 @@
 # [help]
 # Kill running jobs
 #
-# Usage: util jobs kill <name> [--all]
+# Usage: util jobs kill [NAME] [OPTIONS]
+#
+# Options:
+#  --all   Kill all jobs
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
