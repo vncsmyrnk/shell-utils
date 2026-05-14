@@ -27,14 +27,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check for PKGBUILD changes
-        id: filter
-        uses: dorny/paths-filter@v4
-        with:
-          filters: |
-            pkgbuild:
-              - 'PKGBUILD'
-
       - name: Build Arch Package
         uses: edlanglois/pkgbuild-action@v1
         with:
@@ -54,24 +46,33 @@ jobs:
       - name: Shellcheck
         run: just shellcheck
 
+  cd-check:
+    needs: [ci-nix, ci-pkgbuild, ci-scripts]
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' }}
+    outputs:
+      pkgbuild-changed: ${{ steps.filter.outputs.pkgbuild-changed }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check for server version change
+        uses: dorny/paths-filter@v4
+        id: filter
+        with:
+          filters: |
+            pkgbuild-changed:
+              - 'PKGBUILD'
+
   cd-pkgbuild:
-    needs: [ci-pkgbuild, ci-scripts]
-    if: ${{ github.ref == 'refs/heads/main' && needs.ci-pkgbuild.outputs.pkgbuild == 'true' && !contains(github.event.head_commit.message, '[skip-cd]') }}
+    needs: [cd-check]
+    if: ${{ needs.cd-check.outputs.pkgbuild_changed == 'true' && !contains(github.event.head_commit.message, '[skip-cd]') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check for PKGBUILD changes
-        id: filter
-        uses: dorny/paths-filter@v4
-        with:
-          filters: |
-            pkgbuild:
-              - 'PKGBUILD'
-
       - name: Publish AUR package
-        if: steps.filter.outputs.pkgbuild == 'true'
         uses: KSXGitHub/github-actions-deploy-aur@v4.1.3
         with:
           pkgname: shell-utils-git
@@ -83,8 +84,8 @@ jobs:
           ssh_keyscan_types: rsa,ecdsa,ed25519
 
   cd-apt:
-    needs: [ci-nix, ci-scripts]
-    if: ${{ github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip-cd]') }}
+    needs: [cd-check]
+    if: ${{ !contains(github.event.head_commit.message, '[skip-cd]') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
