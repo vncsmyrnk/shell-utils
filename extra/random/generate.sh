@@ -8,13 +8,11 @@
 # Options:
 #  -l, --length   Length of the random string being generated (default: 10)
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # shellcheck source=extra/_lib.sh
-\. "$DIR/../_lib.sh"
+\. "./../_lib.sh"
 
 # shellcheck source=extra/_error.sh
-\. "$DIR/../_error.sh"
+\. "./../_error.sh"
 if ! command -v openssl >/dev/null; then
   exit 1
 fi

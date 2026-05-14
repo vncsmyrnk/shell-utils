@@ -14,6 +14,9 @@ import (
 	"syscall"
 
 	"shellutils/internal"
+	"shellutils/internal/security"
+
+	"golang.org/x/sys/unix"
 )
 
 func main() {
@@ -30,11 +33,7 @@ func main() {
 		return
 	}
 
-	for {
-		if i <= 1 {
-			break
-		}
-
+	for i > 1 {
 		lastCurrentArg := os.Args[i-1]
 		_, atoiErr := strconv.Atoi(lastCurrentArg[0:1])
 		if lastCurrentArg[0] == '-' || atoiErr == nil {
@@ -48,7 +47,7 @@ func main() {
 			if len(matches) > 1 {
 				fatalF("ambiguity detected")
 			}
-			path = matches[0]
+			path, _ = filepath.Abs(matches[0])
 			executableFound = true
 			break
 		}
@@ -59,7 +58,7 @@ func main() {
 	if !executableFound {
 		err := catDirectoryEntries(filepath.Join(os.Args[1:]...), scriptsLookupPaths...)
 		if err != nil {
-			if err == dirNotFoundErr {
+			if err == errDirNotFound {
 				fatalF("executable not found")
 			}
 			fatalF("failed to cat directory entries for path: %s", err)
@@ -83,15 +82,32 @@ func main() {
 
 	if slices.Contains(args, "--to-stdout") {
 		if s, _ := isScript(path); !s {
-			fatalF("Invalid option, the target is not a script.")
+			fatalF("invalid option, the target is not a script.")
 		}
 		cat(path)
 		os.Exit(0)
 	}
 
-	cmd := exec.Command(path, os.Args[i:]...)
+	verifiedBytes, err := security.VerifyScript(path)
+	if err != nil {
+		fatalF("security verification failed: %s\n\nmake sure to have properly installed shell-utils and trust user scripts using \033[4mutil config trust\033[0m ", err)
+	}
 
-	// Connect the command's standard streams directly to the Go program's streams.
+	fd, err := unix.MemfdCreate("util-script", 0)
+	if err != nil {
+		fatalF("failed to create memfd: %s", err)
+	}
+
+	if _, err := unix.Write(fd, verifiedBytes); err != nil {
+		fatalF("failed to write to memfd: %s", err)
+	}
+
+	scriptFile := os.NewFile(uintptr(fd), "util-script")
+
+	cmd := exec.Command("/proc/self/fd/3", os.Args[i:]...)
+	cmd.ExtraFiles = []*os.File{scriptFile}
+	cmd.Dir = filepath.Dir(path)
+
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -99,7 +115,7 @@ func main() {
 	cmd.Env = append(cmd.Environ(),
 		fmt.Sprintf("SHELL_UTILS_USER_CONFIG=%s", internal.ConfigUserPath))
 
-	err := cmd.Run()
+	err = cmd.Run()
 	if err != nil {
 		var statusCode int
 		if exitErr, ok := errors.AsType[*exec.ExitError](err); ok {
@@ -125,7 +141,7 @@ func fatalF(s string, args ...any) {
 	os.Exit(1)
 }
 
-var noHelpAvailableForPath = errors.New("No help available")
+var errNoHelpAvailable = errors.New("no help available")
 
 func catHelpSection(p string) error {
 	s, err := helpSection(p)
@@ -141,7 +157,7 @@ func cat(p string) {
 	fmt.Println(string(f))
 }
 
-var dirNotFoundErr = errors.New("no directory found")
+var errDirNotFound = errors.New("no directory found")
 
 func catDirectoryEntries(relativePath string, basePaths ...string) error {
 	for _, p := range basePaths {
@@ -189,7 +205,7 @@ func catDirectoryEntries(relativePath string, basePaths ...string) error {
 		}
 		return nil
 	}
-	return dirNotFoundErr
+	return errDirNotFound
 }
 
 func helpSection(p string) (string, error) {
@@ -198,7 +214,7 @@ func helpSection(p string) (string, error) {
 		`(?m)^# \[help\]\r?\n((?:^#[^\r\n]*(?:\r?\n|$))*)`)
 	matches := fileContentHelpSectionRegexp.FindAllSubmatch(f, -1)
 	if len(matches) == 0 {
-		return "", noHelpAvailableForPath
+		return "", errNoHelpAvailable
 	}
 	fileContentHelpSectionCleanLineRegexp := regexp.MustCompile(`(?m)^# ?`)
 	m := matches[0]
@@ -227,7 +243,11 @@ func isScript(filename string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	defer file.Close()
+	defer func() {
+		if err := file.Close(); err != nil {
+			fatalF(err.Error())
+		}
+	}()
 
 	magic := make([]byte, 2)
 	_, err = io.ReadFull(file, magic)

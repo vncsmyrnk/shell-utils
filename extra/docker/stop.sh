@@ -3,13 +3,11 @@
 # [help]
 # Stops docker containers
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # shellcheck source=extra/_lib.sh
-\. "$DIR/../_lib.sh"
+\. "./../_lib.sh"
 
 # shellcheck source=extra/_error.sh
-\. "$DIR/../_error.sh"
+\. "./../_error.sh"
 
 if [[ " $* " == *" --all "* ]]; then
   container_ids=$(docker ps -q)

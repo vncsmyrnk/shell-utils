@@ -8,16 +8,14 @@
 # Options:
 #  --all   Kill all jobs
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # shellcheck source=extra/_lib.sh
-\. "$DIR/../_lib.sh"
+\. "./../_lib.sh"
 
 # shellcheck source=extra/_error.sh
-\. "$DIR/../_error.sh"
+\. "./../_error.sh"
 
 # shellcheck source=extra/jobs/_variables
-\. "$DIR/_variables"
+\. "./_variables"
 : "${_jobs_session_name:=}"
 
 tmux_kill_pane_ids() {

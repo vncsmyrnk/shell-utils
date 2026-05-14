@@ -7,13 +7,11 @@
 #
 # Example: util container generate containter.img 2G
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # shellcheck source=extra/_lib.sh
-\. "$DIR/../_lib.sh"
+\. "./../_lib.sh"
 
 # shellcheck source=extra/_error.sh
-\. "$DIR/../_error.sh"
+\. "./../_error.sh"
 
 src="$1"
 size="$2"

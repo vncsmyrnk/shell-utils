@@ -8,10 +8,8 @@
 # Options
 #  -f   Follow output on the current prompt
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # shellcheck source=extra/jobs/_variables
-\. "$DIR/_variables"
+\. "./_variables"
 : "${_jobs_log_dir:=}"
 
 _pager=${PAGER:-vim}

@@ -13,16 +13,19 @@ import (
 	flag "github.com/spf13/pflag"
 
 	"shellutils/internal"
+	"shellutils/internal/security"
 )
 
 func main() {
 	helpFlag := flag.BoolP("help", "h", false, "Displays this help message")
 	forceFlag := flag.BoolP("force", "f", false, "Performs the action without confirmation")
+	gpgUser := flag.String("gpg-user", "", "GPG User ID for encrypting/decrypting the private key")
+
 	flag.Usage = func() {
 		fmt.Fprintln(os.Stderr,
 			"Provides actions for managing the scripts available to the util command\n",
 			"\nUsage:\n", "config [command] [options] [flags]\n",
-			"\nCommands:\n", "add\n remove")
+			"\nCommands:\n", "add\n remove\n trust")
 		fmt.Fprintln(os.Stderr, "\nFlags:")
 		flag.PrintDefaults()
 	}
@@ -65,7 +68,9 @@ func main() {
 			os.Exit(1)
 		}
 
-		addCmd.Parse(flag.Args()[1:])
+		if err := addCmd.Parse(flag.Args()[1:]); err != nil {
+			fatalF(err.Error())
+		}
 		input := addInput{
 			srcPath:    addCmd.Arg(0),
 			targetName: *targetName,
@@ -73,12 +78,18 @@ func main() {
 			force:      *forceFlag,
 		}
 		if err := add(input, internal.ConfigUserScriptsPath); err != nil {
-			if errors.Is(err, insufficientArgumentsErr) {
+			if errors.Is(err, errInsufficientArguments) {
 				addCmd.Usage()
 				os.Exit(1)
 			}
 			fmt.Printf("failed to add scripts: %s\n", err)
 			os.Exit(1)
+		}
+		if *gpgUser != "" {
+			if err := trustUserScripts(*gpgUser); err != nil {
+				fmt.Printf("failed to trust user scripts: %s\n", err)
+				os.Exit(1)
+			}
 		}
 	case "remove":
 		if *helpFlag {
@@ -86,19 +97,36 @@ func main() {
 			os.Exit(1)
 		}
 
-		removeCmd.Parse(flag.Args()[1:])
+		if err := removeCmd.Parse(flag.Args()[1:]); err != nil {
+			fatalF(err.Error())
+		}
 		input := removeInput{
 			srcPath: removeCmd.Arg(0),
 			force:   *forceFlag,
 		}
 		if err := remove(input, internal.ConfigUserScriptsPath); err != nil {
-			if errors.Is(err, insufficientArgumentsErr) {
+			if errors.Is(err, errInsufficientArguments) {
 				removeCmd.Usage()
 				os.Exit(1)
 			}
 			fmt.Printf("failed to remove scripts: %s\n", err)
 			os.Exit(1)
 		}
+		if *gpgUser != "" {
+			if err := trustUserScripts(*gpgUser); err != nil {
+				fmt.Printf("failed to trust user scripts: %s\n", err)
+				os.Exit(1)
+			}
+		}
+	case "trust":
+		if *gpgUser == "" {
+			fatalF("--gpg-user is required for the trust command")
+		}
+		if err := trustUserScripts(*gpgUser); err != nil {
+			fmt.Printf("failed to trust user scripts: %s\n", err)
+			os.Exit(1)
+		}
+		fmt.Println("User scripts trusted and signed successfully.")
 	default:
 		flag.Usage()
 		os.Exit(1)
@@ -106,9 +134,9 @@ func main() {
 }
 
 var (
-	insufficientArgumentsErr = errors.New("insufficient arguments")
-	filePathIsRequiredErr    = fmt.Errorf("a file path is required: %w", insufficientArgumentsErr)
-	confirmationFailedErr    = errors.New("confirmation failed")
+	errInsufficientArguments = errors.New("insufficient arguments")
+	errFilePathIsRequired    = fmt.Errorf("a file path is required: %w", errInsufficientArguments)
+	errConfirmationFailed    = errors.New("confirmation failed")
 )
 
 type addInput struct {
@@ -120,7 +148,7 @@ type addInput struct {
 
 func add(a addInput, targetScriptsPath string) error {
 	if a.srcPath == "" {
-		return filePathIsRequiredErr
+		return errFilePathIsRequired
 	}
 
 	if strings.HasPrefix(a.srcPath, "github:") {
@@ -130,7 +158,7 @@ func add(a addInput, targetScriptsPath string) error {
 	src, err := os.Stat(a.srcPath)
 	if err != nil {
 		if e, ok := errors.AsType[syscall.Errno](err); ok && e.Is(os.ErrNotExist) {
-			return errors.New("source path not found.")
+			return errors.New("source path not found")
 		}
 		return err
 	}
@@ -149,7 +177,7 @@ func add(a addInput, targetScriptsPath string) error {
 	if err == nil && !f.IsDir() {
 		if !a.force && !promptDestructiveConfirmation(
 			"There is already a script at this target, it will be overwritten") {
-			return confirmationFailedErr
+			return errConfirmationFailed
 		}
 		if err := os.Remove(destPath); err != nil {
 			return err
@@ -158,7 +186,7 @@ func add(a addInput, targetScriptsPath string) error {
 
 	if _, err := os.Stat(filepath.Dir(destPath)); err != nil {
 		if e, ok := errors.AsType[syscall.Errno](err); ok && e.Is(os.ErrNotExist) {
-			if err := os.Mkdir(filepath.Dir(destPath), 0755); err != nil {
+			if err := os.MkdirAll(filepath.Dir(destPath), 0755); err != nil {
 				return err
 			}
 		}
@@ -232,17 +260,17 @@ type removeInput struct {
 
 func remove(r removeInput, targetScriptsPath string) error {
 	if r.srcPath == "" {
-		return filePathIsRequiredErr
+		return errFilePathIsRequired
 	}
 
 	m, _ := filepath.Glob(fmt.Sprint(filepath.Join(targetScriptsPath, r.srcPath), "*"))
 	if len(m) > 1 {
-		return errors.New("path matches more than one script.")
+		return errors.New("path matches more than one script")
 	} else if len(m) == 0 {
 		if r.force {
 			return nil
 		}
-		return errors.New("target path not found.")
+		return errors.New("target path not found")
 	}
 
 	destPath := m[0]
@@ -253,7 +281,7 @@ func remove(r removeInput, targetScriptsPath string) error {
 
 	if f.IsDir() {
 		if !r.force && !promptDestructiveConfirmation("Destination is a directory") {
-			return confirmationFailedErr
+			return errConfirmationFailed
 		}
 	}
 
@@ -273,4 +301,32 @@ func promptDestructiveConfirmation(msg ...any) bool {
 func fatalF(s string, args ...any) {
 	fmt.Fprintf(os.Stderr, fmt.Sprintln(s), args...)
 	os.Exit(1)
+}
+
+func trustUserScripts(gpgUserID string) error {
+	backend := &security.GPGBackend{UserID: gpgUserID}
+
+	priv, err := security.LoadUserPrivateKeyEncrypted(backend)
+	if err != nil {
+		if os.IsNotExist(err) {
+			fmt.Println("No local signing key found. Generating one...")
+			_, err = security.GenerateUserKeypair(backend)
+			if err != nil {
+				return fmt.Errorf("failed to generate local keys: %w", err)
+			}
+			// Reload the just generated key
+			priv, err = security.LoadUserPrivateKeyEncrypted(backend)
+			if err != nil {
+				return err
+			}
+		} else {
+			return fmt.Errorf("failed to load local private key: %w", err)
+		}
+	}
+
+	return security.SignDirectory(
+		internal.ConfigUserScriptsPath,
+		priv,
+		security.UserManifestPath,
+	)
 }

@@ -9,13 +9,11 @@
 #
 # Example: u totp add github < /path/to/key
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # shellcheck source=extra/_lib.sh
-\. "$DIR/../_lib.sh"
+\. "./../_lib.sh"
 
 # shellcheck source=extra/_error.sh
-\. "$DIR/../_error.sh"
+\. "./../_error.sh"
 
 TOTP_SECRETS_DIR=${TOTP_SECRETS_DIR:-"$HOME/.secrets/totp"}
 KEY_TMP_PATH=/tmp/key

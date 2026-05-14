@@ -23,38 +23,36 @@
             ./man
             ./go.mod
             ./go.sum
+            ./Makefile
+            ./.shellcheckrc
           ];
         };
         version = "0.0.1";
         vendorHash = "sha256-mP5UYLWlnGWCHHObkVvCNNxYzjWf/xg9Eonf7P+JpGQ=";
-        doCheck = false;
 
-        subPackages = [
-          "cmd/runner"
-          "cmd/completion"
-          "cmd/config"
+        doCheck = true;
+        nativeCheckInputs = [
+          pkgs.shellcheck
+          pkgs.golangci-lint
         ];
+        checkPhase = ''
+          make check
+        '';
 
-        env = {
-          CGO_ENABLED = 1;
-        };
+        buildPhase = ''
+          make PREFIX=${builtins.placeholder "out"}
+        '';
 
-        ldflags = [
-          "-s"
-          "-w"
-          "-X shellutils/internal.BaseDefaultScriptsPath=${builtins.placeholder "out"}/share/shell-utils/scripts"
+        installPhase = ''
+          make install PREFIX=$out
+        '';
+
+        doInstallCheck = true;
+        nativeInstallCheckInputs = [
+          pkgs.ripgrep
         ];
-
-        postInstall = ''
-          mkdir -p $out/share/shell-utils/scripts $out/share/zsh/site-functions $out/share/man/man1
-
-          mv $out/bin/runner $out/bin/util
-          mv $out/bin/completion $out/bin/util-complete
-          mv $out/bin/config $out/share/shell-utils/scripts/
-          cp -a extra/* $out/share/shell-utils/scripts/
-          cp -a completions/zsh/_util $out/share/zsh/site-functions/
-          cp -a completions/zsh/*.completions.zsh $out/share/shell-utils/scripts/
-          cp -a man/* $out/share/man/man1/
+        installCheckPhase = ''
+          make installcheck PREFIX=$out DESTDIR=""
         '';
       };
     in

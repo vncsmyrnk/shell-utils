@@ -17,10 +17,8 @@
 #
 # Example: util environment exec -f /tmp/file.env gcloud project list
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # shellcheck source=extra/environment/_variables
-\. "$DIR/_variables"
+\. "./_variables"
 : "${_secrets_path:=}"
 
 secrets_path="$_secrets_path"

@@ -11,10 +11,8 @@
 # Options:
 #  -f, --file [FILE]   Secret file
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # shellcheck source=extra/workspaces/_variables.sh
-\. "$DIR/_variables"
+\. "./_variables"
 : "${_secrets_path:=}"
 
 secrets_path="$_secrets_path"

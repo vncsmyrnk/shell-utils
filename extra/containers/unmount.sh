@@ -5,19 +5,17 @@
 #
 # Usage: util containers unmount [CONTAINER]
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # shellcheck source=extra/containers/_lib.sh
-\. "$DIR/_lib.sh"
+\. "./_lib.sh"
 
 # shellcheck source=extra/_lib.sh
-\. "$DIR/../_lib.sh"
+\. "./../_lib.sh"
 
 # shellcheck source=extra/_error.sh
-\. "$DIR/../_error.sh"
+\. "./../_error.sh"
 
 # shellcheck source=extra/containers/_variables.sh
-\. "$DIR/_variables.sh"
+\. "./_variables.sh"
 : "${_containers_target_name_prefix:=}"
 
 src="$1"

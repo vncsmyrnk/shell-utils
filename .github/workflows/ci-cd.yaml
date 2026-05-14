@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  ci-nix:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,22 +32,8 @@ jobs:
         with:
           namcap: true
 
-  ci-scripts:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: sudo apt-get install -y ripgrep
-
-      - uses: extractions/setup-just@v1
-
-      - name: Shellcheck
-        run: just shellcheck
-
   cd-check:
-    needs: [ci-nix, ci-pkgbuild, ci-scripts]
+    needs: [ci, ci-pkgbuild]
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
     outputs:
@@ -66,7 +52,7 @@ jobs:
 
   cd-pkgbuild:
     needs: [cd-check]
-    if: ${{ needs.cd-check.outputs.pkgbuild_changed == 'true' && !contains(github.event.head_commit.message, '[skip-cd]') }}
+    if: ${{ needs.cd-check.outputs.pkgbuild-changed == 'true' && !contains(github.event.head_commit.message, '[skip-cd]') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -96,10 +82,7 @@ jobs:
         with:
           go-version: '1.26'
 
-      - uses: extractions/setup-just@v4
-
-      - name: Build
-        run: just build
+      - run: make install
 
       - name: Install packaging dependencies
         run: |
@@ -112,14 +95,9 @@ jobs:
           COMMIT_HASH=$(git rev-parse --short HEAD)
           DYNAMIC_VERSION="1.0.0+git${COMMIT_COUNT}.${COMMIT_HASH}"
 
-          mkdir -p staging-root/usr/bin staging-root/usr/share/shell-utils/scripts \
-            staging-root/usr/share/zsh/vendor-completions staging-root/usr/share/man/man1
-
-          cp ./dist/* staging-root/usr/bin/
-          cp -a extra/* staging-root/usr/share/shell-utils/scripts/
-          cp -a completions/zsh/_util staging-root/usr/share/zsh/vendor-completions/
-          cp -a completions/zsh/*.completions.zsh staging-root/usr/share/shell-utils/scripts/
-          cp -a man/* staging-root/usr/share/man/man1/
+          mkdir -p ./staging-root/usr/
+          cp -ar ./dist/* ./staging-root/usr/
+          mv ./staging-root/usr/share/zsh/site-functions/ ./staging-root/usr/share/zsh/vendor-completions
 
           fpm -s dir -t deb \
             -n shell-utils \

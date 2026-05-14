@@ -3,13 +3,11 @@
 # [help]
 # Lists backups uploaded to the current set rclone remote
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # shellcheck source=extra/_lib.sh
-\. "$DIR/../../_lib.sh"
+\. "./../../_lib.sh"
 
 # shellcheck source=extra/_error.sh
-\. "$DIR/../../_error.sh"
+\. "./../../_error.sh"
 
 SHELL_UTILS_BACKUP_RCLONE_REMOTE=${SHELL_UTILS_BACKUP_RCLONE_REMOTE:-"gdrive"}
 SHELL_UTILS_BACKUP_RCLONE_FOLDER=${SHELL_UTILS_BACKUP_RCLONE_FOLDER:-"bkp"}

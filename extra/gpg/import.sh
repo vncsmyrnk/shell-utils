@@ -10,13 +10,11 @@
 #  --public-key    GPG key's public key, exportable via `gpg --export `
 #  --ownertrust    GPG key's ownertrust data base, exportable via `gpg --export-ownertrust`
 
-DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
 # shellcheck source=extra/_lib.sh
-\. "$DIR/../_lib.sh"
+\. "./../_lib.sh"
 
 # shellcheck source=extra/_error.sh
-\. "$DIR/../_error.sh"
+\. "./../_error.sh"
 
 while [[ $# -gt 0 ]]; do
   case $1 in

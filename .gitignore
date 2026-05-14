@@ -4,4 +4,9 @@ dist/
 pkg/
 src/
 shell-utils/
+.shell-utils/
 *.zst
+*.key
+*.pub
+manifest.json
+.out
