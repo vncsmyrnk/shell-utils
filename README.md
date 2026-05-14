@@ -12,6 +12,11 @@ Have you ever struggled to locate useful scripts scattered across multiple files
 
 Do you manually install apps and maintain scripts to update them? **shell utils** lets you configure your scripts to run automatically whenever `util update` is executed, streamlining all your update tasks.
 
+> [!WARNING]
+> shell-utils does not keep track if the default or user scripts were maliciously manipulated yet. Issue tracking this problem: [shell-utils#72](https://github.com/vncsmyrnk/shell-utils/issues/72).
+>
+> Until this problem is completely fixed, proceed with caution if you still decide to install and use it.
+
 ## Usage
 
 All the arguments represent the path to script to be executed from `$HOME/.config/shell-utils/scripts` without directory separators, like a CLI application. Additional arguments after the path is matched are seamlessly passed to the specified script.
