@@ -20,6 +20,7 @@ pkgver() {
 
 build() {
   cd "${pkgname%-git}" || return
+  # The package path is guessed here as shell-utils need to know it at run time
   make PREFIX=/usr
 }
 
