@@ -9,7 +9,6 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/go-git/go-git/v5"
 	flag "github.com/spf13/pflag"
 
 	"shellutils/internal"
@@ -36,7 +35,6 @@ func main() {
 		fmt.Fprint(os.Stderr,
 			"Set script to be executed using the `util` command\n\n",
 			"Usage:\n", " util config add <path> [flags]\n",
-			" util config add <github:username/repo> [flags]\n",
 		)
 		fmt.Fprint(os.Stderr, "\nFlags:\n", addCmd.FlagUsages())
 	}
@@ -151,10 +149,6 @@ func add(a addInput, targetScriptsPath string) error {
 		return errFilePathIsRequired
 	}
 
-	if strings.HasPrefix(a.srcPath, "github:") {
-		return addGitHubRepo(a.srcPath, filepath.Join(targetScriptsPath), a.targetName)
-	}
-
 	src, err := os.Stat(a.srcPath)
 	if err != nil {
 		if e, ok := errors.AsType[syscall.Errno](err); ok && e.Is(os.ErrNotExist) {
@@ -223,34 +217,6 @@ func add(a addInput, targetScriptsPath string) error {
 		return err
 	}
 	return os.Symlink(srcPath, destPath)
-}
-
-func addGitHubRepo(url, destPath, targetName string) error {
-	gitURL := func() string {
-		if !strings.HasPrefix(url, "http://") {
-			return fmt.Sprintf("https://%s.git", strings.Replace(url, "github:", "github.com/", 1))
-		}
-		return url
-	}()
-
-	p := filepath.Join(destPath, targetName)
-	if targetName == "" {
-		parts := strings.Split(url, "/")
-		if len(parts) != 2 {
-			return fmt.Errorf("invalid GithHub repo format")
-		}
-		p = filepath.Join(destPath, parts[1])
-	}
-
-	_, err := git.PlainClone(p, false, &git.CloneOptions{
-		URL:          gitURL,
-		SingleBranch: true,
-		Depth:        1,
-	})
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 type removeInput struct {

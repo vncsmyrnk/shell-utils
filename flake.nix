@@ -28,7 +28,7 @@
           ];
         };
         version = "0.0.1";
-        vendorHash = "sha256-mP5UYLWlnGWCHHObkVvCNNxYzjWf/xg9Eonf7P+JpGQ=";
+        vendorHash = "sha256-Yq64hzbakRzSl3vz0Sn4D2y13wjozQbao7yRX2NkdDk=";
 
         doCheck = true;
         nativeCheckInputs = [
