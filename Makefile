@@ -1,12 +1,14 @@
 OUTPUT = .out
 
 SCRIPTS = $(OUTPUT)/scripts
+SCRIPTS_STAMP = $(OUTPUT)/.scripts.stamp
 KEYS = $(OUTPUT)/signing.key $(OUTPUT)/signing.pub
 MANIFEST = $(OUTPUT)/manifest.json
 RUNNER = $(OUTPUT)/util
 CONFIG = $(OUTPUT)/config
 FETCH = $(OUTPUT)/util-fetch
 COMPLETION = $(OUTPUT)/util-complete
+GO_SRC = $(shell find . -type f -name '*.go')
 
 PREFIX ?= ./dist
 DESTDIR ?=
@@ -86,18 +88,19 @@ run-runner: $(MANIFEST)
 		-X 'shellutils/internal.BaseDefaultScriptsPath=$$(realpath ./extra)'" \
 		./cmd/runner/main.go $(ARGS)
 
-$(SCRIPTS): $(CONFIG)
-	@mkdir -p $@
-	cp -r ./extra/* $@
-	cp $(CONFIG) $@
+$(SCRIPTS_STAMP): $(CONFIG) $(wildcard ./extra/*)
+	@mkdir -p $(SCRIPTS)
+	cp -r ./extra/* $(SCRIPTS)/
+	cp $(CONFIG) $(SCRIPTS)/
+	@touch $@
 
 $(KEYS)&:
 	go run ./cmd/keygen/main.go $(OUTPUT)
 
-$(MANIFEST): $(KEYS) $(SCRIPTS)
+$(MANIFEST): $(KEYS) $(SCRIPTS_STAMP) $(wildcard ./cmd/manifestgen/*.go)
 	go run ./cmd/manifestgen/main.go $(SCRIPTS) $$(cat $(OUTPUT)/signing.key) $(OUTPUT)
 
-$(RUNNER): $(MANIFEST)
+$(RUNNER): $(MANIFEST) $(GO_SRC)
 	CGO_ENABLED=0 go build \
 		-trimpath \
 		-ldflags="-s -w \
@@ -106,13 +109,13 @@ $(RUNNER): $(MANIFEST)
 			-X 'shellutils/internal.BaseDefaultScriptsPath=$(INSTALL_SHARE)/scripts'" \
 		-o $@ ./cmd/runner/main.go
 
-$(CONFIG):
+$(CONFIG): $(GO_SRC)
 	CGO_ENABLED=0 go build \
 		-trimpath \
 		-ldflags="-s -w" \
 		-o $@ ./cmd/config/main.go
 
-$(FETCH): $(MANIFEST)
+$(FETCH): $(MANIFEST) $(GO_SRC)
 	CGO_ENABLED=0 go build \
 		-trimpath \
 		-ldflags="-s -w \
@@ -121,7 +124,7 @@ $(FETCH): $(MANIFEST)
 			-X 'shellutils/internal.BaseDefaultScriptsPath=$(INSTALL_SHARE)/scripts'" \
 		-o $@ ./cmd/fetch/main.go
 
-$(COMPLETION):
+$(COMPLETION): $(GO_SRC)
 	CGO_ENABLED=0 go build \
 		-trimpath \
 		-ldflags="-s -w \
