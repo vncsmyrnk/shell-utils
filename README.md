@@ -29,12 +29,16 @@ util random # considering a `generate.*` script exists in the
             # section will be displayed listing it. A comment starting with "help"
             # will be printed if present on the script.
 
-util config add ~/scripts/example.sh # Creates a symbolic link of the file at
+util config add ~/scripts/example.sh # Copies the file to
                                      # `$HOME/.config/shell-utils/scripts` making
                                      # the script executable via `$ util example`
 ```
 
 For more information: `$ man util`.
+
+### Security
+
+**shell-utils** implements a script integrity verification system. Every script (both global and user-added) must be hashed and recorded in a signed manifest. Use `util config trust --gpg-user <your-email>` to generate a local keypair (encrypted via GPG) and sign your scripts.
 
 ### Customization
 
@@ -42,10 +46,8 @@ This project includes [default extra scripts](https://github.com/vncsmyrnk/shell
 
 To automate update tasks when running `util update`, simply place your scripts in `$HOME/.config/shell-utils/scripts/on-update`. You can achieve this using `$ util config add`.
 
-You can also add scripts from a GitHub repo using `$ util config add github:username/repo`.
-
 > [!TIP]
-> The best practice is to keep your scripts were you already store them and just create symbolic links in the folder `$HOME/.config/shell-utils/scripts`. This can be done via `$ util config add`.
+> `util config add` automatically copies your scripts into the secure storage and updates the integrity manifest.
 
 ### Completions and help messages
 

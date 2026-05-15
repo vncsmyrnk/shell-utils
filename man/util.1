@@ -10,7 +10,7 @@ util \- A shell-agnostic utility tool for managing user scripts
 .B util
 is a shell-agnostic utility tool designed to make your scripts accessible everywhere using the `util` command. It was created to need no external runtime dependencies for its basic functionalities, including executing the scripts and providing assist for generating shell suggestions.
 
-All the arguments represent the path to script to be executed from `$HOME/.config/shell-utils/scripts` without directory separators, like a CLI application. Additional arguments after the path is matched are seamlessly passed to the specified script.
+All the arguments represent the path to script to be executed from `$HOME/.config/shell-utils/scripts` without directory separators, like a CLI application. Additional arguments after the path is matched are seamlessly passed to the specified script. Before execution, verifies the SHA-256 hash of the script against a signed manifest. For user-added scripts, this manifest must be signed using a local keypair.
 
 Custom completions can be set at a file named "[script_name].completions.[shell]". See `totp/_generate.completions.zsh` for reference. All the arguments passed to the script are also passed to the completion script.
 
@@ -52,18 +52,17 @@ Print the script to the standard input.
 .SH COMMANDS
 .SS config add
 .B util config add
-<file|directory|github:username/repo>
+<file|directory>
 [\-t|\-\-target-name <name>]
 [\-p|\-\-parent-path <path>]
 [\-f|\-\-force]
+[\-\-gpg-user <id>]
 
-Makes a script or a folder of scripts accessible to the util command. Creates symbolic links of the sources in order for the scripts to be found by util.
-
-It can also download GitHub repos, to make scripts accessible via the util command.
+Makes a script or a folder of scripts accessible to the util command. Copies the source to the user-created scripts path in order for the scripts to be found by util. If is provided, the integrity manifest is automatically re-signed.
 
 .TP
 .B \-t, \-\-target-name <name>
-Custom name for the target symlink.
+Custom name for the target.
 
 .TP
 .B \-p, \-\-parent-path <path>
@@ -73,16 +72,37 @@ Subpath relative to scripts directory, right below the target path.
 .B \-f, \-\-force
 Force overwrite without confirmation prompt.
 
+.TP
+.B \-\-gpg-user <id>
+GPG User ID used to decrypt the private key for signing the manifest.
+
 .SS config remove
-.B util remove add
+.B util config remove
 <target>
 [\-f|\-\-force]
+[\-\-gpg-user <id>]
 
-Deletes the script file or folder.
+Deletes the script file or folder. If
+.B \-\-gpg-user
+is provided, the integrity manifest is automatically re-signed.
 
 .TP
 .B \-f, \-\-force
 Force overwrite without confirmation prompt.
+
+.TP
+.B \-\-gpg-user <id>
+GPG User ID used to decrypt the private key for signing the manifest.
+
+.SS config trust
+.B util config trust
+\-\-gpg\-user <id>
+
+Generates a local keypair (if it doesn't exist) and signs the integrity manifest for all user scripts. The private key is stored encrypted using GnuPG.
+
+.TP
+.B \-\-gpg-user <id>
+GPG User ID for encrypting the private key and signing the manifest.
 
 .SH EXAMPLES
 .TP
@@ -95,7 +115,7 @@ Executes a script named `checkout-pr.sh` in `$HOME/.config/shell-utils/scripts/g
 
 .TP
 .B util config add ~/scripts
-Creates symbolic links for the folder at ~/scripts in `$HOME/.config/shell-utils/scripts`. The scripts are now accessbile via `$ util <script-file-name`. So if a `test.sh` is at ~/scripts, it is now accessbile via `$ util test`.
+Copies the folder at ~/scripts to `$HOME/.config/shell-utils/scripts`. The scripts are now accessbile via `$ util <script-file-name>`. So if a `test.sh` is at ~/scripts, it is now accessbile via `$ util test`.
 
 .TP
 .B util config remove test/script
