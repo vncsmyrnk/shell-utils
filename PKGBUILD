@@ -8,8 +8,8 @@ url="https://github.com/vncsmyrnk/shell-utils"
 license=('GPL-3.0')
 depends=()
 makedepends=('git' 'go')
-provides=('util')
-conflicts=('util')
+provides=('util' 'util-complete' 'util-fetch')
+conflicts=('util' 'util-complete' 'util-fetch')
 source=("git+${url}.git")
 sha256sums=('SKIP')
 
