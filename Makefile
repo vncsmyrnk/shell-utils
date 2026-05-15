@@ -41,7 +41,7 @@ install: all
 uninstall:
 	rm -rf $(INSTALL_SHARE)
 	rm -f $(INSTALL_MAN)/man1/util.1
-	rm -f $(INSTALL_BIN)/util $(DESTDIR)$(PREFIX)/bin/util-complete
+	rm -f $(INSTALL_BIN)/util $(INSTALL_BIN)/util-complete $(INSTALL_BIN)/util-fetch
 	rm -f $(INSTALL_ZSH)/site-functions/_util
 	rm -f $(INSTALL_ZSH)/site-functions/_config.completions.zsh
 
@@ -97,7 +97,7 @@ $(KEYS):
 $(MANIFEST): $(KEYS) $(SCRIPTS)
 	go run ./cmd/manifestgen/main.go $(SCRIPTS) $$(cat $(OUTPUT)/signing.key) $(OUTPUT)
 
-$(RUNNER): $(MANIFEST) $(wildcard cmd/runner) $(wildcard cmd/internal)
+$(RUNNER): $(MANIFEST)
 	CGO_ENABLED=0 go build \
 		-trimpath \
 		-ldflags="-s -w \
@@ -106,13 +106,13 @@ $(RUNNER): $(MANIFEST) $(wildcard cmd/runner) $(wildcard cmd/internal)
 			-X 'shellutils/internal.BaseDefaultScriptsPath=$(INSTALL_SHARE)/scripts'" \
 		-o $@ ./cmd/runner/main.go
 
-$(CONFIG): $(wildcard cmd/config) $(wildcard cmd/internal)
+$(CONFIG):
 	CGO_ENABLED=0 go build \
 		-trimpath \
 		-ldflags="-s -w" \
 		-o $@ ./cmd/config/main.go
 
-$(FETCH): $(MANIFEST) $(wildcard cmd/fetch) $(wildcard cmd/internal)
+$(FETCH): $(MANIFEST)
 	CGO_ENABLED=0 go build \
 		-trimpath \
 		-ldflags="-s -w \
@@ -121,7 +121,7 @@ $(FETCH): $(MANIFEST) $(wildcard cmd/fetch) $(wildcard cmd/internal)
 			-X 'shellutils/internal.BaseDefaultScriptsPath=$(INSTALL_SHARE)/scripts'" \
 		-o $@ ./cmd/fetch/main.go
 
-$(COMPLETION): $(wildcard cmd/fetch) $(wildcard cmd/internal)
+$(COMPLETION):
 	CGO_ENABLED=0 go build \
 		-trimpath \
 		-ldflags="-s -w \
