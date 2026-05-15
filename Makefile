@@ -91,7 +91,7 @@ $(SCRIPTS): $(CONFIG)
 	cp -r ./extra/* $@
 	cp $(CONFIG) $@
 
-$(KEYS):
+$(KEYS)&:
 	go run ./cmd/keygen/main.go $(OUTPUT)
 
 $(MANIFEST): $(KEYS) $(SCRIPTS)
