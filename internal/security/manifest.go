@@ -33,7 +33,13 @@ type GPGBackend struct {
 var _ KeyBackend = &GPGBackend{}
 
 func (g *GPGBackend) Encrypt(plaintext []byte) ([]byte, error) {
-	cmd := exec.Command("gpg", "--encrypt", "--recipient", g.UserID, "--armor")
+	args := []string{"--encrypt", "--armor"}
+	if g.UserID != "" {
+		args = append(args, "--recipient", g.UserID)
+	} else {
+		args = append(args, "--default-recipient-self")
+	}
+	cmd := exec.Command("gpg", args...)
 	cmd.Stdin = strings.NewReader(string(plaintext))
 	var out strings.Builder
 	cmd.Stdout = &out

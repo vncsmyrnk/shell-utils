@@ -44,7 +44,13 @@ For more information: `$ man util`.
 
 **shell-utils** implements a script integrity verification system. Every script (both global and user-added) must be hashed and recorded in a signed manifest.
 
-When using `util packages sync`, scripts are automatically signed. For manual additions, use `util config trust` to sign your scripts.
+Signing is automatically performed when adding scripts or syncing packages. By default, it uses your **default GPG key**. You can override this by providing a `user_id` in your config file or using the `--gpg-user` flag for manual additions. GPG is the only backend supported to secure the user's private key until now.
+
+To manually sign your scripts:
+
+```sh
+util config trust
+```
 
 ### Customization
 

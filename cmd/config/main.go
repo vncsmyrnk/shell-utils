@@ -83,11 +83,9 @@ func main() {
 			fmt.Printf("failed to add scripts: %s\n", err)
 			os.Exit(1)
 		}
-		if *gpgUser != "" {
-			if err := trustUserScripts(*gpgUser); err != nil {
-				fmt.Printf("failed to trust user scripts: %s\n", err)
-				os.Exit(1)
-			}
+		if err := trustUserScripts(*gpgUser); err != nil {
+			fmt.Printf("failed to trust user scripts: %s\n", err)
+			os.Exit(1)
 		}
 	case "remove":
 		if *helpFlag {
@@ -110,16 +108,11 @@ func main() {
 			fmt.Printf("failed to remove scripts: %s\n", err)
 			os.Exit(1)
 		}
-		if *gpgUser != "" {
-			if err := trustUserScripts(*gpgUser); err != nil {
-				fmt.Printf("failed to trust user scripts: %s\n", err)
-				os.Exit(1)
-			}
+		if err := trustUserScripts(*gpgUser); err != nil {
+			fmt.Printf("failed to trust user scripts: %s\n", err)
+			os.Exit(1)
 		}
 	case "trust":
-		if *gpgUser == "" {
-			fatalF("--gpg-user is required for the trust command")
-		}
 		if err := trustUserScripts(*gpgUser); err != nil {
 			fmt.Printf("failed to trust user scripts: %s\n", err)
 			os.Exit(1)

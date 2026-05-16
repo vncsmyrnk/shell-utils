@@ -58,7 +58,7 @@ and the synchronized commit hashes are stored in
 .B util packages sync
 Synchronizes all repositories listed in the configuration file to
 .B $HOME/.cache/shell-utils/packages
-and copies the specified scripts to the user's scripts directory. If a GPG User ID is configured, the scripts are automatically trusted and signed.
+and copies the specified scripts to the user's scripts directory. By default, scripts are automatically signed using the system's **default GPG key**. You can override this by specifying a `user_id` in the configuration file.
 
 .TP
 .B Configuration Schema
@@ -137,13 +137,13 @@ GPG User ID used to decrypt the private key for signing the manifest.
 
 .SS config trust
 .B util config trust
-\-\-gpg\-user <id>
+[\-\-gpg\-user <id>]
 
-Generates a local keypair (if it doesn't exist) and signs the integrity manifest for all user scripts. The private key is stored encrypted using GnuPG.
+Generates a local keypair (if it doesn't exist) and signs the integrity manifest for all user scripts. The private key is stored encrypted using GnuPG. By default, it uses the system's **default GPG key**.
 
 .TP
 .B \-\-gpg-user <id>
-GPG User ID for encrypting the private key and signing the manifest.
+Optional GPG User ID for encrypting the private key and signing the manifest. If omitted, the default key is used.
 
 .SH EXAMPLES
 .TP

@@ -177,7 +177,12 @@ func Sync() error {
 		return fmt.Errorf("failed to save lock file: %w", err)
 	}
 
-	if cfg.Signing.UserID != "" {
+	backend := cfg.Signing.Backend
+	if backend == "" && cfg.Signing.UserID != "" {
+		backend = "gpg"
+	}
+
+	if backend == "gpg" || (backend == "" && len(cfg.Repositories) > 0) {
 		fmt.Println("Signing scripts...")
 		if err := trust(cfg.Signing.UserID); err != nil {
 			return fmt.Errorf("failed to trust scripts: %w", err)
