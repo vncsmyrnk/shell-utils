@@ -104,3 +104,7 @@ shell-utils follows the standard GNU directives for make targets.
 ```sh
 make install
 ```
+
+## Development
+
+Use `nix develop` to get a Nix shell with all expected dependencies.

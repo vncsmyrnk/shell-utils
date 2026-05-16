@@ -55,8 +55,28 @@
           make installcheck PREFIX=$out DESTDIR=""
         '';
       };
+
+      devShell = pkgs.mkShell {
+        packages = with pkgs; [
+          go
+          gnumake
+          golangci-lint
+          shellcheck
+          bash
+          coreutils
+        ];
+
+        shellHook = ''
+          mkdir -p .gocache .gomodcache
+          export GOCACHE=$PWD/.gocache
+          export GOMODCACHE=$PWD/.gomodcache
+          export PATH="$PWD/dist/bin:$PATH"
+          export PREFIX=$(realpath ./dist)
+        '';
+      };
     in
     {
       packages.${system}.default = shellUtils;
+      devShells.${system}.default = devShell;
     };
 }

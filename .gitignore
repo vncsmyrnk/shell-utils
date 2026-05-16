@@ -10,3 +10,5 @@ shell-utils/
 *.pub
 manifest.json
 .out
+.gocache
+.gomodcache
