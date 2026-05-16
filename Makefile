@@ -68,26 +68,6 @@ installcheck:
 
 	@echo "Installation verification passed successfully!"
 
-ARGS ?=
-.PHONY: run-fetch
-run-fetch: $(MANIFEST)
-	cp $(MANIFEST) .
-	go run -ldflags=" \
-		-X 'shellutils/internal/security.GlobalPublicKeyHex=$$(cat ./.out/signing.pub)' \
-		-X 'shellutils/internal.BaseDefaultPath=$$(realpath .)' \
-		-X 'shellutils/internal.BaseDefaultScriptsPath=$$(realpath ./extra)'" \
-		./cmd/fetch/main.go $(ARGS)
-
-ARGS ?=
-.PHONY: run-runner
-run-runner: $(MANIFEST)
-	cp $(MANIFEST) .
-	go run -ldflags=" \
-		-X 'shellutils/internal/security.GlobalPublicKeyHex=$$(cat ./.out/signing.pub)' \
-		-X 'shellutils/internal.BaseDefaultPath=$$(realpath .)' \
-		-X 'shellutils/internal.BaseDefaultScriptsPath=$$(realpath ./extra)'" \
-		./cmd/runner/main.go $(ARGS)
-
 $(SCRIPTS_STAMP): $(CONFIG) $(wildcard ./extra/*)
 	@mkdir -p $(SCRIPTS)
 	cp -r ./extra/* $(SCRIPTS)/
