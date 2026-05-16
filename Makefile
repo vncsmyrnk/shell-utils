@@ -10,7 +10,7 @@ FETCH = $(OUTPUT)/util-fetch
 COMPLETION = $(OUTPUT)/util-complete
 GO_SRC = $(shell find . -type f -name '*.go')
 
-PREFIX ?= ./dist
+PREFIX ?= $(shell realpath ./dist)
 DESTDIR ?=
 
 INSTALL_SHARE=$(DESTDIR)$(PREFIX)/share/shell-utils

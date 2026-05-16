@@ -183,24 +183,14 @@ func VerifyScript(path string) ([]byte, error) {
 		return nil, err
 	}
 
-	absGlobalScriptsPath, err := filepath.Abs(internal.BaseDefaultScriptsPath)
-	if err != nil {
-		return nil, err
-	}
-
-	absConfigUserScriptsPath, err := filepath.Abs(internal.ConfigUserScriptsPath)
-	if err != nil {
-		return nil, err
-	}
-
-	if strings.HasPrefix(absPath, absGlobalScriptsPath) {
+	if strings.HasPrefix(absPath, internal.BaseDefaultScriptsPath) {
 		isGlobal = true
 		manifestPath = filepath.Join(internal.BaseDefaultPath, "manifest.json")
 		publicKey, err = GetGlobalPublicKey()
 		if err != nil {
 			return nil, err
 		}
-	} else if strings.HasPrefix(absPath, absConfigUserScriptsPath) {
+	} else if strings.HasPrefix(absPath, internal.ConfigUserScriptsPath) {
 		manifestPath = UserManifestPath
 		publicKey, err = LoadUserPublicKey()
 		if err != nil {
@@ -222,9 +212,9 @@ func VerifyScript(path string) ([]byte, error) {
 	// Calculate relative path for manifest lookup
 	var relPath string
 	if isGlobal {
-		relPath, _ = filepath.Rel(absGlobalScriptsPath, absPath)
+		relPath, _ = filepath.Rel(internal.BaseDefaultScriptsPath, absPath)
 	} else {
-		relPath, _ = filepath.Rel(absConfigUserScriptsPath, absPath)
+		relPath, _ = filepath.Rel(internal.ConfigUserScriptsPath, absPath)
 	}
 
 	expectedHash, ok := m.Hashes[relPath]
