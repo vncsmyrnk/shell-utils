@@ -5,10 +5,9 @@
 # [help]
 # Updates system packages and runs custom update scripts.
 #
-# Runs custom scripts located at \033[1m$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH\033[0m and a global script at \033[1m$UPDATE_GLOBAL_SCRIPT\033[0m if available.
+# Runs custom scripts located at \033[1m$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH\033[0m.
 
 SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH=${SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH:-"$SHELL_UTILS_USER_CONFIG/scripts/on-update"}
-UPDATE_GLOBAL_SCRIPT=$HOME/update.sh
 
 main() {
   # Updates package managers
@@ -20,18 +19,20 @@ main() {
   # Checks for global update scripts on utils folder
   [[ -x "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" ]] && {
     printf "\n[UTIL] Now updating on-update scripts\n"
+    for f in "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH"/*; do
+      echo "found $f"
+      script=$(mktemp)
+      if ! util-fetch "$(realpath "$f" || true)" >"$script"; then
+        exit 1
+      fi
+      "$script"
+    done
     find "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" \
       -type f \
       -follow \
       -executable \
       -exec echo "found {}." \; \
       -exec {} \;
-  }
-
-  # Checks for global update script
-  [[ -x "$UPDATE_GLOBAL_SCRIPT" ]] && {
-    printf "\n[UTIL] Now using the global update script\n"
-    "$UPDATE_GLOBAL_SCRIPT"
   }
 }
 
