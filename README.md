@@ -102,5 +102,5 @@ nix profile install github:vncsmyrnk/shell-utils
 shell-utils follows the standard GNU directives for make targets.
 
 ```sh
-make install DESTDIR=/path/to/installation
+make install
 ```

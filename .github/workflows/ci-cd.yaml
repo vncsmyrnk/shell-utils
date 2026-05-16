@@ -82,7 +82,10 @@ jobs:
         with:
           go-version: '1.26'
 
-      - run: make install
+      - name: Build
+        run: |
+          mkdir staging-root
+          make install DESTDIR=staging-root
 
       - name: Install packaging dependencies
         run: |
@@ -95,8 +98,6 @@ jobs:
           COMMIT_HASH=$(git rev-parse --short HEAD)
           DYNAMIC_VERSION="1.0.0+git${COMMIT_COUNT}.${COMMIT_HASH}"
 
-          mkdir -p ./staging-root/usr/
-          cp -ar ./dist/* ./staging-root/usr/
           mv ./staging-root/usr/share/zsh/site-functions/ ./staging-root/usr/share/zsh/vendor-completions
 
           fpm -s dir -t deb \

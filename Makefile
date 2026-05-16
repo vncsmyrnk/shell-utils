@@ -10,13 +10,17 @@ FETCH = $(OUTPUT)/util-fetch
 COMPLETION = $(OUTPUT)/util-complete
 GO_SRC = $(shell find . -type f -name '*.go')
 
-PREFIX ?= $(shell realpath ./dist)
+PREFIX ?= /usr
 DESTDIR ?=
 
 INSTALL_SHARE=$(DESTDIR)$(PREFIX)/share/shell-utils
 INSTALL_BIN=$(DESTDIR)$(PREFIX)/bin
 INSTALL_MAN=$(DESTDIR)$(PREFIX)/share/man
 INSTALL_ZSH=$(DESTDIR)$(PREFIX)/share/zsh
+
+GO_LDFLAGS = -s -w \
+						 -X 'shellutils/internal.BaseDefaultPath=$(PREFIX)/share/shell-utils' \
+						 -X 'shellutils/internal.BaseDefaultScriptsPath=$(PREFIX)/share/shell-utils/scripts'
 
 all: $(RUNNER) $(SCRIPTS_STAMP) $(FETCH) $(COMPLETION)
 
@@ -83,31 +87,26 @@ $(MANIFEST): $(KEYS) $(SCRIPTS_STAMP) $(wildcard ./cmd/manifestgen/*.go)
 $(RUNNER): $(MANIFEST) $(GO_SRC)
 	CGO_ENABLED=0 go build \
 		-trimpath \
-		-ldflags="-s -w \
-			-X 'shellutils/internal/security.GlobalPublicKeyHex=$$(cat $(OUTPUT)/signing.pub)' \
-			-X 'shellutils/internal.BaseDefaultPath=$(INSTALL_SHARE)' \
-			-X 'shellutils/internal.BaseDefaultScriptsPath=$(INSTALL_SHARE)/scripts'" \
+		-ldflags="$(GO_LDFLAGS) \
+			-X 'shellutils/internal/security.GlobalPublicKeyHex=$$(cat $(OUTPUT)/signing.pub)'" \
 		-o $@ ./cmd/runner/main.go
 
 $(CONFIG): $(GO_SRC)
 	CGO_ENABLED=0 go build \
 		-trimpath \
-		-ldflags="-s -w" \
+		-ldflags="$(GO_LDFLAGS)" \
 		-o $@ ./cmd/config/main.go
 
 $(FETCH): $(MANIFEST) $(GO_SRC)
 	CGO_ENABLED=0 go build \
 		-trimpath \
-		-ldflags="-s -w \
-			-X 'shellutils/internal/security.GlobalPublicKeyHex=$$(cat $(OUTPUT)/signing.pub)' \
-			-X 'shellutils/internal.BaseDefaultPath=$(INSTALL_SHARE)' \
-			-X 'shellutils/internal.BaseDefaultScriptsPath=$(INSTALL_SHARE)/scripts'" \
+		-ldflags="$(GO_LDFLAGS) \
+			-X 'shellutils/internal/security.GlobalPublicKeyHex=$$(cat $(OUTPUT)/signing.pub)'" \
 		-o $@ ./cmd/fetch/main.go
 
 $(COMPLETION): $(GO_SRC)
 	CGO_ENABLED=0 go build \
 		-trimpath \
-		-ldflags="-s -w \
-			-X 'shellutils/internal.BaseDefaultPath=$(INSTALL_SHARE)' \
-			-X 'shellutils/internal.BaseDefaultScriptsPath=$(INSTALL_SHARE)/scripts'" \
+		-ldflags="$(GO_LDFLAGS) \
+			-X 'shellutils/internal/security.GlobalPublicKeyHex=$$(cat $(OUTPUT)/signing.pub)'" \
 		-o $@ ./cmd/completion/main.go
