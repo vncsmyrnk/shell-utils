@@ -12,11 +12,17 @@
 #  -t, --first-copy-timeout   Time waited after the user is copied before
 #                             copying the password to the clipboard
 
-# shellcheck source=extra/_lib.sh
-\. "./../_lib.sh"
-
 # shellcheck source=extra/_error.sh
-\. "./../_error.sh"
+if ! e=$(util-fetch "$(realpath "./../_error.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
+# shellcheck source=extra/_lib.sh
+if ! e=$(util-fetch "$(realpath "./../_lib.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
 
 first_copy_timeout=1
 while [[ $# -gt 0 ]]; do

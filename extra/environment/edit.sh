@@ -12,7 +12,11 @@
 #  -f, --file [FILE]   Secret file
 
 # shellcheck source=extra/workspaces/_variables.sh
-\. "./_variables"
+if ! e=$(util-fetch "$(realpath "./_variables" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
 : "${_secrets_path:=}"
 
 secrets_path="$_secrets_path"

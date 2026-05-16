@@ -3,11 +3,17 @@
 # [help]
 # Lists backups uploaded to the current set rclone remote
 
-# shellcheck source=extra/_lib.sh
-\. "./../../_lib.sh"
-
 # shellcheck source=extra/_error.sh
-\. "./../../_error.sh"
+if ! e=$(util-fetch "$(realpath "./../_error.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
+# shellcheck source=extra/_lib.sh
+if ! e=$(util-fetch "$(realpath "./../../_lib.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
 
 SHELL_UTILS_BACKUP_RCLONE_REMOTE=${SHELL_UTILS_BACKUP_RCLONE_REMOTE:-"gdrive"}
 SHELL_UTILS_BACKUP_RCLONE_FOLDER=${SHELL_UTILS_BACKUP_RCLONE_FOLDER:-"bkp"}

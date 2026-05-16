@@ -6,13 +6,23 @@
 # Usage: util containers mount [CONTAINER] [MOUNTPOINT]
 
 # shellcheck source=extra/containers/_lib.sh
-\. "./_lib.sh"
+if ! e=$(util-fetch "$(realpath "./_lib.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
 
 # shellcheck source=extra/_lib.sh
-\. "./../_lib.sh"
+if ! e=$(util-fetch "$(realpath "./../_lib.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
 
 # shellcheck source=extra/containers/_variables.sh
-\. "./_variables.sh"
+if ! e=$(util-fetch "$(realpath "./_variables.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
 : "${_containers_target_name_prefix:=}"
 
 src="$1"

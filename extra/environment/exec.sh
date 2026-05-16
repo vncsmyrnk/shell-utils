@@ -18,7 +18,11 @@
 # Example: util environment exec -f /tmp/file.env gcloud project list
 
 # shellcheck source=extra/environment/_variables
-\. "./_variables"
+if ! e=$(util-fetch "$(realpath "./_variables" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
 : "${_secrets_path:=}"
 
 secrets_path="$_secrets_path"

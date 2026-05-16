@@ -6,7 +6,11 @@
 # Usage: util jobs list
 
 # shellcheck source=extra/jobs/_variables
-\. "./_variables"
+if ! e=$(util-fetch "$(realpath "./_variables" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
 : "${_jobs_session_name:=}"
 
 tmux list-windows -t "$_jobs_session_name" -F "#{window_name}" 2>/dev/null

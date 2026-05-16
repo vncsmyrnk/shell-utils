@@ -7,11 +7,16 @@
 #
 # You must specify \033[1m$SHELL_UTILS_BACKUP_RCLONE_REMOTE\033[0m and \033[1m$SHELL_UTILS_BACKUP_RCLONE_FOLDER\033[0m in order to the backup be automatically uploaded to the remote.
 
-# shellcheck source=extra/_lib.sh
-\. "./../_lib.sh"
-
 # shellcheck source=extra/_error.sh
-\. "./../_error.sh"
+if ! e=$(util-fetch "$(realpath "./../_error.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
+# shellcheck source=extra/_lib.sh
+if util-fetch "$(realpath "./../_lib.sh" || true)"; then
+  exit 1
+fi
 
 umask 077
 

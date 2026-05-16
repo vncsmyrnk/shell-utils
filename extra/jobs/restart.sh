@@ -6,7 +6,11 @@
 # Usage: util jobs restart [NAME]
 
 # shellcheck source=extra/jobs/_variables
-\. "./_variables"
+if ! e=$(util-fetch "$(realpath "./_variables" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
 : "${_jobs_session_name:=}"
 
 job_name="$1"

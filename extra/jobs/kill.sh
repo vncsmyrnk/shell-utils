@@ -8,14 +8,24 @@
 # Options:
 #  --all   Kill all jobs
 
-# shellcheck source=extra/_lib.sh
-\. "./../_lib.sh"
-
 # shellcheck source=extra/_error.sh
-\. "./../_error.sh"
+if ! e=$(util-fetch "$(realpath "./../_error.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
+# shellcheck source=extra/_lib.sh
+if ! e=$(util-fetch "$(realpath "./../_lib.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
 
 # shellcheck source=extra/jobs/_variables
-\. "./_variables"
+if ! e=$(util-fetch "$(realpath "./_variables" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
 : "${_jobs_session_name:=}"
 
 tmux_kill_pane_ids() {

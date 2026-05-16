@@ -9,7 +9,11 @@
 #  -f   Follow output on the current prompt
 
 # shellcheck source=extra/jobs/_variables
-\. "./_variables"
+if ! e=$(util-fetch "$(realpath "./_variables" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
 : "${_jobs_log_dir:=}"
 
 _pager=${PAGER:-vim}

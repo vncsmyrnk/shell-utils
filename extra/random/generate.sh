@@ -8,11 +8,18 @@
 # Options:
 #  -l, --length   Length of the random string being generated (default: 10)
 
-# shellcheck source=extra/_lib.sh
-\. "./../_lib.sh"
-
 # shellcheck source=extra/_error.sh
-\. "./../_error.sh"
+if ! e=$(util-fetch "$(realpath "./../_error.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
+# shellcheck source=extra/_lib.sh
+if ! e=$(util-fetch "$(realpath "./../_lib.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
 if ! command -v openssl >/dev/null; then
   exit 1
 fi

@@ -7,18 +7,31 @@
 #
 # Usage: util workspaces set [CONTAINER]
 
+# shellcheck source=extra/_error.sh
+if ! e=$(util-fetch "$(realpath "./../_error.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
 # shellcheck source=extra/containers/_lib.sh
-\. "./../containers/_lib.sh"
+if ! e=$(util-fetch "$(realpath "./../containers/_lib.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
 
 # shellcheck source=extra/workspaces/_variables.sh
-\. "./_variables.sh"
+if ! e=$(util-fetch "$(realpath "./_variables.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
+
 : "${_workspaces_mount_path:=}"
 
 # shellcheck source=extra/_lib.sh
-\. "./../_lib.sh"
-
-# shellcheck source=extra/_error.sh
-\. "./../_error.sh"
+if ! e=$(util-fetch "$(realpath "./../_lib.sh" || true)"); then
+  exit 1
+fi
+\. <(echo "$e")
 
 SHELL_UTILS_WORKSPACES_DEFAULT=${SHELL_UTILS_WORKSPACES_DEFAULT:-}
 
