@@ -30,7 +30,15 @@ Unlike the defaults, some of the extra scripts have unspecified dependencies. Th
 
 .SS Get started
 
-Add some scripts to make them available to the util command:
+The recommended way to install scripts is using the **packages** system. Create a configuration file at `$HOME/.config/shell-utils/config.json` listing the GitHub repositories you want to sync, and run:
+
+.nf
+.eo
+util packages sync
+.ec
+.fi
+
+Alternatively, you can manually add local scripts:
 
 .nf
 .eo
@@ -38,7 +46,40 @@ util config add <path/to/script>
 .ec
 .fi
 
-The script should be available with `$ util <script-file-name-with-no-extension>`
+.SH PACKAGES
+The packages system allows you to manage collections of scripts from remote GitHub repositories. It supports parallel synchronization, version pinning, and automatic integrity signing.
+
+Repositories are configured in a JSON file at
+.B $HOME/.config/shell-utils/config.json
+and the synchronized commit hashes are stored in
+.B $HOME/.config/shell-utils/config.lock .
+
+.TP
+.B util packages sync
+Synchronizes all repositories listed in the configuration file to
+.B $HOME/.cache/shell-utils/packages
+and copies the specified scripts to the user's scripts directory. If a GPG User ID is configured, the scripts are automatically trusted and signed.
+
+.TP
+.B Configuration Schema
+.nf
+{
+  "signing": {
+    "backend": "gpg",
+    "user_id": "user@example.com"
+  },
+  "repositories": [
+    {
+      "url": "https://github.com/user/repo",
+      "ref": "main",
+      "scripts_path": "path/in/repo",
+      "target_name": "local-folder-name",
+      "on_update_scripts_path": "hooks/on-update",
+      "on_update_target_name": "update-hooks"
+    }
+  ]
+}
+.fi
 
 .SH OPTIONS
 .TP

@@ -6,6 +6,7 @@ KEYS = $(OUTPUT)/signing.key $(OUTPUT)/signing.pub
 MANIFEST = $(OUTPUT)/manifest.json
 RUNNER = $(OUTPUT)/util
 CONFIG = $(OUTPUT)/config
+PACKAGES = $(OUTPUT)/packages
 FETCH = $(OUTPUT)/util-fetch
 COMPLETION = $(OUTPUT)/util-complete
 GO_SRC = $(shell find . -type f -name '*.go')
@@ -72,10 +73,11 @@ installcheck:
 
 	@echo "Installation verification passed successfully!"
 
-$(SCRIPTS_STAMP): $(CONFIG) $(wildcard ./extra/*)
+$(SCRIPTS_STAMP): $(CONFIG) $(PACKAGES) $(wildcard ./extra/*)
 	@mkdir -p $(SCRIPTS)
 	cp -r ./extra/* $(SCRIPTS)/
 	cp $(CONFIG) $(SCRIPTS)/
+	cp $(PACKAGES) $(SCRIPTS)/
 	@touch $@
 
 $(KEYS)&:
@@ -96,6 +98,13 @@ $(CONFIG): $(GO_SRC)
 		-trimpath \
 		-ldflags="$(GO_LDFLAGS)" \
 		-o $@ ./cmd/config/main.go
+
+$(PACKAGES): $(GO_SRC)
+	CGO_ENABLED=0 go build \
+		-trimpath \
+		-ldflags="$(GO_LDFLAGS)" \
+		-o $@ ./cmd/packages/main.go
+
 
 $(FETCH): $(MANIFEST) $(GO_SRC)
 	CGO_ENABLED=0 go build \

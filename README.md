@@ -29,7 +29,11 @@ util random # considering a `generate.*` script exists in the
             # section will be displayed listing it. A comment starting with "help"
             # will be printed if present on the script.
 
-util config add ~/scripts/example.sh # Copies the file to
+util packages sync # Synchronizes all GitHub repositories listed in your
+                   # `$HOME/.config/shell-utils/config.json` and automatically
+                   # trusts the downloaded scripts.
+
+util config add ~/scripts/example.sh # Copies a local file to
                                      # `$HOME/.config/shell-utils/scripts` making
                                      # the script executable via `$ util example`
 ```
@@ -38,16 +42,20 @@ For more information: `$ man util`.
 
 ### Security
 
-**shell-utils** implements a script integrity verification system. Every script (both global and user-added) must be hashed and recorded in a signed manifest. Use `util config trust --gpg-user <your-email>` to generate a local keypair (encrypted via GPG) and sign your scripts.
+**shell-utils** implements a script integrity verification system. Every script (both global and user-added) must be hashed and recorded in a signed manifest.
+
+When using `util packages sync`, scripts are automatically signed. For manual additions, use `util config trust` to sign your scripts.
 
 ### Customization
 
-This project includes [default extra scripts](https://github.com/vncsmyrnk/shell-utils/tree/main/extra), but you can easily add custom scripts by placing them in `$HOME/.config/shell-utils/scripts`. Subfolders within this directory represent subcommands for the `util` command. The dependencies for the extra scripts are not specified, so their successful execution depends on your runtime environment.
+This project includes [default extra scripts](https://github.com/vncsmyrnk/shell-utils/tree/main/extra), but you can easily add third-party scripts using the **Packages** system. By creating a `$HOME/.config/shell-utils/config.json` file, third-party scripts can be downloaded and automatically added via `util packages sync`. They will be available as subcommands to the `util` command. Refer to the manual for more information: [util.1](./man1/util.1)
 
-To automate update tasks when running `util update`, simply place your scripts in `$HOME/.config/shell-utils/scripts/on-update`. You can achieve this using `$ util config add`.
+You can also manually add local scripts by placing them in `$HOME/.config/shell-utils/scripts`. Subfolders within this directory represent subcommands for the `util` command.
+
+To automate update tasks when running `util update`, simply place your scripts in `$HOME/.config/shell-utils/scripts/on-update`. You can achieve this using the `on_update_scripts_path` field in your packages config or manually via `$ util config add`.
 
 > [!TIP]
-> `util config add` automatically copies your scripts into the secure storage and updates the integrity manifest.
+> `util packages sync` is the recommended way to manage collections of scripts, providing parallel downloads, version pinning, and automatic integrity verification.
 
 ### Completions and help messages
 
