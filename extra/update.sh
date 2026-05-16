@@ -17,23 +17,31 @@ main() {
   printf "[UTIL] Package managers OK\n"
 
   # Checks for global update scripts on utils folder
-  [[ -x "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" ]] && {
-    printf "\n[UTIL] Now updating on-update scripts\n"
-    for f in "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH"/*; do
-      echo "found $f"
-      script=$(mktemp)
-      if ! util-fetch "$(realpath "$f" || true)" >"$script"; then
+  if [[ -d "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" ]]; then
+    printf "\n[UTIL] Now running on-update scripts\n"
+    tmp_dir=$(mktemp -d -t shell-utils-updates.XXXXXX)
+    trap 'rm -rf "$tmp_dir"' EXIT
+
+    scripts=$(find "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" -type f -print0)
+    if [[ -z "$scripts" ]]; then
+      echo "no script found." >&2
+      exit 1
+    fi
+
+    while IFS= read -r -d '' f; do
+      echo "Running $f"
+      script_path="$tmp_dir/exec_script"
+
+      if ! util-fetch "$f" >"$script_path"; then
+        echo "Error: Failed to fetch $f"
         exit 1
       fi
-      "$script"
-    done
-    find "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" \
-      -type f \
-      -follow \
-      -executable \
-      -exec echo "found {}." \; \
-      -exec {} \;
-  }
+
+      chmod u+x "$script_path"
+      "$script_path"
+
+    done <<<"$scripts"
+  fi
 }
 
 exists() {
@@ -41,4 +49,3 @@ exists() {
 }
 
 main "$@"
-exit 0
