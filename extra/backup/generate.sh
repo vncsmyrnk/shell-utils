@@ -14,9 +14,10 @@ fi
 \. <(echo "$e")
 
 # shellcheck source=extra/_lib.sh
-if util-fetch "$(realpath "./../_lib.sh" || true)"; then
+if ! e=$(util-fetch "$(realpath "./../_lib.sh" || true)"); then
   exit 1
 fi
+\. <(echo "$e")
 
 umask 077
 
