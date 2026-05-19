@@ -4,7 +4,7 @@
 # Lists backups uploaded to the current set rclone remote
 
 # shellcheck source=extra/_error.sh
-if ! e=$(util-fetch "$(realpath "./../_error.sh" || true)"); then
+if ! e=$(util-fetch "$(realpath "./../../_error.sh" || true)"); then
   exit 1
 fi
 \. <(echo "$e")

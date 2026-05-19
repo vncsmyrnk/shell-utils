@@ -11,7 +11,7 @@
 # Tip: use `rsync -av backup dest` to copy the backup files to their destination places
 
 # shellcheck source=extra/_error.sh
-if ! e=$(util-fetch "$(realpath "./../_error.sh" || true)"); then
+if ! e=$(util-fetch "$(realpath "./../../_error.sh" || true)"); then
   exit 1
 fi
 \. <(echo "$e")
