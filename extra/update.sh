@@ -22,7 +22,7 @@ main() {
     tmp_dir=$(mktemp -d -t shell-utils-updates.XXXXXX)
     trap 'rm -rf "$tmp_dir"' EXIT
 
-    scripts=$(find "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" -type f -print0)
+    scripts=$(find "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" -type f)
     if [[ -z "$scripts" ]]; then
       echo "no script found." >&2
       exit 1
@@ -40,7 +40,7 @@ main() {
       chmod u+x "$script_path"
       "$script_path"
 
-    done <<<"$scripts"
+    done < <(find "$SHELL_UTILS_ON_UPDATE_SCRIPTS_PATH" -type f -print0 || true)
   fi
 }
 
