@@ -19,7 +19,7 @@ jobs:
         run: nix flake check
 
       - name: Build flake
-        run: nix build .# -L
+        run: make buildflake
 
   ci-pkgbuild:
     runs-on: ubuntu-latest

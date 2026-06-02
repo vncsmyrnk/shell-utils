@@ -17,18 +17,16 @@
           root = ./.;
           fileset = pkgs.lib.fileset.unions [
             ./cmd
+            ./scripts
             ./completions
-            ./extra
             ./internal
-            ./man
             ./go.mod
-            ./go.sum
             ./Makefile
             ./.shellcheckrc
           ];
         };
-        version = "0.0.1";
-        vendorHash = "sha256-Yq64hzbakRzSl3vz0Sn4D2y13wjozQbao7yRX2NkdDk=";
+        version = "1.0.0";
+        vendorHash = null;
 
         doCheck = true;
         nativeCheckInputs = [
