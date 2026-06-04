@@ -1,0 +1,136 @@
+name "util"
+help "An attempt to be a shell-agnostic custom utilities tool."
+
+flag "--help" help="Displays a help section" global=#true
+flag "--to-stdout" help="Displays a help section" global=#true
+
+cmd "backup" help="Performs backup related actions" {
+  cmd "generate" help="Generates an encrypted backup file and uploads it to a rclone remote"
+  cmd "remote" help="Offers actions related to the backups uploaded to the rclone remote." {
+    cmd "list" help="Lists backups uploaded to the current set rclone remote"
+    cmd "unwrap" help="Uses the latest backup" {
+      flag "--latest"
+    }
+  }
+}
+
+cmd "containers" help="Manages encrypted containers" {
+  cmd "list" help="Lists currently mounted containers" {
+    flag "-h --noheading" help="Hides heading"
+  }
+  cmd "mount" help="Lists currently mounted containers" {
+    arg "<file>" help="Container image file"
+    arg "<file>" help="Destination mountpoint"
+  }
+}
+
+cmd "distribution" help="Defines visualizations for number distributions" {
+  cmd "graph" help="Reads a file and plots relevant distribution graphs" {
+    arg "<file>" help="Path of the file containing the numbers"
+  }
+  cmd "stats" help="Reads a file and calculates statistics." {
+    arg "<file>" help="Path of the file containing the numbers"
+  }
+}
+
+cmd "docker" help="Docker related commands" {
+  cmd "stop" help="Stops docker containers" {
+    arg "<int>" help="Container ID"
+    flag "--all" help="Stops all running containers"
+  }
+  cmd "clear-cache-soft" help="Clears docker build and volume cache"
+}
+
+cmd "environment" help="Handles sensible environment variables injection" {
+  cmd "edit" help="Edits the sops secrets variables using $EDITOR" {
+    flag "-f --file <file>" help="Secret file"
+  }
+  cmd "exec" help="Executes a command setting sops secrets on the environment" {
+    flag "-f --file <file>" help="Secret file"
+    arg "<precommand>" help="Command to be executed"
+  }
+}
+
+cmd "gpg" help="Performs gpg related actions" {
+  cmd "export" help="Exports the public and private gpg keys for an ID" {
+    flag "--remote" help="Push the encrypted backup to a rclone remote"
+    arg "<email>" help="Email"
+  }
+  cmd "generate" help="Generates a new gpg key"
+  cmd "import" help="Imports a gpg key ID using the private and public keys and the trust backup" {
+    flag "--private-key <string>" help="GPG private key, exportable via gpg --export-secret-keys"
+    flag "--public-key <string>" help="GPG public key, exportable via gpg --export "
+    flag "--ownertrust <string>" help="GPG ownertrust data base, exportable via gpg --export-ownertrust"
+  }
+}
+
+cmd "jobs" help="TMUX wrappers for spawning and monitoring jobs" {
+  cmd "attach" help="Attaches to the tmux session and window of a job" {
+    arg "<string>" help="Job name"
+  }
+  cmd "kill" help="Kill running jobs" {
+    flag "--all" help="Kill all jobs"
+    arg "<string>" help="Job name"
+  }
+  cmd "list" help="List all running jobs"
+  cmd "log" help="Pages the job standard output" {
+    flag "-f" help="Follow output on the current prompt"
+  }
+  cmd "restart" help="Restarts a currently running job" {
+    arg "<string>" help="Job name"
+  }
+  cmd "run" help="Executes a command on a new window in the default session" {
+    arg "<string>" help="Job name"
+    arg "<precommand>" help="Command to be executed"
+  }
+}
+
+cmd "locale" help="Allows translation files manipulation" {
+  cmd "gettext" help="Fetches a corresponding translation of a word in a mo file." {
+    arg "<file>" help="MO file"
+    arg "<int>" help="Message ID"
+    flag "-l --language <string>" help="Language"
+  }
+}
+
+cmd "nix" help="Defines Nix-related actions" {
+  cmd "clear-cache" help="Invokes Nix garbage collection"
+}
+
+cmd "pass" help="Auxiliary pass wrappers" {
+  cmd "cp2l" help="Copies the second and first lines of a pass password one after the other" {
+    flag "-t --first-copy-timeout <int>" help="Time waited after the user is copied before copying the password to the clipboard"
+  }
+}
+
+cmd "random" help="Random value geneation helpers" {
+  cmd "generate" help="Generates random hex based pseudo-random strings using openssl" {
+    flag "-l --length <int>" help="Length of the random string being generated"
+  }
+}
+
+cmd "totp" help="Performs TOTP related actions" {
+  cmd "add" help="Cryptographs TOTP keys on gpg files to be later used to generate TOTP passwords" {
+    arg "<string>" help="Entity name"
+  }
+  cmd "generate" help="Generates TOTP passwords based on predefined keys stored in gpg files" {
+    arg "<string>" help="Entity name"
+  }
+}
+
+cmd "workspaces" help="Manages environment files" {
+  cmd "list" help="Lists currently mounted workspace containers" {
+    flag "-h --noheading" help="Hides heading"
+  }
+  cmd "set" help="Mounts an encrypted container from a file and stows it on $HOME" {
+    arg "<file>" help="Container image file"
+  }
+  cmd "unset" help="Unmounts an existent workspace container after its content is unstowed" {
+    arg "<file>" help="Container image file"
+  }
+}
+
+cmd "yay" help="Defines yay-related actions"
+
+cmd "install-check" help="Checks if shell-utils is properly installed"
+cmd "update" help="Executes packages upgrade actions"

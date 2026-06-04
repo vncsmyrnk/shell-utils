@@ -1,0 +1,1035 @@
+#compdef util
+
+# This script was generated automatically
+
+function _util_backup_generate() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_backup_remote_list() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_backup_remote_unwrap() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--latest)'--latest'' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_backup_remote() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'list:Lists backups uploaded to the current set rclone remote'
+                'unwrap:Uses the latest backup'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                list)
+                    _util_backup_remote_list "$@" && ret=0
+                    ;;
+                unwrap)
+                    _util_backup_remote_unwrap "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_backup() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'generate:Generates an encrypted backup file and uploads it to a rclone remote'
+                'remote:Offers actions related to the backups uploaded to the rclone remote.'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                generate)
+                    _util_backup_generate "$@" && ret=0
+                    ;;
+                remote)
+                    _util_backup_remote "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_containers_list() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(-h --noheading)'-h'[Hides heading]' \
+        '(-h --noheading)'--noheading'[Hides heading]' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_containers_mount() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:Container image file:_files' \
+        '2:Destination mountpoint:_files' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_containers() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'list:Lists currently mounted containers'
+                'mount:Lists currently mounted containers'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                list)
+                    _util_containers_list "$@" && ret=0
+                    ;;
+                mount)
+                    _util_containers_mount "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_distribution_graph() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:Path of the file containing the numbers:_files' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_distribution_stats() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:Path of the file containing the numbers:_files' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_distribution() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'graph:Reads a file and plots relevant distribution graphs'
+                'stats:Reads a file and calculates statistics.'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                graph)
+                    _util_distribution_graph "$@" && ret=0
+                    ;;
+                stats)
+                    _util_distribution_stats "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_docker_stop() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--all)'--all'[Stops all running containers]' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:Container ID:_guard "[0-9]#"' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_docker_clear-cache-soft() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_docker() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'stop:Stops docker containers'
+                'clear-cache-soft:Clears docker build and volume cache'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                stop)
+                    _util_docker_stop "$@" && ret=0
+                    ;;
+                clear-cache-soft)
+                    _util_docker_clear-cache-soft "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_environment_edit() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(-f --file)'-f'[Secret file]:file:_files' \
+        '(-f --file)'--file'[Secret file]:file:_files' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_environment_exec() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(-f --file)'-f'[Secret file]:file:_files' \
+        '(-f --file)'--file'[Secret file]:file:_files' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        args)
+            _normal
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_environment() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'edit:Edits the sops secrets variables using $EDITOR'
+                'exec:Executes a command setting sops secrets on the environment'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                edit)
+                    _util_environment_edit "$@" && ret=0
+                    ;;
+                exec)
+                    _util_environment_exec "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_gpg_export() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--remote)'--remote'[Push the encrypted backup to a rclone remote]' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:email:' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_gpg_generate() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_gpg_import() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--ownertrust)'--ownertrust'[GPG ownertrust data base, exportable via gpg --export-ownertrust]:string:' \
+        '(--public-key)'--public-key'[GPG public key, exportable via gpg --export ]:string:' \
+        '(--private-key)'--private-key'[GPG private key, exportable via gpg --export-secret-keys]:string:' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_gpg() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'export:Exports the public and private gpg keys for an ID'
+                'generate:Generates a new gpg key'
+                'import:Imports a gpg key ID using the private and public keys and the trust backup'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                export)
+                    _util_gpg_export "$@" && ret=0
+                    ;;
+                generate)
+                    _util_gpg_generate "$@" && ret=0
+                    ;;
+                import)
+                    _util_gpg_import "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_jobs_attach() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:string:' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_jobs_kill() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--all)'--all'[Kill all jobs]' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:string:' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_jobs_list() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_jobs_log() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '()'-f'[Follow output on the current prompt]' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_jobs_restart() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:string:' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_jobs_run() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:string:' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        args)
+            _normal
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_jobs() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'attach:Attaches to the tmux session and window of a job'
+                'kill:Kill running jobs'
+                'list:List all running jobs'
+                'log:Pages the job standard output'
+                'restart:Restarts a currently running job'
+                'run:Executes a command on a new window in the default session'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                attach)
+                    _util_jobs_attach "$@" && ret=0
+                    ;;
+                kill)
+                    _util_jobs_kill "$@" && ret=0
+                    ;;
+                list)
+                    _util_jobs_list "$@" && ret=0
+                    ;;
+                log)
+                    _util_jobs_log "$@" && ret=0
+                    ;;
+                restart)
+                    _util_jobs_restart "$@" && ret=0
+                    ;;
+                run)
+                    _util_jobs_run "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_locale_gettext() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(-l --language)'-l'[Language]:string:' \
+        '(-l --language)'--language'[Language]:string:' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:MO file:_files' \
+        '2:Message ID:_guard "[0-9]#"' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_locale() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'gettext:Fetches a corresponding translation of a word in a mo file.'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                gettext)
+                    _util_locale_gettext "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_nix_clear-cache() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_nix() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'clear-cache:Invokes Nix garbage collection'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                clear-cache)
+                    _util_nix_clear-cache "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_pass_cp2l() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(-t --first-copy-timeout)'-t'[Time waited after the user is copied before copying the password to the clipboard]:int:' \
+        '(-t --first-copy-timeout)'--first-copy-timeout'[Time waited after the user is copied before copying the password to the clipboard]:int:' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_pass() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'cp2l:Copies the second and first lines of a pass password one after the other'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                cp2l)
+                    _util_pass_cp2l "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_random_generate() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(-l --length)'-l'[Length of the random string being generated]:int:' \
+        '(-l --length)'--length'[Length of the random string being generated]:int:' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_random() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'generate:Generates random hex based pseudo-random strings using openssl'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                generate)
+                    _util_random_generate "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_totp_add() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:string:' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_totp_generate() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:string:' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_totp() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'add:Cryptographs TOTP keys on gpg files to be later used to generate TOTP passwords'
+                'generate:Generates TOTP passwords based on predefined keys stored in gpg files'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                add)
+                    _util_totp_add "$@" && ret=0
+                    ;;
+                generate)
+                    _util_totp_generate "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_workspaces_list() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(-h --noheading)'-h'[Hides heading]' \
+        '(-h --noheading)'--noheading'[Hides heading]' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_workspaces_set() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:Container image file:_files' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_workspaces_unset() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:Container image file:_files' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_workspaces() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'list:Lists currently mounted workspace containers'
+                'set:Mounts an encrypted container from a file and stows it on $HOME'
+                'unset:Unmounts an existent workspace container after its content is unstowed'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                list)
+                    _util_workspaces_list "$@" && ret=0
+                    ;;
+                set)
+                    _util_workspaces_set "$@" && ret=0
+                    ;;
+                unset)
+                    _util_workspaces_unset "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_yay() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_install-check() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_update() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'backup:Performs backup related actions'
+                'containers:Manages encrypted containers'
+                'distribution:Defines visualizations for number distributions'
+                'docker:Docker related commands'
+                'environment:Handles sensible environment variables injection'
+                'gpg:Performs gpg related actions'
+                'jobs:TMUX wrappers for spawning and monitoring jobs'
+                'locale:Allows translation files manipulation'
+                'nix:Defines Nix-related actions'
+                'pass:Auxiliary pass wrappers'
+                'random:Random value geneation helpers'
+                'totp:Performs TOTP related actions'
+                'workspaces:Manages environment files'
+                'yay:Defines yay-related actions'
+                'install-check:Checks if shell-utils is properly installed'
+                'update:Executes packages upgrade actions'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                backup)
+                    _util_backup "$@" && ret=0
+                    ;;
+                containers)
+                    _util_containers "$@" && ret=0
+                    ;;
+                distribution)
+                    _util_distribution "$@" && ret=0
+                    ;;
+                docker)
+                    _util_docker "$@" && ret=0
+                    ;;
+                environment)
+                    _util_environment "$@" && ret=0
+                    ;;
+                gpg)
+                    _util_gpg "$@" && ret=0
+                    ;;
+                jobs)
+                    _util_jobs "$@" && ret=0
+                    ;;
+                locale)
+                    _util_locale "$@" && ret=0
+                    ;;
+                nix)
+                    _util_nix "$@" && ret=0
+                    ;;
+                pass)
+                    _util_pass "$@" && ret=0
+                    ;;
+                random)
+                    _util_random "$@" && ret=0
+                    ;;
+                totp)
+                    _util_totp "$@" && ret=0
+                    ;;
+                workspaces)
+                    _util_workspaces "$@" && ret=0
+                    ;;
+                yay)
+                    _util_yay "$@" && ret=0
+                    ;;
+                install-check)
+                    _util_install-check "$@" && ret=0
+                    ;;
+                update)
+                    _util_update "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+if [ "$funcstack[1]" = "_util" ]; then
+    _util "$@"
+else
+    compdef _util util
+fi
+

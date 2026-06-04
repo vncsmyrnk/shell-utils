@@ -5,6 +5,7 @@ OUTPUT = $(SRCDIR)/build
 GO_SRC = $(shell find $(SRCDIR) -type f -name '*.go')
 MAN1_SRC = $(wildcard $(SRCDIR)/man/*)
 SCRIPTS_SRC = $(shell find $(SRCDIR)/scripts -type f)
+COMPLETION_SRC = $(SRCDIR)/completions
 
 UTIL = $(OUTPUT)/util
 
@@ -39,6 +40,7 @@ install: all
 	$(INSTALL) -d $(DESTDIR)$(ZSHDIR)/site-functions
 	$(INSTALL) -d $(DESTDIR)$(BINDIR)
 	$(INSTALL_PROGRAM) $(UTIL) $(DESTDIR)$(BINDIR)
+	$(INSTALL_DATA) $(COMPLETION_SRC)/zsh/_util $(DESTDIR)$(ZSHDIR)/site-functions/_util
 	cp -r $(SRCDIR)/scripts $(DESTDIR)$(DATADIR)/shell-utils/
 	find $(DESTDIR)$(DATADIR)/shell-utils/scripts/ -type d -print0 | xargs -0 chmod 755
 	find $(DESTDIR)$(DATADIR)/shell-utils/scripts/ -type f -print0 | xargs -0 chmod 755
@@ -81,6 +83,12 @@ installcheck:
 .PHONY: buildflake
 buildflake:
 	@nix build .# -L
+
+.PHONY: completions
+completions: $(SRCDIR)/completions/zsh/_util
+
+$(SRCDIR)/completions/zsh/_util: $(SRCDIR)/completions.kdl
+	cg --shell zsh $< > $(SRCDIR)/completions/zsh/_util
 
 $(UTIL): $(GO_SRC)
 	$(GO) generate ./...
