@@ -32,7 +32,7 @@ main() {
   fi
 
   # shellcheck disable=SC2310
-  if ! _container_mounted "$src" >/dev/null; then
+  if ! _container_mounted "$src" >/dev/null 2>&1; then
     echo "container is not mounted." >&2
     exit 1
   fi
@@ -44,6 +44,12 @@ main() {
 
   : "${_workspaces_mount_path:=}"
   target="$_workspaces_mount_path/$target_name"
+
+  if fuser -s -m "$target"; then
+    echo "target is busy." >&2
+    return 1
+  fi
+
   stow -D -d "$target" -t "$HOME" .
   _container_unmount "$target_name" "$target"
   ssh-add -D

@@ -51,6 +51,11 @@ _container_unmount() {
   target_name="$1"
   target="$2"
 
+  if fuser -s -m "$target"; then
+    echo "target is busy." >&2
+    return 1
+  fi
+
   sudo -v
 
   if ! sudo umount "$target"; then
