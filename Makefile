@@ -9,6 +9,8 @@ COMPLETION_SRC = $(SRCDIR)/completions
 
 UTIL = $(OUTPUT)/util
 
+VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || cat VERSION 2>/dev/null || echo "unknown")
+
 PREFIX ?= /usr
 DESTDIR ?=
 
@@ -26,7 +28,8 @@ INSTALL_DATA = $(INSTALL) -m 644
 GO ?= go
 GO_FLAGS = -trimpath
 GO_ENV ?= CGO_ENABLED=0
-GO_LDFLAGS ?= -s -w -X 'shellutils/internal.DataPath=$(PREFIX)/share/shell-utils'
+GO_LDFLAGS ?= -s -w -X 'shellutils/internal.DataPath=$(PREFIX)/share/shell-utils' \
+							-X 'shellutils/internal.Version=$(VERSION)'
 
 all: $(UTIL)
 

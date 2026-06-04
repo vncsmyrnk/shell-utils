@@ -25,6 +25,11 @@ func main() {
 		printUsageAndExit()
 	}
 
+	if len(os.Args) == 2 && slices.Contains([]string{"--version", "-V"}, os.Args[1]) {
+		fmt.Println(internal.Version)
+		os.Exit(0)
+	}
+
 	scriptsDir := internal.ScriptsPath(internal.DataPath)
 	if !strings.HasPrefix(scriptsDir, "/") {
 		scriptsDir, _ = os.Getwd()
