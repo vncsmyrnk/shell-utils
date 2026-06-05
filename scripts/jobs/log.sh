@@ -13,14 +13,38 @@ set -e
 # shellcheck source=scripts/jobs/_variables.sh
 \. "${SHELL_UTILS_SCRIPT_DIRNAME}/_variables.sh"
 
-job_name="$1"
-: "${_jobs_log_dir:=}"
-log_file="$_jobs_log_dir/$job_name.log"
-if [[ -z "$log_file" ]]; then
+follow=false
+job_name=
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  -f | --follow)
+    follow=true
+    shift
+    ;;
+  *)
+    if [[ -n "$job_name" ]]; then
+      echo "Unexpected extra argument \"$1\""
+      break
+    fi
+    job_name="$1"
+    shift
+    ;;
+  esac
+done
+
+if [[ -z "$job_name" ]]; then
+  echo "A job name is required." >&2
   exit 1
 fi
 
-if [[ " $* " == *" -f "* ]]; then
+: "${_jobs_log_dir:=}"
+log_file="$_jobs_log_dir/$job_name.log"
+if [[ -z "$log_file" ]]; then
+  echo "Job not found." >&2
+  exit 1
+fi
+
+if [[ "$follow" = "true" ]]; then
   tail -f "$log_file"
   exit 0
 fi

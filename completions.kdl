@@ -66,18 +66,19 @@ cmd "gpg" help="Performs gpg related actions" {
 
 cmd "jobs" help="TMUX wrappers for spawning and monitoring jobs" {
   cmd "attach" help="Attaches to the tmux session and window of a job" {
-    arg "<string>" help="Job name"
+    arg "<string>" help="Job name" run="util jobs list"
   }
   cmd "kill" help="Kill running jobs" {
     flag "--all" help="Kill all jobs"
-    arg "<string>" help="Job name"
+    arg "<string>" help="Job name" run="util jobs list"
   }
   cmd "list" help="List all running jobs"
   cmd "log" help="Pages the job standard output" {
     flag "-f" help="Follow output on the current prompt"
+    arg "<string>" help="Job name" run="util jobs list"
   }
   cmd "restart" help="Restarts a currently running job" {
-    arg "<string>" help="Job name"
+    arg "<string>" help="Job name" run="util jobs list"
   }
   cmd "run" help="Executes a command on a new window in the default session" {
     arg "<string>" help="Job name"
