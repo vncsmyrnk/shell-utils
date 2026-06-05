@@ -49,7 +49,7 @@ func main() {
 	}
 
 	for _, e := range os.Environ() {
-		if strings.HasPrefix(e, "SHELL_UTILS_") || slices.Contains(persistentEnvironmentVariables, e) {
+		if strings.HasPrefix(e, "SHELL_UTILS_") || pathHasAnyVar(e, persistentEnvironmentVariables) {
 			env = append(env, e)
 		}
 	}
@@ -138,6 +138,15 @@ func main() {
 func formatEnvKey(flagName string) string {
 	key := strings.ToUpper(flagName)
 	return strings.ReplaceAll(key, "-", "_")
+}
+
+func pathHasAnyVar(path string, targets []string) bool {
+	for _, t := range targets {
+		if strings.HasPrefix(path, fmt.Sprintf("%s=", t)) {
+			return true
+		}
+	}
+	return false
 }
 
 func printUsageAndExit() {
