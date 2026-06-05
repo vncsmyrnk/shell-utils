@@ -130,7 +130,17 @@ cmd "workspaces" help="Manages environment files" {
   }
 }
 
-cmd "yay" help="Defines yay-related actions"
+cmd "tmux" help="TMUX wrappers" {
+  cmd "split" help="Splits the current window both horizontally and vertically"
+}
 
+cmd "git" help="Git wrappers" {
+  cmd "backup" help="Splits the current window both horizontally and vertically" {
+    flag "--name <string>" help="Backup name"
+  }
+  cmd "new-ssh-key" help="Generates a new ssh key for the current git user considering the current git user e-mail"
+}
+
+cmd "yay" help="Defines yay-related actions"
 cmd "install-check" help="Checks if shell-utils is properly installed"
 cmd "update" help="Executes packages upgrade actions"

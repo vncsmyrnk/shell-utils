@@ -132,7 +132,6 @@ function _util_containers_mount() {
         '(--to-stdout)'--to-stdout'[Displays a help section]' \
         '(--help)'--help'[Displays a help section]' \
         '1:Container image file:_files' \
-        '2:Destination mountpoint:_files' \
         '*:: :->args' && ret=0
 
     return ret
@@ -491,7 +490,7 @@ function _util_jobs_log() {
     local ret=1
 
     _arguments -C \
-        '()'-f'[Follow output on the current prompt]' \
+        '(-f)'-f'[Follow output on the current prompt]' \
         '(--to-stdout)'--to-stdout'[Displays a help section]' \
         '(--help)'--help'[Displays a help section]' \
         '*:: :->args' && ret=0
@@ -523,12 +522,6 @@ function _util_jobs_run() {
         '(--help)'--help'[Displays a help section]' \
         '1:string:' \
         '*:: :->args' && ret=0
-
-    case $state in
-        args)
-            _normal
-            ;;
-    esac
 
     return ret
 }
@@ -593,7 +586,6 @@ function _util_locale_gettext() {
         '(--to-stdout)'--to-stdout'[Displays a help section]' \
         '(--help)'--help'[Displays a help section]' \
         '1:MO file:_files' \
-        '2:Message ID:_guard "[0-9]#"' \
         '*:: :->args' && ret=0
 
     return ret
@@ -899,6 +891,108 @@ function _util_workspaces() {
     return ret
 }
 
+function _util_tmux_split() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_tmux() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'split:Splits the current window both horizontally and vertically'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                split)
+                    _util_tmux_split "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
+function _util_git_backup() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--name)'--name'[Backup name]:string:' \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_git_new-ssh-key() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
+function _util_git() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '1: :->action' \
+        '*:: :->args' && ret=0
+
+    case $state in
+        action)
+            local -a choices
+            choices=(
+                'backup:Splits the current window both horizontally and vertically'
+                'new-ssh-key:Generates a new ssh key for the current git user considering the current git user e-mail'
+            )
+            _describe 'commands' choices && ret=0
+            ;;
+        args)
+            case $line[1] in
+                backup)
+                    _util_git_backup "$@" && ret=0
+                    ;;
+                new-ssh-key)
+                    _util_git_new-ssh-key "$@" && ret=0
+                    ;;
+            esac
+            ;;
+    esac
+
+    return ret
+}
+
 function _util_yay() {
     local context state state_descr line
     typeset -A opt_args
@@ -964,6 +1058,8 @@ function _util() {
                 'random:Random value geneation helpers'
                 'totp:Performs TOTP related actions'
                 'workspaces:Manages environment files'
+                'tmux:TMUX wrappers'
+                'git:Git wrappers'
                 'yay:Defines yay-related actions'
                 'install-check:Checks if shell-utils is properly installed'
                 'update:Executes packages upgrade actions'
@@ -1010,6 +1106,12 @@ function _util() {
                     ;;
                 workspaces)
                     _util_workspaces "$@" && ret=0
+                    ;;
+                tmux)
+                    _util_tmux "$@" && ret=0
+                    ;;
+                git)
+                    _util_git "$@" && ret=0
                     ;;
                 yay)
                     _util_yay "$@" && ret=0
