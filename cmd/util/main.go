@@ -14,10 +14,9 @@ import (
 )
 
 var persistentEnvironmentVariables = []string{
-	"HOME",
-	"USER",
-	"EDITOR",
-	"PAGER",
+	"HOME", "USER", "EDITOR",
+	"PAGER", "XDG_RUNTIME_DIR",
+	"WAYLAND_DISPLAY",
 }
 
 func main() {
