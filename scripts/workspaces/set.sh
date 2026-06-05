@@ -12,9 +12,8 @@ set -e
 # shellcheck source=scripts/_lib.sh
 \. "${SHELL_UTILS_SCRIPTS_PATH}/_lib.sh"
 
-: "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
 # shellcheck source=scripts/containers/_lib.sh
-\. "${SHELL_UTILS_SCRIPT_DIRNAME}/_lib.sh"
+\. "$SHELL_UTILS_SCRIPTS_PATH/containers/_lib.sh"
 
 : "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
 # shellcheck source=scripts/workspaces/_variables.sh
@@ -45,7 +44,7 @@ main() {
   fi
 
   # shellcheck disable=SC2310
-  if _container_mounted "$src" >/dev/null; then
+  if _container_mounted "$src" >/dev/null 2>&1; then
     _lib_fatal "container is already mounted."
   fi
 
