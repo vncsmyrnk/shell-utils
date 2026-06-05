@@ -47,7 +47,7 @@ install: all
 	cp -r $(SRCDIR)/scripts $(DESTDIR)$(DATADIR)/shell-utils/
 	find $(DESTDIR)$(DATADIR)/shell-utils/scripts/ -type d -print0 | xargs -0 chmod 755
 	find $(DESTDIR)$(DATADIR)/shell-utils/scripts/ -type f -print0 | xargs -0 chmod 755
-	find $(DESTDIR)$(DATADIR)/shell-utils/scripts/ -type f -name help -print0 | xargs -0 chmod 644
+	find $(DESTDIR)$(DATADIR)/shell-utils/scripts/ -type f -name help -or -name '_*' -print0 | xargs -0 chmod 644
 
 .PHONY: install-local
 install-local: all
