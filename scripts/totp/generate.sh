@@ -19,13 +19,11 @@ set -e
 # shellcheck source=scripts/_lib.sh
 \. "${SHELL_UTILS_SCRIPTS_PATH}/_lib.sh"
 
-TOTP_SECRETS_DIR=${TOTP_SECRETS_DIR:-"$HOME/.secrets/totp"}
-TOTP_CURRENT_TIME=${TOTP_CURRENT_TIME:-"5 seconds"}
-
-error() {
-  echo -e "$1" >&2
-  exit 1
-}
+: "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
+# shellcheck source=scripts/totp/_variables.sh
+\. "${SHELL_UTILS_SCRIPT_DIRNAME}/_variables.sh"
+: "${_totp_secrets_dir:=}"
+: "${_totp_current_time:=}"
 
 main() {
   local entity
@@ -39,9 +37,9 @@ main() {
   fi
 
   local secret_file
-  secret_file="$TOTP_SECRETS_DIR/$entity.gpg"
+  secret_file="$_totp_secrets_dir/$entity.gpg"
   if [[ ! -f "$secret_file" ]]; then
-    _lib_fatal "secret not found for entity.\n\nPlace them at \033[4m$TOTP_SECRETS_DIR\033[0m" >&2
+    _lib_fatal "secret not found for entity." >&2
   fi
 
   local totp_key
@@ -51,7 +49,7 @@ main() {
 
   local totp_code
   totp_code=$(
-    oathtool --totp -b --now "$TOTP_CURRENT_TIME" - <<<"$totp_key"
+    oathtool --totp -b --now "$_totp_current_time" - <<<"$totp_key"
   )
 
   echo "$totp_code"

@@ -114,11 +114,12 @@ cmd "random" help="Random value geneation helpers" {
 }
 
 cmd "totp" help="Performs TOTP related actions" {
+  cmd "list" help="Lists TOTP entities available"
   cmd "add" help="Cryptographs TOTP keys on gpg files to be later used to generate TOTP passwords" {
-    arg "<string>" help="Entity name"
+    arg "<totp_entity>" help="Entity name" run="util totp list"
   }
   cmd "generate" help="Generates TOTP passwords based on predefined keys stored in gpg files" {
-    arg "<string>" help="Entity name"
+    arg "<totp_entity>" help="Entity name" run="util totp list"
   }
 }
 

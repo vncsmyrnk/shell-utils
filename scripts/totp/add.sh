@@ -14,7 +14,11 @@ set -e
 # shellcheck source=scripts/_lib.sh
 \. "${SHELL_UTILS_SCRIPTS_PATH}/_lib.sh"
 
-TOTP_SECRETS_DIR=${TOTP_SECRETS_DIR:-"$HOME/.secrets/totp"}
+: "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
+# shellcheck source=scripts/totp/_variables.sh
+\. "${SHELL_UTILS_SCRIPT_DIRNAME}/_variables.sh"
+: "${_totp_secrets_dir:=}"
+
 KEY_TMP_PATH=/tmp/key
 
 entity="$1"
@@ -27,7 +31,7 @@ if [[ -z "$key" ]]; then
   _lib_fatal "key must be provided via STDIN."
 fi
 
-entity_path="$TOTP_SECRETS_DIR/${entity}.gpg"
+entity_path="$_totp_secrets_dir/${entity}.gpg"
 if [[ -f "$entity_path" ]]; then
   echo -n "An entity with this name already exists. Override it? [y/N]: "
   read -r response </dev/tty
