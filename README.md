@@ -18,7 +18,7 @@ For security reasons, the `util` router sets a predefined set of environment var
 
 
 ```sh
-util random generate -l 20 # this will execute ./extra/random/generate.sh
+util random generate -l 20 # this will execute ./scripts/random/generate.sh
                            # automatically forwarding all arguments.
 ```
 
