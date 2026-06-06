@@ -18,7 +18,10 @@ cmd "containers" help="Manages encrypted containers" {
   cmd "list" help="Lists currently mounted containers" {
     flag "-h --noheading" help="Hides heading"
   }
-  cmd "mount" help="Lists currently mounted containers" {
+  cmd "unmount" help="Unmounts an encrypted container" {
+    arg "<file>" help="Container image file"
+  }
+  cmd "mount" help="Mounts an encrypted container from a file" {
     arg "<file>" help="Container image file"
     arg "<file>" help="Destination mountpoint"
   }

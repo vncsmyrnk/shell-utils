@@ -123,6 +123,20 @@ function _util_containers_list() {
     return ret
 }
 
+function _util_containers_unmount() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        '(--to-stdout)'--to-stdout'[Displays a help section]' \
+        '(--help)'--help'[Displays a help section]' \
+        '1:Container image file:_files' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
 function _util_containers_mount() {
     local context state state_descr line
     typeset -A opt_args
@@ -151,7 +165,8 @@ function _util_containers() {
             local -a choices
             choices=(
                 'list:Lists currently mounted containers'
-                'mount:Lists currently mounted containers'
+                'unmount:Unmounts an encrypted container'
+                'mount:Mounts an encrypted container from a file'
             )
             _describe 'commands' choices && ret=0
             ;;
@@ -159,6 +174,9 @@ function _util_containers() {
             case $line[1] in
                 list)
                     _util_containers_list "$@" && ret=0
+                    ;;
+                unmount)
+                    _util_containers_unmount "$@" && ret=0
                     ;;
                 mount)
                     _util_containers_mount "$@" && ret=0
