@@ -146,6 +146,7 @@ function _util_containers_mount() {
         '(--to-stdout)'--to-stdout'[Displays a help section]' \
         '(--help)'--help'[Displays a help section]' \
         '1:Container image file:_files' \
+        '2:Destination mountpoint:_files' \
         '*:: :->args' && ret=0
 
     return ret
@@ -574,6 +575,12 @@ function _util_jobs_run() {
         '1:string:' \
         '*:: :->args' && ret=0
 
+    case $state in
+        args)
+            _normal
+            ;;
+    esac
+
     return ret
 }
 
@@ -637,6 +644,7 @@ function _util_locale_gettext() {
         '(--to-stdout)'--to-stdout'[Displays a help section]' \
         '(--help)'--help'[Displays a help section]' \
         '1:MO file:_files' \
+        '2:Message ID:_guard "[0-9]#"' \
         '*:: :->args' && ret=0
 
     return ret
