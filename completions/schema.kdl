@@ -77,7 +77,7 @@ cmd "jobs" help="TMUX wrappers for spawning and monitoring jobs" {
   }
   cmd "list" help="List all running jobs" alias="ls"
   cmd "log" help="Pages the job standard output" {
-    flag "-f" help="Follow output on the current prompt"
+    flag "-f --follow" help="Follow output on the current prompt"
     arg "<string>" help="Job name" run="util jobs list"
   }
   cmd "restart" help="Restarts a currently running job" alias="rs" {
