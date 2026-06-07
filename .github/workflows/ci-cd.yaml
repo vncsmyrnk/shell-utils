@@ -47,7 +47,7 @@ jobs:
           sudo apt-get update && sudo apt-get install -y ruby ruby-dev rubygems build-essential
           sudo gem install fpm
 
-      - name: Build flake
+      - name: Build DEB
         run: make deb
 
       - name: Archive artifacts
@@ -60,7 +60,6 @@ jobs:
   cd-check:
     needs: [ci, ci-deb, ci-pkgbuild]
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/heads/main' }}
     outputs:
       pkgbuild-changed: ${{ steps.filter.outputs.pkgbuild-changed }}
     steps:
