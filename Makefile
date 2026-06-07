@@ -9,7 +9,14 @@ COMPLETION_SRC = $(SRCDIR)/completions
 
 UTIL = $(OUTPUT)/util
 
-VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || cat VERSION 2>/dev/null || echo "unknown")
+BASE_VERSION := $(shell git describe --tags --always --dirty 2>/dev/null || cat VERSION 2>/dev/null || echo "unknown")
+
+GIT_BRANCH := $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null)
+ifeq ($(GIT_BRANCH),unstable)
+	FINAL_VERSION = $(BASE_VERSION)-unstable
+else
+	FINAL_VERSION = $(BASE_VERSION)
+endif
 
 PREFIX ?= /usr
 DESTDIR ?=
@@ -29,7 +36,7 @@ GO ?= go
 GO_FLAGS = -trimpath
 GO_ENV ?= CGO_ENABLED=0
 GO_LDFLAGS ?= -s -w -X 'shellutils/internal.DataPath=$(PREFIX)/share/shell-utils' \
-							-X 'shellutils/internal.Version=$(VERSION)'
+							-X 'shellutils/internal.Version=$(FINAL_VERSION)'
 
 all: $(UTIL)
 
@@ -71,6 +78,15 @@ check:
 .PHONY: lint
 lint:
 	GOLANGCI_LINT_CACHE=$$(mktemp -d) golangci-lint run $(SRCDIR)/...
+
+.PHONY: dist
+dist:
+	@echo "Packaging source for $(FINAL_VERSION)..."
+	@mkdir -p shell-utils-$(FINAL_VERSION)
+	git archive HEAD | tar -x -C shell-utils-$(FINAL_VERSION)
+	@echo $(FINAL_VERSION) > shell-utils-$(FINAL_VERSION)/VERSION
+	tar -czvf shell-utils-$(FINAL_VERSION).tar.gz shell-utils-$(FINAL_VERSION)
+	@rm -rf shell-utils-$(FINAL_VERSION)
 
 .PHONY: installcheck
 installcheck:
