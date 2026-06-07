@@ -53,6 +53,8 @@ var Router = map[string]string{
 	"environment:edit": "environment.env/edit.sh",
 	"environment:exec": "environment.env/exec.sh",
 	"font": "font",
+	"font:cache-reload": "font/cache-reload.cr.sh",
+	"font:cr": "font/cache-reload.cr.sh",
 	"git": "git",
 	"git:backup": "git/backup.bkp.sh",
 	"git:bkp": "git/backup.bkp.sh",
