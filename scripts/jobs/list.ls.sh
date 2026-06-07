@@ -12,4 +12,7 @@ set -e
 
 : "${_jobs_session_name:=}"
 
-tmux list-windows -t "$_jobs_session_name" -F "#{window_name}" 2>/dev/null
+if ! tmux list-windows -t "$_jobs_session_name" -F "#{window_name}" 2>/dev/null; then
+  echo "no active jobs found." >&2
+  exit 1
+fi
