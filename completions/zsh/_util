@@ -581,6 +581,7 @@ function _util_jobs_run() {
     local ret=1
 
     _arguments -C \
+        '(-f --file)'{-f,--file}'=[Executable file]:file:_files' \
         --help'[Displays a help section]' \
         --to-stdout'[Displays a help section]' \
         '1:string:' \

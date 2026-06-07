@@ -85,6 +85,7 @@ cmd "jobs" help="TMUX wrappers for spawning and monitoring jobs" {
     arg "<string>" help="Job name" run="util jobs list"
   }
   cmd "run" help="Executes a command on a new window in the default session" alias="r" {
+    flag "-f --file <file>" help="Executable file"
     arg "<string>" help="Job name"
     arg "<precommand>" help="Command to be executed"
   }
