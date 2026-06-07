@@ -4,30 +4,30 @@ help "An attempt to be a shell-agnostic custom utilities tool."
 flag "--help" help="Displays a help section" global=#true
 flag "--to-stdout" help="Displays a help section" global=#true
 
-cmd "backup" help="Performs backup related actions" {
-  cmd "generate" help="Generates an encrypted backup file and uploads it to a rclone remote"
+cmd "backup" help="Performs backup related actions" alias="bkp" {
+  cmd "generate" help="Generates an encrypted backup file and uploads it to a rclone remote" alias="gen"
   cmd "remote" help="Offers actions related to the backups uploaded to the rclone remote." {
-    cmd "list" help="Lists backups uploaded to the current set rclone remote"
+    cmd "list" help="Lists backups uploaded to the current set rclone remote" alias="ls"
     cmd "unwrap" help="Uses the latest backup" {
       flag "--latest"
     }
   }
 }
 
-cmd "containers" help="Manages encrypted containers" {
-  cmd "list" help="Lists currently mounted containers" {
+cmd "containers" help="Manages encrypted containers" alias="cont" {
+  cmd "list" help="Lists currently mounted containers" alias="ls" {
     flag "-h --noheading" help="Hides heading"
   }
-  cmd "unmount" help="Unmounts an encrypted container" {
+  cmd "unmount" help="Unmounts an encrypted container" alias="umnt" {
     arg "<file>" help="Container image file"
   }
-  cmd "mount" help="Mounts an encrypted container from a file" {
+  cmd "mount" help="Mounts an encrypted container from a file" alias="mnt" {
     arg "<file>" help="Container image file"
     arg "<file>" help="Destination mountpoint"
   }
 }
 
-cmd "distribution" help="Defines visualizations for number distributions" {
+cmd "distribution" help="Defines visualizations for number distributions" alias="dist" {
   cmd "graph" help="Reads a file and plots relevant distribution graphs" {
     arg "<file>" help="Path of the file containing the numbers"
   }
@@ -44,7 +44,7 @@ cmd "docker" help="Docker related commands" {
   cmd "clear-cache-soft" help="Clears docker build and volume cache"
 }
 
-cmd "environment" help="Handles sensible environment variables injection" {
+cmd "environment" help="Handles sensible environment variables injection" alias="env" {
   cmd "edit" help="Edits the sops secrets variables using $EDITOR" {
     flag "-f --file <file>" help="Secret file"
   }
@@ -59,7 +59,7 @@ cmd "gpg" help="Performs gpg related actions" {
     flag "--remote" help="Push the encrypted backup to a rclone remote"
     arg "<email>" help="Email"
   }
-  cmd "generate" help="Generates a new gpg key"
+  cmd "generate" help="Generates a new gpg key" alias="gen"
   cmd "import" help="Imports a gpg key ID using the private and public keys and the trust backup" {
     flag "--private-key <string>" help="GPG private key, exportable via gpg --export-secret-keys"
     flag "--public-key <string>" help="GPG public key, exportable via gpg --export "
@@ -68,22 +68,22 @@ cmd "gpg" help="Performs gpg related actions" {
 }
 
 cmd "jobs" help="TMUX wrappers for spawning and monitoring jobs" {
-  cmd "attach" help="Attaches to the tmux session and window of a job" {
+  cmd "attach" help="Attaches to the tmux session and window of a job" alias="a" {
     arg "<string>" help="Job name" run="util jobs list"
   }
-  cmd "kill" help="Kill running jobs" {
+  cmd "kill" help="Kill running jobs" alias="k" {
     flag "--all" help="Kill all jobs"
     arg "<string>" help="Job name" run="util jobs list"
   }
-  cmd "list" help="List all running jobs"
+  cmd "list" help="List all running jobs" alias="ls"
   cmd "log" help="Pages the job standard output" {
     flag "-f" help="Follow output on the current prompt"
     arg "<string>" help="Job name" run="util jobs list"
   }
-  cmd "restart" help="Restarts a currently running job" {
+  cmd "restart" help="Restarts a currently running job" alias="rs" {
     arg "<string>" help="Job name" run="util jobs list"
   }
-  cmd "run" help="Executes a command on a new window in the default session" {
+  cmd "run" help="Executes a command on a new window in the default session" alias="r" {
     arg "<string>" help="Job name"
     arg "<precommand>" help="Command to be executed"
   }
@@ -114,17 +114,17 @@ cmd "random" help="Random value geneation helpers" {
 }
 
 cmd "totp" help="Performs TOTP related actions" {
-  cmd "list" help="Lists TOTP entities available"
+  cmd "list" help="Lists TOTP entities available" alias="ls"
   cmd "add" help="Cryptographs TOTP keys on gpg files to be later used to generate TOTP passwords" {
     arg "<totp_entity>" help="Entity name" run="util totp list"
   }
-  cmd "generate" help="Generates TOTP passwords based on predefined keys stored in gpg files" {
+  cmd "generate" help="Generates TOTP passwords based on predefined keys stored in gpg files" alias="gen" {
     arg "<totp_entity>" help="Entity name" run="util totp list"
   }
 }
 
-cmd "workspaces" help="Manages environment files" {
-  cmd "list" help="Lists currently mounted workspace containers" {
+cmd "workspaces" help="Manages environment files" alias="ws" {
+  cmd "list" help="Lists currently mounted workspace containers" alias="ls" {
     flag "-h --noheading" help="Hides heading"
   }
   cmd "set" help="Mounts an encrypted container from a file and stows it on $HOME" {
@@ -137,14 +137,14 @@ cmd "workspaces" help="Manages environment files" {
 }
 
 cmd "tmux" help="TMUX wrappers" {
-  cmd "split" help="Splits the current window both horizontally and vertically"
+  cmd "split" help="Splits the current window both horizontally and vertically" alias="sp"
 }
 
 cmd "git" help="Git wrappers" {
-  cmd "backup" help="Splits the current window both horizontally and vertically" {
+  cmd "backup" help="Splits the current window both horizontally and vertically" alias="bkp" {
     flag "--name <string>" help="Backup name"
   }
-  cmd "new-ssh-key" help="Generates a new ssh key for the current git user considering the current git user e-mail"
+  cmd "new-ssh-key" help="Generates a new ssh key for the current git user considering the current git user e-mail" alias="nsk"
 }
 
 cmd "yay" help="Defines yay-related actions"

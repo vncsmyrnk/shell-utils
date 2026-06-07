@@ -19,7 +19,7 @@ set -e
 # Example: util environment exec -f /tmp/file.env gcloud project list
 
 : "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
-# shellcheck source=scripts/environment/_variables.sh
+# shellcheck source=scripts/environment.env/_variables.sh
 \. "${SHELL_UTILS_SCRIPT_DIRNAME}/_variables.sh"
 
 : "${_secrets_path:=}"

@@ -93,7 +93,7 @@ completions: $(SRCDIR)/completions/zsh/_util
 $(SRCDIR)/completions/zsh/_util: $(SRCDIR)/completions.kdl
 	cg --shell zsh $< > $(SRCDIR)/completions/zsh/_util
 
-$(SRCDIR)/cmd/util/router_generated.go: $(SCRIPTS_SRC)
+$(SRCDIR)/cmd/util/router_generated.go: $(SCRIPTS_SRC) $(SRCDIR)/internal/gen_router.go
 	$(GO) generate ./...
 
 $(UTIL): $(GO_SRC) $(SRCDIR)/cmd/util/router_generated.go

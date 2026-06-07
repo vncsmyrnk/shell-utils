@@ -10,7 +10,7 @@ set -e
 #  -n, --noheadings   Hide headings
 
 : "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
-# shellcheck source=scripts/workspaces/_variables.sh
+# shellcheck source=scripts/workspaces.ws/_variables.sh
 \. "${SHELL_UTILS_SCRIPT_DIRNAME}/_variables.sh"
 
 no_headings=false

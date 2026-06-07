@@ -13,4 +13,3 @@ manifest.json
 .gocache
 .gomodcache
 build
-*_generated.go

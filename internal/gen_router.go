@@ -47,8 +47,16 @@ func main() {
 		filename := parts[lastIdx]
 		parts[lastIdx] = strings.TrimSuffix(filename, filepath.Ext(filename))
 
-		routeKey := strings.Join(parts, ":")
-		routes[routeKey] = pRel
+		var aliasMatrix [][]string
+		for _, part := range parts {
+			aliases := strings.Split(part, ".")
+			aliasMatrix = append(aliasMatrix, aliases)
+		}
+
+		generatedRoutes := generatePermutations(aliasMatrix)
+		for _, routeKey := range generatedRoutes {
+			routes[routeKey] = pRel
+		}
 
 		return nil
 	})
@@ -70,4 +78,27 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Error executing template: %v\n", err)
 		os.Exit(1)
 	}
+}
+
+// generatePermutations recursively builds a Cartesian product of all aliases
+func generatePermutations(matrix [][]string) []string {
+	if len(matrix) == 0 {
+		return nil
+	}
+	// Base case: we are at the last element (the file)
+	if len(matrix) == 1 {
+		return matrix[0]
+	}
+
+	var result []string
+	// Get all permutations of the sub-directories/files
+	tails := generatePermutations(matrix[1:])
+
+	// Cross the current aliases with the tail permutations
+	for _, head := range matrix[0] {
+		for _, tail := range tails {
+			result = append(result, head+":"+tail)
+		}
+	}
+	return result
 }

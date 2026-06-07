@@ -12,10 +12,10 @@ set -e
 
 : "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
 
-# shellcheck source=scripts/containers/_lib.sh
+# shellcheck source=scripts/containers.cont/_lib.sh
 \. "${SHELL_UTILS_SCRIPT_DIRNAME}/_lib.sh"
 
-# shellcheck source=scripts/containers/_variables.sh
+# shellcheck source=scripts/containers.cont/_variables.sh
 \. "${SHELL_UTILS_SCRIPT_DIRNAME}/_variables.sh"
 
 : "${_containers_target_name_prefix:=}"

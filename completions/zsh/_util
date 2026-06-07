@@ -56,13 +56,14 @@ function _util_backup_remote() {
             local -a choices
             choices=(
                 'list:Lists backups uploaded to the current set rclone remote'
+                'ls:Lists backups uploaded to the current set rclone remote'
                 'unwrap:Uses the latest backup'
             )
             _describe 'commands' choices && ret=0
             ;;
         args)
             case $line[1] in
-                list)
+                list|ls)
                     _util_backup_remote_list "$@" && ret=0
                     ;;
                 unwrap)
@@ -89,13 +90,14 @@ function _util_backup() {
             local -a choices
             choices=(
                 'generate:Generates an encrypted backup file and uploads it to a rclone remote'
+                'gen:Generates an encrypted backup file and uploads it to a rclone remote'
                 'remote:Offers actions related to the backups uploaded to the rclone remote.'
             )
             _describe 'commands' choices && ret=0
             ;;
         args)
             case $line[1] in
-                generate)
+                generate|gen)
                     _util_backup_generate "$@" && ret=0
                     ;;
                 remote)
@@ -165,20 +167,23 @@ function _util_containers() {
             local -a choices
             choices=(
                 'list:Lists currently mounted containers'
+                'ls:Lists currently mounted containers'
                 'unmount:Unmounts an encrypted container'
+                'umnt:Unmounts an encrypted container'
                 'mount:Mounts an encrypted container from a file'
+                'mnt:Mounts an encrypted container from a file'
             )
             _describe 'commands' choices && ret=0
             ;;
         args)
             case $line[1] in
-                list)
+                list|ls)
                     _util_containers_list "$@" && ret=0
                     ;;
-                unmount)
+                unmount|umnt)
                     _util_containers_unmount "$@" && ret=0
                     ;;
-                mount)
+                mount|mnt)
                     _util_containers_mount "$@" && ret=0
                     ;;
             esac
@@ -436,6 +441,7 @@ function _util_gpg() {
             choices=(
                 'export:Exports the public and private gpg keys for an ID'
                 'generate:Generates a new gpg key'
+                'gen:Generates a new gpg key'
                 'import:Imports a gpg key ID using the private and public keys and the trust backup'
             )
             _describe 'commands' choices && ret=0
@@ -445,7 +451,7 @@ function _util_gpg() {
                 export)
                     _util_gpg_export "$@" && ret=0
                     ;;
-                generate)
+                generate|gen)
                     _util_gpg_generate "$@" && ret=0
                     ;;
                 import)
@@ -595,32 +601,37 @@ function _util_jobs() {
             local -a choices
             choices=(
                 'attach:Attaches to the tmux session and window of a job'
+                'a:Attaches to the tmux session and window of a job'
                 'kill:Kill running jobs'
+                'k:Kill running jobs'
                 'list:List all running jobs'
+                'ls:List all running jobs'
                 'log:Pages the job standard output'
                 'restart:Restarts a currently running job'
+                'rs:Restarts a currently running job'
                 'run:Executes a command on a new window in the default session'
+                'r:Executes a command on a new window in the default session'
             )
             _describe 'commands' choices && ret=0
             ;;
         args)
             case $line[1] in
-                attach)
+                attach|a)
                     _util_jobs_attach "$@" && ret=0
                     ;;
-                kill)
+                kill|k)
                     _util_jobs_kill "$@" && ret=0
                     ;;
-                list)
+                list|ls)
                     _util_jobs_list "$@" && ret=0
                     ;;
                 log)
                     _util_jobs_log "$@" && ret=0
                     ;;
-                restart)
+                restart|rs)
                     _util_jobs_restart "$@" && ret=0
                     ;;
-                run)
+                run|r)
                     _util_jobs_run "$@" && ret=0
                     ;;
             esac
@@ -874,20 +885,22 @@ function _util_totp() {
             local -a choices
             choices=(
                 'list:Lists TOTP entities available'
+                'ls:Lists TOTP entities available'
                 'add:Cryptographs TOTP keys on gpg files to be later used to generate TOTP passwords'
                 'generate:Generates TOTP passwords based on predefined keys stored in gpg files'
+                'gen:Generates TOTP passwords based on predefined keys stored in gpg files'
             )
             _describe 'commands' choices && ret=0
             ;;
         args)
             case $line[1] in
-                list)
+                list|ls)
                     _util_totp_list "$@" && ret=0
                     ;;
                 add)
                     _util_totp_add "$@" && ret=0
                     ;;
-                generate)
+                generate|gen)
                     _util_totp_generate "$@" && ret=0
                     ;;
             esac
@@ -917,7 +930,7 @@ function _util_workspaces_set() {
     local ret=1
 
     _arguments -C \
-        '(-c --clear)'{-c,--clear}'[Removes potential conflicts before stowing (warning: destructive behavior)]' \
+        '(-c --clear)'{-c,--clear}'[Removes potential conflicts before stowing (warning  destructive behavior)]' \
         --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
         '1:Container image file:_files' \
@@ -954,6 +967,7 @@ function _util_workspaces() {
             local -a choices
             choices=(
                 'list:Lists currently mounted workspace containers'
+                'ls:Lists currently mounted workspace containers'
                 'set:Mounts an encrypted container from a file and stows it on $HOME'
                 'unset:Unmounts an existent workspace container after its content is unstowed'
             )
@@ -961,7 +975,7 @@ function _util_workspaces() {
             ;;
         args)
             case $line[1] in
-                list)
+                list|ls)
                     _util_workspaces_list "$@" && ret=0
                     ;;
                 set)
@@ -1004,12 +1018,13 @@ function _util_tmux() {
             local -a choices
             choices=(
                 'split:Splits the current window both horizontally and vertically'
+                'sp:Splits the current window both horizontally and vertically'
             )
             _describe 'commands' choices && ret=0
             ;;
         args)
             case $line[1] in
-                split)
+                split|sp)
                     _util_tmux_split "$@" && ret=0
                     ;;
             esac
@@ -1060,16 +1075,18 @@ function _util_git() {
             local -a choices
             choices=(
                 'backup:Splits the current window both horizontally and vertically'
+                'bkp:Splits the current window both horizontally and vertically'
                 'new-ssh-key:Generates a new ssh key for the current git user considering the current git user e-mail'
+                'nsk:Generates a new ssh key for the current git user considering the current git user e-mail'
             )
             _describe 'commands' choices && ret=0
             ;;
         args)
             case $line[1] in
-                backup)
+                backup|bkp)
                     _util_git_backup "$@" && ret=0
                     ;;
-                new-ssh-key)
+                new-ssh-key|nsk)
                     _util_git_new-ssh-key "$@" && ret=0
                     ;;
             esac
@@ -1132,10 +1149,14 @@ function _util() {
             local -a choices
             choices=(
                 'backup:Performs backup related actions'
+                'bkp:Performs backup related actions'
                 'containers:Manages encrypted containers'
+                'cont:Manages encrypted containers'
                 'distribution:Defines visualizations for number distributions'
+                'dist:Defines visualizations for number distributions'
                 'docker:Docker related commands'
                 'environment:Handles sensible environment variables injection'
+                'env:Handles sensible environment variables injection'
                 'gpg:Performs gpg related actions'
                 'jobs:TMUX wrappers for spawning and monitoring jobs'
                 'locale:Allows translation files manipulation'
@@ -1144,6 +1165,7 @@ function _util() {
                 'random:Random value geneation helpers'
                 'totp:Performs TOTP related actions'
                 'workspaces:Manages environment files'
+                'ws:Manages environment files'
                 'tmux:TMUX wrappers'
                 'git:Git wrappers'
                 'yay:Defines yay-related actions'
@@ -1154,19 +1176,19 @@ function _util() {
             ;;
         args)
             case $line[1] in
-                backup)
+                backup|bkp)
                     _util_backup "$@" && ret=0
                     ;;
-                containers)
+                containers|cont)
                     _util_containers "$@" && ret=0
                     ;;
-                distribution)
+                distribution|dist)
                     _util_distribution "$@" && ret=0
                     ;;
                 docker)
                     _util_docker "$@" && ret=0
                     ;;
-                environment)
+                environment|env)
                     _util_environment "$@" && ret=0
                     ;;
                 gpg)
@@ -1190,7 +1212,7 @@ function _util() {
                 totp)
                     _util_totp "$@" && ret=0
                     ;;
-                workspaces)
+                workspaces|ws)
                     _util_workspaces "$@" && ret=0
                     ;;
                 tmux)
