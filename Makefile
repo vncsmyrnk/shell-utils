@@ -106,6 +106,19 @@ buildflake:
 .PHONY: completions
 completions: $(SRCDIR)/completions/zsh/_util
 
+.PHONY: deb
+deb: DESTDIR=./dist
+deb: install
+	fpm -s dir -t deb \
+		-n shell-utils \
+		-v $(FINAL_VERSION) \
+		-a amd64 \
+		--maintainer "Vinicius Mayrink <vncsmyrnk@gmail.com>" \
+		--description "An attempt to be a shell-agnostic custom utilities tool." \
+		--license "GPL-3.0" \
+		--url "https://github.com/vncsmyrnk/shell-utils" \
+		-C dist .
+
 $(SRCDIR)/completions/zsh/_util: $(SRCDIR)/completions.kdl
 	cg --shell zsh $< > $(SRCDIR)/completions/zsh/_util
 

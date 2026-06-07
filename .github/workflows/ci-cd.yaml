@@ -32,8 +32,33 @@ jobs:
         with:
           namcap: true
 
+  ci-deb:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.26'
+
+      - name: Install packaging dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y ruby ruby-dev rubygems build-essential
+          sudo gem install fpm
+
+      - name: Build flake
+        run: make deb
+
+      - name: Archive artifacts
+        if: github.ref_type == 'tag'
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb
+          path: ./**/*.deb
+
   cd-check:
-    needs: [ci, ci-pkgbuild]
+    needs: [ci, ci-deb, ci-pkgbuild]
     runs-on: ubuntu-latest
     if: ${{ github.ref == 'refs/heads/main' }}
     outputs:
@@ -42,7 +67,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check for server version change
+      - name: Check for PKGBUILD version change
         uses: dorny/paths-filter@v4
         id: filter
         with:
@@ -71,44 +96,13 @@ jobs:
 
   cd-apt:
     needs: [cd-check]
-    if: ${{ !contains(github.event.head_commit.message, '[skip-cd]') }}
+    if: ${{ github.ref_type == 'tag' && !contains(github.event.head_commit.message, '[skip-cd]') }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Download artifact
+        uses: actions/download-artifact@v4
         with:
-          fetch-depth: 0
-
-      - uses: actions/setup-go@v6
-        with:
-          go-version: '1.26'
-
-      - name: Build
-        run: |
-          mkdir staging-root
-          make install DESTDIR=staging-root
-
-      - name: Install packaging dependencies
-        run: |
-          sudo apt-get update && sudo apt-get install -y ruby ruby-dev rubygems build-essential
-          sudo gem install fpm
-
-      - name: Package it using fpm
-        run: |
-          COMMIT_COUNT=$(git rev-list --count HEAD)
-          COMMIT_HASH=$(git rev-parse --short HEAD)
-          DYNAMIC_VERSION="1.0.0+git${COMMIT_COUNT}.${COMMIT_HASH}"
-
-          mv ./staging-root/usr/share/zsh/site-functions/ ./staging-root/usr/share/zsh/vendor-completions
-
-          fpm -s dir -t deb \
-            -n shell-utils \
-            -v $DYNAMIC_VERSION \
-            -a amd64 \
-            --maintainer "Vinicius Mayrink <vncsmyrnk@gmail.com>" \
-            --description "An attempt to be a shell-agnostic custom utilities tool." \
-            --license "GPL-3.0" \
-            --url "https://github.com/vncsmyrnk/shell-utils" \
-            -C staging-root .
+          name: deb
 
       - name: Upload to Gemfury
         run: |
