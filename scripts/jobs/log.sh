@@ -39,8 +39,8 @@ fi
 
 : "${_jobs_log_dir:=}"
 log_file="$_jobs_log_dir/$job_name.log"
-if [[ -z "$log_file" ]]; then
-  echo "Job not found." >&2
+if [[ ! -f "$log_file" ]]; then
+  echo "job not found." >&2
   exit 1
 fi
 
