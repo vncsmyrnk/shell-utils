@@ -67,6 +67,12 @@ shell-utils follows the standard GNU directives for make targets.
 make install
 ```
 
+## Roadmap
+
+Check out the [milestones section](https://github.com/vncsmyrnk/shell-utils/milestones) to know what's being currently developed.
+
+The [unstable branch](https://github.com/vncsmyrnk/shell-utils/tree/unstable) is usually updated with soon to be available features.
+
 ## Development
 
 Use `nix develop` to get a Nix shell with all expected dependencies.
