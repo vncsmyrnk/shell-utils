@@ -49,7 +49,7 @@ func CatDirectoryEntries(dirPath string) error {
 				helpTitle = fmt.Sprint("- ", strings.Split(hs, "\n")[0])
 			}
 			noExtFileBaseName := strings.ReplaceAll(filepath.Join(dirName), filepath.Ext(filePath), "")
-			fmt.Fprintln(os.Stderr, " ", noExtFileBaseName, helpTitle)
+			fmt.Fprintln(os.Stderr, " ", strings.ReplaceAll(noExtFileBaseName, ".", ","), helpTitle)
 		}
 	}
 	return nil
