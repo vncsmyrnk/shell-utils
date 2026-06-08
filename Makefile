@@ -114,7 +114,7 @@ deb: install
 		-v $(FINAL_VERSION) \
 		-a amd64 \
 		--maintainer "Vinicius Mayrink <vncsmyrnk@gmail.com>" \
-		--description "An attempt to be a shell-agnostic custom utilities tool." \
+		--description "A collection of useful shell scripts and wrappers." \
 		--license "GPL-3.0" \
 		--url "https://github.com/vncsmyrnk/shell-utils" \
 		-C dist .
