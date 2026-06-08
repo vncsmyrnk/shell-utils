@@ -119,7 +119,7 @@ deb: install
 		--url "https://github.com/vncsmyrnk/shell-utils" \
 		-C dist .
 
-$(SRCDIR)/completions/zsh/_util: $(SRCDIR)/completions.kdl
+$(SRCDIR)/completions/zsh/_util: $(SRCDIR)/completions/schema.kdl
 	cg --shell zsh $< > $(SRCDIR)/completions/zsh/_util
 
 $(SRCDIR)/cmd/util/router_generated.go: $(SCRIPTS_SRC) $(SRCDIR)/internal/gen_router.go
