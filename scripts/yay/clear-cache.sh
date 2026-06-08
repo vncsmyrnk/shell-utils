@@ -2,6 +2,6 @@
 set -e
 
 # [help]
-# Invokes Nix garbage collection
+# Clears yay cache
 
 yay -Sc
