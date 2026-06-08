@@ -96,7 +96,7 @@ upload_backup_zip_to_rclone() {
 
 encrypt_backup_zip() {
   if [[ -z "$SHELL_UTILS_BACKUP_ENCRYPT_PASSWORD" ]]; then
-    echo "file was not encrypted." >&2
+    echo "encrypt password was not provided." >&2
     return 1
   fi
 
