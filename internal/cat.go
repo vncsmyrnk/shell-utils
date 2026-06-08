@@ -41,7 +41,13 @@ func CatDirectoryEntries(dirPath string) error {
 			continue
 		}
 		if e.IsDir() {
-			fmt.Fprintln(os.Stderr, " ", dirName)
+			filePath := filepath.Join(dirPath, dirName, "help")
+			var helpTitle string
+			if _, err := os.Stat(filePath); err == nil {
+				c, _ := os.ReadFile(filePath)
+				helpTitle = fmt.Sprint("- ", strings.Split(string(c), "\n")[0])
+			}
+			fmt.Fprintln(os.Stderr, " ", strings.ReplaceAll(dirName, ".", ","), helpTitle)
 		} else {
 			filePath := filepath.Join(dirPath, dirName)
 			var helpTitle string
