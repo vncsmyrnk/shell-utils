@@ -129,7 +129,6 @@ cmd "workspaces" help="Manages environment files" alias="ws" {
   }
   cmd "set" help="Mounts an encrypted container from a file and stows it on $HOME" {
     arg "<file>" help="Container image file"
-    flag "-c --clear" help="Removes potential conflicts before stowing (warning: destructive behavior)"
   }
   cmd "unset" help="Unmounts an existent workspace container after its content is unstowed" {
     arg "<file>" help="Container image file"

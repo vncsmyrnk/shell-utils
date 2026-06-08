@@ -37,48 +37,8 @@ _ssh_key_add() {
   ssh-add "$key"
 }
 
-_clear_stow_target() {
-  local target="$1"
-  local stow_target="$2"
-
-  mapfile -t targets < <(find "$target" -mindepth 1 -printf '%P\n' || true)
-  local file_conflicts=()
-  local dir_conflicts=()
-  for t in "${targets[@]}"; do
-    if [[ -f "$stow_target/$t" ]]; then
-      file_conflicts+=("$stow_target/$t")
-    elif [[ -d "$stow_target/$t" ]]; then
-      dir_conflicts+=("$stow_target/$t")
-    fi
-  done
-
-  # WARNING: destructive behavior
-  local trash
-  trash=$(mktemp -d)
-  cp --parents "${file_conflicts[@]}" "$trash"
-  rm -I "${file_conflicts[@]}"
-  rmdir --parents "${dir_conflicts[@]}" 2>/dev/null || true
-}
-
 main() {
-  local src
-  local clear
-  while [[ $# -gt 0 ]]; do
-    case $1 in
-    -c | --clear)
-      clear=true
-      shift
-      ;;
-    *)
-      if [[ -n "$src" ]]; then
-        _lib_fatal "Error: Multiple arguments provided."
-      fi
-      src="$1"
-      shift
-      ;;
-    esac
-  done
-
+  local src="$1"
   if [[ -z "$src" ]]; then
     if [[ ! -f "$SHELL_UTILS_WORKSPACES_DEFAULT" ]]; then
       _lib_fatal "default workspace not found."
@@ -101,10 +61,6 @@ main() {
   _container_mount "$src" "$target_name" "$target"
 
   local stow_target="$HOME"
-  if [[ "$clear" = true ]]; then
-    _clear_stow_target "$target" "$stow_target"
-  fi
-
   if ! stow -d "$target" -t "$stow_target" .; then
     _container_unmount "$target_name" "$target"
     exit 1
