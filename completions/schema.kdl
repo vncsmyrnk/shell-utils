@@ -133,6 +133,7 @@ cmd "workspaces" help="Manages environment files" alias="ws" {
     arg "<file>" help="Container image file"
   }
   cmd "unset" help="Unmounts an existent workspace container after its content is unstowed" {
+    flag "-f --force" help="Kills running processes associated with the container files"
     arg "<mounted_workspace>" help="Container image file" run="util workspaces list -n | awk '{ print $1 }'"
   }
 }

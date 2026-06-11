@@ -953,6 +953,7 @@ function _util_workspaces_unset() {
     local ret=1
 
     _arguments -C \
+        '(-f --force)'{-f,--force}'[Kills running processes associated with the container files]' \
         --help'[Displays a help section]' \
         --to-stdout'[Displays a help section]' \
         '1:mounted_workspace:->action_mounted_workspace' \
