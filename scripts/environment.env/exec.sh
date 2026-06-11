@@ -6,17 +6,19 @@ set -e
 #
 # This allows the secrets to never be decrypted on physical drive.
 #
-# If no argument is specified, a new shell is launched with the provided secrets.
-#
 # The default secret path is `$HOME/.secrets/sops/secrets.env` but it can be
 # overriden with `-f|--file`.
 #
-# Usage: util environment exec [OPTIONS] [COMMAND]
+# Usage: util environment exec <COMMAND> [OPTIONS]
 #
 # Options:
 #  -f, --file [FILE]   Secret file
 #
 # Example: util environment exec -f /tmp/file.env gcloud project list
+
+: "${SHELL_UTILS_SCRIPTS_PATH:=}"
+# shellcheck source=scripts/_lib.sh
+\. "${SHELL_UTILS_SCRIPTS_PATH}/_lib.sh"
 
 : "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
 # shellcheck source=scripts/environment.env/_variables.sh
@@ -43,7 +45,7 @@ done
 
 exec_args="$*"
 if [[ -z "$exec_args" ]]; then
-  exec_args="$SHELL"
+  _lib_fatal "a command is required."
 fi
 
 sops exec-env "$secrets_path" "$exec_args"
