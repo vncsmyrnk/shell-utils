@@ -22,6 +22,23 @@ set -e
 
 SHELL_UTILS_WORKSPACES_DEFAULT=${SHELL_UTILS_WORKSPACES_DEFAULT:-}
 
+force=false
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  -f | --force)
+    force=true
+    shift
+    ;;
+  --)
+    shift
+    break
+    ;;
+  *)
+    break
+    ;;
+  esac
+done
+
 main() {
   src="$1"
   if [[ -z "$src" ]]; then
@@ -46,8 +63,14 @@ main() {
   target="$_workspaces_mount_path/$target_name"
 
   if fuser -s -m "$target"; then
-    echo "target is busy." >&2
-    return 1
+    if [[ "$force" = false ]]; then
+      fuser -v -m "$target"
+      read -r -p "kill and procceed? (y/N) " answer
+      if [[ ! "$answer" =~ ^([Yy])$ ]]; then
+        return 1
+      fi
+    fi
+    fuser -s -m "$target" -k
   fi
 
   stow -D -d "$target" -t "$HOME" .
