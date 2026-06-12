@@ -107,18 +107,22 @@ func main() {
 		os.Exit(1)
 	}
 
-	if slices.Contains(os.Args, "--help") || slices.Contains(os.Args, "-h") {
-		err := internal.CatHelpSection(absScriptPath)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error: Failed to display help section: %s\n", err)
-			os.Exit(1)
+	for _, arg := range os.Args[1:] {
+		if arg == "--" {
+			break
 		}
-		os.Exit(0)
-	}
-
-	if slices.Contains(os.Args, "--to-stdout") || slices.Contains(os.Args, "-o") {
-		internal.Cat(absScriptPath)
-		os.Exit(0)
+		switch arg {
+		case "--help", "-h":
+			err := internal.CatHelpSection(absScriptPath)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error: Failed to display help section: %s\n", err)
+				os.Exit(1)
+			}
+			os.Exit(0)
+		case "--to-stdout", "-o":
+			internal.Cat(absScriptPath)
+			os.Exit(0)
+		}
 	}
 
 	env = append(env, fmt.Sprintf("SHELL_UTILS_SCRIPTS_PATH=%s", scriptsDir))
