@@ -31,6 +31,10 @@ while [[ $# -gt 0 ]]; do
     secrets_path="$2"
     shift 2
     ;;
+  --)
+    shift
+    break
+    ;;
   *)
     break
     ;;
