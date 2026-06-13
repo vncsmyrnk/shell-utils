@@ -5,7 +5,7 @@ set -e
 # [help]
 # Unmounts an existent workspace container after its content is unstowed
 #
-# A default workspace can be set as `$SHELL_UTILS_WORKSPACES_DEFAULT`.
+# A default workspace can be set on \033[1m$HOME/.shell-utils/workspaces/default.img\033[0m.
 #
 # Usage: util workspaces unset [CONTAINER]
 
@@ -19,8 +19,7 @@ set -e
 : "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
 # shellcheck source=scripts/workspaces.ws/_variables.sh
 \. "${SHELL_UTILS_SCRIPT_DIRNAME}/_variables.sh"
-
-SHELL_UTILS_WORKSPACES_DEFAULT=${SHELL_UTILS_WORKSPACES_DEFAULT:-}
+: "${_workspaces_default_path:=}"
 
 force=false
 while [[ $# -gt 0 ]]; do
@@ -42,10 +41,10 @@ done
 main() {
   src="$1"
   if [[ -z "$src" ]]; then
-    if [[ ! -f "$SHELL_UTILS_WORKSPACES_DEFAULT" ]]; then
+    if [[ ! -f "$_workspaces_default_path" ]]; then
       _lib_fatal "default workspace not found."
     fi
-    src="$SHELL_UTILS_WORKSPACES_DEFAULT"
+    src="$_workspaces_default_path"
   fi
 
   # shellcheck disable=SC2310
