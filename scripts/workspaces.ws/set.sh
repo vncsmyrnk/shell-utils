@@ -7,9 +7,6 @@ set -e
 # A default workspace can be set as \033[4m$SHELL_UTILS_WORKSPACES_DEFAULT\033[0m.
 #
 # Usage: util workspaces set [CONTAINER] [OPTIONS]
-#
-# Options:
-#  -c, --clear   Removes potential conflicts before stowing (warning: destructive behavior)
 
 : "${SHELL_UTILS_SCRIPTS_PATH:=}"
 # shellcheck source=scripts/_lib.sh
