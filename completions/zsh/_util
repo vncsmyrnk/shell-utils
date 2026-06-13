@@ -1173,6 +1173,7 @@ function _util() {
                 'distribution:Defines visualizations for number distributions'
                 'dist:Defines visualizations for number distributions'
                 'docker:Docker related commands'
+                'dck:Docker related commands'
                 'environment:Handles sensible environment variables injection'
                 'env:Handles sensible environment variables injection'
                 'gpg:Performs gpg related actions'
@@ -1203,7 +1204,7 @@ function _util() {
                 distribution|dist)
                     _util_distribution "$@" && ret=0
                     ;;
-                docker)
+                docker|dck)
                     _util_docker "$@" && ret=0
                     ;;
                 environment|env)
