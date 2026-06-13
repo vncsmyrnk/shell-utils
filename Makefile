@@ -62,7 +62,7 @@ install-local: all
 
 .PHONY: uninstall
 uninstall:
-	rm -rf $(DESTDIR)$(DATADIR)/shell-util
+	rm -rf $(DESTDIR)$(DATADIR)/shell-utils
 	rm -f $(DESTDIR)$(BINDIR)/util
 	rm -f $(DESTDIR)$(ZSHDIR)/site-functions/_util
 	rm -f $(DESTDIR)$(ZSHDIR)/site-functions/_config.completions.zsh
