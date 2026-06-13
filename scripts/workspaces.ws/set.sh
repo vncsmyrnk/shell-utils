@@ -4,7 +4,7 @@ set -e
 # [help]
 # Mounts an encrypted container from a file and stows it on \033[4m$HOME\033[0m
 #
-# A default workspace can be set as \033[4m$SHELL_UTILS_WORKSPACES_DEFAULT\033[0m.
+# A default workspace can be set on \033[1m$HOME/.shell-utils/workspaces/default.img\033[0m.
 #
 # Usage: util workspaces set [CONTAINER] [OPTIONS]
 
@@ -18,8 +18,7 @@ set -e
 : "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
 # shellcheck source=scripts/workspaces.ws/_variables.sh
 \. "${SHELL_UTILS_SCRIPT_DIRNAME}/_variables.sh"
-
-SHELL_UTILS_WORKSPACES_DEFAULT=${SHELL_UTILS_WORKSPACES_DEFAULT:-}
+: "${_workspaces_default_path:=}"
 
 _ssh_key_add() {
   local key
@@ -42,10 +41,10 @@ _config() {
 main() {
   local src="$1"
   if [[ -z "$src" ]]; then
-    if [[ ! -f "$SHELL_UTILS_WORKSPACES_DEFAULT" ]]; then
+    if [[ ! -f "$_workspaces_default_path" ]]; then
       _lib_fatal "default workspace not found."
     fi
-    src="$SHELL_UTILS_WORKSPACES_DEFAULT"
+    src="$_workspaces_default_path"
   fi
 
   # shellcheck disable=SC2310
