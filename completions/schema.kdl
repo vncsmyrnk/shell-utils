@@ -15,7 +15,7 @@ cmd "backup" help="Performs backup related actions" alias="bkp" {
   }
 }
 
-cmd "containers" help="Manages encrypted containers" alias="cont" {
+cmd "containers" help="Manages encrypted containers" alias="cnt" {
   cmd "list" help="Lists currently mounted containers" alias="ls" {
     flag "-h --noheading" help="Hides heading"
   }

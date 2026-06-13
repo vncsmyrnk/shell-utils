@@ -12,8 +12,8 @@ set -e
 # shellcheck source=scripts/_lib.sh
 \. "${SHELL_UTILS_SCRIPTS_PATH}/_lib.sh"
 
-# shellcheck source=scripts/containers.cont/_lib.sh
-\. "$SHELL_UTILS_SCRIPTS_PATH/containers.cont/_lib.sh"
+# shellcheck source=scripts/containers.cnt/_lib.sh
+\. "$SHELL_UTILS_SCRIPTS_PATH/containers.cnt/_lib.sh"
 
 : "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
 # shellcheck source=scripts/workspaces.ws/_variables.sh
