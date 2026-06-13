@@ -1183,6 +1183,7 @@ function _util() {
                 'nix:Defines Nix-related actions'
                 'pass:Auxiliary pass wrappers'
                 'random:Random value geneation helpers'
+                'rnd:Random value geneation helpers'
                 'totp:Performs TOTP related actions'
                 'workspaces:Manages environment files'
                 'ws:Manages environment files'
@@ -1226,7 +1227,7 @@ function _util() {
                 pass)
                     _util_pass "$@" && ret=0
                     ;;
-                random)
+                random|rnd)
                     _util_random "$@" && ret=0
                     ;;
                 totp)

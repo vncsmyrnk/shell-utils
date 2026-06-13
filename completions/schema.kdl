@@ -109,7 +109,7 @@ cmd "pass" help="Auxiliary pass wrappers" {
   }
 }
 
-cmd "random" help="Random value geneation helpers" {
+cmd "random" help="Random value geneation helpers" alias="rnd" {
   cmd "generate" help="Generates random hex based pseudo-random strings using openssl" {
     flag "-l --length <int>" help="Length of the random string being generated"
   }
