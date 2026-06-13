@@ -115,7 +115,7 @@ cmd "random" help="Random value geneation helpers" alias="rnd" {
   }
 }
 
-cmd "totp" help="Performs TOTP related actions" {
+cmd "totp" help="Performs TOTP related actions" alias="ttp" {
   cmd "list" help="Lists TOTP entities available" alias="ls"
   cmd "add" help="Cryptographs TOTP keys on gpg files to be later used to generate TOTP passwords" {
     arg "<totp_entity>" help="Entity name" run="util totp list"
@@ -138,7 +138,7 @@ cmd "workspaces" help="Manages environment files" alias="ws" {
   }
 }
 
-cmd "tmux" help="TMUX wrappers" {
+cmd "tmux" help="TMUX wrappers" alias="tmx" {
   cmd "split" help="Splits the current window both horizontally and vertically" alias="sp"
 }
 

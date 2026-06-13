@@ -1185,9 +1185,11 @@ function _util() {
                 'random:Random value geneation helpers'
                 'rnd:Random value geneation helpers'
                 'totp:Performs TOTP related actions'
+                'ttp:Performs TOTP related actions'
                 'workspaces:Manages environment files'
                 'ws:Manages environment files'
                 'tmux:TMUX wrappers'
+                'tmx:TMUX wrappers'
                 'git:Git wrappers'
                 'yay:Defines yay-related actions'
                 'install-check:Checks if shell-utils is properly installed'
@@ -1230,13 +1232,13 @@ function _util() {
                 random|rnd)
                     _util_random "$@" && ret=0
                     ;;
-                totp)
+                totp|ttp)
                     _util_totp "$@" && ret=0
                     ;;
                 workspaces|ws)
                     _util_workspaces "$@" && ret=0
                     ;;
-                tmux)
+                tmux|tmx)
                     _util_tmux "$@" && ret=0
                     ;;
                 git)
