@@ -954,8 +954,16 @@ function _util_workspaces_unset() {
     _arguments -C \
         --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
-        '1:Container image file:_files' \
+        '1:mounted_workspace:->action_mounted_workspace' \
         '*:: :->args' && ret=0
+
+    case $state in
+        action_mounted_workspace)
+            local -a choices
+            choices=(${(f)"$(_call_program mounted_workspace util workspaces list -n | awk '{ print $1 }')"})
+            compadd -a choices && ret=0
+            ;;
+    esac
 
     return ret
 }
