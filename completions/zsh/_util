@@ -1169,7 +1169,7 @@ function _util() {
                 'backup:Performs backup related actions'
                 'bkp:Performs backup related actions'
                 'containers:Manages encrypted containers'
-                'cont:Manages encrypted containers'
+                'cnt:Manages encrypted containers'
                 'distribution:Defines visualizations for number distributions'
                 'dist:Defines visualizations for number distributions'
                 'docker:Docker related commands'
@@ -1197,7 +1197,7 @@ function _util() {
                 backup|bkp)
                     _util_backup "$@" && ret=0
                     ;;
-                containers|cont)
+                containers|cnt)
                     _util_containers "$@" && ret=0
                     ;;
                 distribution|dist)
