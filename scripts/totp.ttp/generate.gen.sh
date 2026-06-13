@@ -20,7 +20,7 @@ set -e
 \. "${SHELL_UTILS_SCRIPTS_PATH}/_lib.sh"
 
 : "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
-# shellcheck source=scripts/totp/_variables.sh
+# shellcheck source=scripts/totp.ttp/_variables.sh
 \. "${SHELL_UTILS_SCRIPT_DIRNAME}/_variables.sh"
 : "${_totp_secrets_dir:=}"
 : "${_totp_current_time:=}"
