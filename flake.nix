@@ -1,5 +1,5 @@
 {
-  description = "A shell-agnostic utility tool designed to make your scripts accessible everywhere";
+  description = "A collection of useful shell scripts and wrappers.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
