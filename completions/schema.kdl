@@ -37,7 +37,7 @@ cmd "distribution" help="Defines visualizations for number distributions" alias=
   }
 }
 
-cmd "docker" help="Docker related commands" {
+cmd "docker" help="Docker related commands" alias="dck" {
   cmd "stop" help="Stops docker containers" {
     arg "<int>" help="Container ID"
     flag "--all" help="Stops all running containers"
