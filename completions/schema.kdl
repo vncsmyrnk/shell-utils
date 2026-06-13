@@ -68,7 +68,7 @@ cmd "gpg" help="Performs gpg related actions" {
   }
 }
 
-cmd "jobs" help="TMUX wrappers for spawning and monitoring jobs" {
+cmd "jobs" help="TMUX wrappers for spawning and monitoring jobs" alias="jbs" {
   cmd "attach" help="Attaches to the tmux session and window of a job" alias="a" {
     arg "<string>" help="Job name" run="util jobs list"
   }

@@ -1178,6 +1178,7 @@ function _util() {
                 'env:Handles sensible environment variables injection'
                 'gpg:Performs gpg related actions'
                 'jobs:TMUX wrappers for spawning and monitoring jobs'
+                'jbs:TMUX wrappers for spawning and monitoring jobs'
                 'locale:Allows translation files manipulation'
                 'nix:Defines Nix-related actions'
                 'pass:Auxiliary pass wrappers'
@@ -1213,7 +1214,7 @@ function _util() {
                 gpg)
                     _util_gpg "$@" && ret=0
                     ;;
-                jobs)
+                jobs|jbs)
                     _util_jobs "$@" && ret=0
                     ;;
                 locale)
