@@ -132,8 +132,16 @@ function _util_containers_unmount() {
     _arguments -C \
         --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
-        '1:Container image file:_files' \
+        '1:mounted_container:->action_mounted_container' \
         '*:: :->args' && ret=0
+
+    case $state in
+        action_mounted_container)
+            local -a choices
+            choices=(${(f)"$(_call_program mounted_container util containers list -n | awk '{ print $1 }')"})
+            compadd -a choices && ret=0
+            ;;
+    esac
 
     return ret
 }

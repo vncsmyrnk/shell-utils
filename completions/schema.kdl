@@ -19,7 +19,7 @@ cmd "containers" help="Manages encrypted containers" alias="cont" {
     flag "-h --noheading" help="Hides heading"
   }
   cmd "unmount" help="Unmounts an encrypted container" alias="umnt" {
-    arg "<file>" help="Container image file"
+    arg "<mounted_container>" help="Container image file" run="util containers list -n | awk '{ print $1 }'"
   }
   cmd "mount" help="Mounts an encrypted container from a file" alias="mnt" {
     arg "<file>" help="Container image file"
