@@ -7,10 +7,11 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"shellutils/internal"
 	"slices"
 	"strings"
 	"syscall"
+
+	"shellutils/internal"
 )
 
 var persistentEnvironmentVariables = []string{
