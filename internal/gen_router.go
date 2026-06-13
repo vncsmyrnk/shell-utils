@@ -43,9 +43,11 @@ func main() {
 			return nil
 		}
 
-		lastIdx := len(parts) - 1
-		filename := parts[lastIdx]
-		parts[lastIdx] = strings.TrimSuffix(filename, filepath.Ext(filename))
+		if !d.IsDir() {
+			lastIdx := len(parts) - 1
+			filename := parts[lastIdx]
+			parts[lastIdx] = strings.TrimSuffix(filename, filepath.Ext(filename))
+		}
 
 		var aliasMatrix [][]string
 		for _, part := range parts {
