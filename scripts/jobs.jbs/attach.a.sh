@@ -2,12 +2,12 @@
 set -e
 
 # [help]
-# Restarts a currently running job
+# Attaches to the tmux session and window of a job
 #
-# Usage: util jobs restart [NAME]
+# Usage: util jobs attach [NAME]
 
 : "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
-# shellcheck source=scripts/jobs/_variables.sh
+# shellcheck source=scripts/jobs.jbs/_variables.sh
 \. "${SHELL_UTILS_SCRIPT_DIRNAME}/_variables.sh"
 
 job_name="$1"
@@ -16,4 +16,4 @@ if [[ -z "$job_name" ]]; then
 fi
 
 : "${_jobs_session_name:=}"
-tmux respawn-pane -k -t "$_jobs_session_name":"$job_name"
+tmux switch-client -t "$_jobs_session_name:$job_name"

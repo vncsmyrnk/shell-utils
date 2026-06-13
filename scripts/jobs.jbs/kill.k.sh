@@ -14,7 +14,7 @@ set -e
 \. "${SHELL_UTILS_SCRIPTS_PATH}/_lib.sh"
 
 : "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
-# shellcheck source=scripts/jobs/_variables.sh
+# shellcheck source=scripts/jobs.jbs/_variables.sh
 \. "${SHELL_UTILS_SCRIPT_DIRNAME}/_variables.sh"
 
 : "${_jobs_session_name:=}"
