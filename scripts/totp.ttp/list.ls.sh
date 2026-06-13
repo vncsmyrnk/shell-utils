@@ -7,8 +7,8 @@ set -e
 # Usage: totp list
 
 : "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
-# shellcheck source=scripts/totp/_variables.sh
-\. "${SHELL_UTILS_SCRIPT_DIRNAME}/_lib.sh"
+# shellcheck source=scripts/totp.ttp/_variables.sh
+\. "${SHELL_UTILS_SCRIPT_DIRNAME}/_variables.sh"
 
 : "${SHELL_UTILS_SCRIPTS_PATH:=}"
 # shellcheck source=scripts/_lib.sh
