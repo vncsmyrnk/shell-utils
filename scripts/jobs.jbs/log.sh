@@ -10,7 +10,7 @@ set -e
 #  -f   Follow output on the current prompt
 
 : "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
-# shellcheck source=scripts/jobs/_variables.sh
+# shellcheck source=scripts/jobs.jbs/_variables.sh
 \. "${SHELL_UTILS_SCRIPT_DIRNAME}/_variables.sh"
 
 follow=false
