@@ -1,0 +1,31 @@
+name: Tag issue as unstable on commit
+
+on:
+  push:
+    branches:
+      - unstable
+
+jobs:
+  label-issue:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+
+    steps:
+      - name: Extract issues from all commits and apply label
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          MESSAGES=$(jq -r '.commits[].message' "$GITHUB_EVENT_PATH")
+          ISSUE_NUMS=$(echo "$MESSAGES" | grep -oP '#\K\d+' | sort -u)
+
+          if [ -z "$ISSUE_NUMS" ]; then
+            echo "No issue numbers found in any of the pushed commits. Skipping."
+            exit 0
+          fi
+
+          for NUM in $ISSUE_NUMS; do
+            echo "Found issue #$NUM. Adding label..."
+            gh issue edit "$NUM" --add-label "unstable"
+          done
