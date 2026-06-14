@@ -3,3 +3,4 @@ set -e
 
 _containers_target_name_prefix="container_"
 _containers_image_dir="$HOME/.shell-utils/containers"
+_containers_config_dir="$HOME/.config/shell-utils/containers"

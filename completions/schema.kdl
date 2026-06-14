@@ -21,6 +21,7 @@ cmd "containers" help="Manages encrypted containers" alias="cnt" {
   cmd "generate" help="Generates an encrypted container file formated using ext4" alias="gnr"
   cmd "list" help="Lists currently mounted containers" alias="ls" {
     flag "-h --noheading" help="Hides heading"
+    flag "-p --full-path" help="Display full container source path"
   }
   cmd "unmount" help="Unmounts an encrypted container" alias="umnt" {
     arg "<mounted_container>" help="Container image file" run="util containers list -n | awk '{ print $1 }'"

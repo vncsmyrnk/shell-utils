@@ -20,8 +20,11 @@ set -e
 : "${_containers_target_name_prefix:=}"
 
 src="$1"
-if [[ -z "$src" ]]; then
-  _lib_fatal "source is required."
+if [[ ! -f "$src" ]]; then
+  src="$_containers_image_dir/$1.img"
+  if [[ ! -f "$src" ]]; then
+    _lib_fatal "container file not found."
+  fi
 fi
 
 target=$(
