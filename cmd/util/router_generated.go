@@ -105,6 +105,7 @@ var Router = map[string]string{
 	"rnd": "random.rnd",
 	"rnd:gen": "random.rnd/generate.gen.sh",
 	"rnd:generate": "random.rnd/generate.gen.sh",
+	"tee": "tee.sh",
 	"tmux": "tmux.tmx",
 	"tmux:sp": "tmux.tmx/split.sp.sh",
 	"tmux:split": "tmux.tmx/split.sp.sh",

@@ -1113,6 +1113,19 @@ function _util_git() {
     return ret
 }
 
+function _util_tee() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
 function _util_yay() {
     local context state state_descr line
     typeset -A opt_args
@@ -1191,6 +1204,7 @@ function _util() {
                 'tmux:TMUX wrappers'
                 'tmx:TMUX wrappers'
                 'git:Git wrappers'
+                'tee:Tees STDIN to a temporary file'
                 'yay:Defines yay-related actions'
                 'install-check:Checks if shell-utils is properly installed'
                 'update:Executes packages upgrade actions'
@@ -1243,6 +1257,9 @@ function _util() {
                     ;;
                 git)
                     _util_git "$@" && ret=0
+                    ;;
+                tee)
+                    _util_tee "$@" && ret=0
                     ;;
                 yay)
                     _util_yay "$@" && ret=0
