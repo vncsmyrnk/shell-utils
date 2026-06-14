@@ -149,6 +149,7 @@ cmd "git" help="Git wrappers" {
   cmd "new-ssh-key" help="Generates a new ssh key for the current git user considering the current git user e-mail" alias="nsk"
 }
 
+cmd "tee" help="Tees STDIN to a temporary file"
 cmd "yay" help="Defines yay-related actions"
 cmd "install-check" help="Checks if shell-utils is properly installed"
 cmd "update" help="Executes packages upgrade actions"
