@@ -95,7 +95,7 @@ jobs:
 
   cd-apt:
     needs: [cd-check]
-    if: ${{ github.ref_type == 'tag' && !contains(github.event.head_commit.message, '[skip-cd]') }}
+    if: ${{ github.ref_type == 'tag' && !contains(github.event.head_commit.message, '[skip-cd]') && !contains(github.ref_name, '-unstable') }}
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
