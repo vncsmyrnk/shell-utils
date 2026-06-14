@@ -1,0 +1,65 @@
+name: Append related issues as release notes
+
+on:
+  release:
+    types: [created]
+
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'The exact release tag to update (e.g., v1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  update-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract issues and append to release notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            CURRENT_TAG="${{ inputs.tag_name }}"
+          else
+            CURRENT_TAG="${{ github.event.release.tag_name }}"
+          fi
+
+          echo "Target Release Tag: $CURRENT_TAG"
+
+          PREV_TAG=$(gh api repos/${{ github.repository }}/releases/latest --jq '.tag_name' 2>/dev/null || echo "")
+          if [ -z "$PREV_TAG" ]; then
+            echo "First release detected. Scanning all commits..."
+            COMMITS=$(git log --format=%B)
+          else
+            echo "Scanning commits between $PREV_TAG and $CURRENT_TAG..."
+            COMMITS=$(git log ${PREV_TAG}..HEAD --format=%B)
+          fi
+
+          ISSUE_NUMS=$(echo "$COMMITS" | grep -oP '#\K\d+' | sort -u)
+
+          if [ -z "$ISSUE_NUMS" ]; then
+            echo "No issue references found. Skipping update."
+            exit 0
+          fi
+
+          ISSUE_LIST="\n\n### Related Issues\n"
+          for NUM in $ISSUE_NUMS; do
+            ISSUE_LIST+="- #$NUM\n"
+          done
+
+          # Fetch current notes and append
+          CURRENT_NOTES=$(gh release view "$CURRENT_TAG" --json body -q .body)
+          NEW_NOTES=$(printf "%s%b" "$CURRENT_NOTES" "$ISSUE_LIST")
+
+          # Update the release (works perfectly on drafts too!)
+          echo "Updating release $CURRENT_TAG with found issues..."
+          gh release edit "$CURRENT_TAG" --notes "$NEW_NOTES"
