@@ -6,7 +6,7 @@ set -e
 #
 # This allows the secrets to never be decrypted on physical drive.
 #
-# The default secret path is `$HOME/.secrets/sops/secrets.env` but it can be
+# The default secret path is `$HOME/.config/shell-utils/environment/default.env` but it can be
 # overriden with `-f|--file`.
 #
 # Usage: util environment exec <COMMAND> [OPTIONS]
