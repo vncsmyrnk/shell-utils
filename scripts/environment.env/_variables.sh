@@ -1,3 +1,3 @@
 # vim: set ft=sh:
 
-_secrets_path="$HOME/.secrets/sops/secrets.env"
+_secrets_path="$HOME/.config/shell-utils/environment/default.env"
