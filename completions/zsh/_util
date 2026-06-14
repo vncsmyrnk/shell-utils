@@ -130,6 +130,7 @@ function _util_containers_list() {
     local ret=1
 
     _arguments -C \
+        '(-p --full-path)'{-p,--full-path}'[Display full container source path]' \
         '(-h --noheading)'{-h,--noheading}'[Hides heading]' \
         --help'[Displays a help section]' \
         --to-stdout'[Displays a help section]' \
@@ -168,9 +169,20 @@ function _util_containers_mount() {
     _arguments -C \
         --help'[Displays a help section]' \
         --to-stdout'[Displays a help section]' \
-        '1:Container image file:_files' \
+        '1:Container image file:->action' \
         '2:Destination mountpoint:_files' \
         '*:: :->args' && ret=0
+
+    # Temporary manual interference
+    case $state in
+        action)
+            _files
+            choices=(${(f)"$(_call_program command ls "$HOME/.config/shell-utils/containers" | while read -r f; do
+                basename "$f" | rev | cut -f2 -d "." | rev
+            done)"})
+            _describe 'commands' choices && ret=0
+            ;;
+    esac
 
     return ret
 }

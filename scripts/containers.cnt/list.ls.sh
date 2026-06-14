@@ -8,6 +8,7 @@ set -e
 #
 # Options:
 #  -n, --noheadings   Hide heading
+#  -p, --full-path    Display full container source path
 
 : "${SHELL_UTILS_SCRIPTS_PATH:=}"
 # shellcheck source=scripts/_lib.sh
@@ -20,10 +21,15 @@ set -e
 : "${_containers_target_name_prefix:=}"
 
 no_headings=false
+full_path=false
 while [[ $# -gt 0 ]]; do
   case $1 in
   -n | --noheadings)
     no_headings=true
+    shift
+    ;;
+  -p | --full-path)
+    full_path=true
     shift
     ;;
   *)
@@ -45,6 +51,11 @@ while read -r loop_device mountpoint fs_used fs_size fs_usage; do
   back_file=$(
     losetup "$loop_device" -O BACK-FILE -n
   )
+  # shellcheck disable=SC2310,SC2311
+  if [[ "$full_path" = false ]] && container_ref=$(_lib_files_filename_noext "$back_file" || true) &&
+    [[ -f "$HOME/.config/shell-utils/containers/$container_ref.json" ]]; then
+    back_file="$container_ref"
+  fi
   rows+="$back_file $mountpoint $fs_used $fs_size $fs_usage"$'\n'
 done <<<"$block_devices_result"
 
