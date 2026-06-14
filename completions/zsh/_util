@@ -111,6 +111,19 @@ function _util_backup() {
     return ret
 }
 
+function _util_containers_generate() {
+    local context state state_descr line
+    typeset -A opt_args
+    local ret=1
+
+    _arguments -C \
+        --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
+        '*:: :->args' && ret=0
+
+    return ret
+}
+
 function _util_containers_list() {
     local context state state_descr line
     typeset -A opt_args
@@ -175,6 +188,8 @@ function _util_containers() {
         action)
             local -a choices
             choices=(
+                'generate:Generates an encrypted container file formated using ext4'
+                'gnr:Generates an encrypted container file formated using ext4'
                 'list:Lists currently mounted containers'
                 'ls:Lists currently mounted containers'
                 'unmount:Unmounts an encrypted container'
@@ -186,6 +201,9 @@ function _util_containers() {
             ;;
         args)
             case $line[1] in
+                generate|gnr)
+                    _util_containers_generate "$@" && ret=0
+                    ;;
                 list|ls)
                     _util_containers_list "$@" && ret=0
                     ;;
