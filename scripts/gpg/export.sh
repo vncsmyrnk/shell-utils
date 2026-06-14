@@ -7,38 +7,41 @@ set -e
 # Usage: util gpg export [EMAIL] [OPTIONS]
 #
 # Options:
-#  --remote   Push the encrypted backup to a rclone remote
+#  --remote               Push the encrypted backup to a rclone remote
+#  -b,--bypass-password   Bypasses encryption password confirmation
 
 : "${SHELL_UTILS_SCRIPTS_PATH:=}"
 # shellcheck source=scripts/_lib.sh
 \. "${SHELL_UTILS_SCRIPTS_PATH}/_lib.sh"
 
 SHELL_UTILS_GPG_EXPORT_TARGET_PATH=${SHELL_UTILS_GPG_EXPORT_TARGET_PATH:-/tmp}
-SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD=${SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD-:}
+SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD=${SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD-}
 SHELL_UTILS_GPG_RCLONE_REMOTE=${SHELL_UTILS_GPG_RCLONE_REMOTE:-}
 SHELL_UTILS_GPG_RCLONE_FOLDER=${SHELL_UTILS_GPG_RCLONE_FOLDER:-}
 
 remote=false
-gpg_email=""
+bypass_password=false
 while [[ $# -gt 0 ]]; do
   case $1 in
   --remote)
     remote=true
     shift
     ;;
-  -*)
-    _lib_fatal "Unknown option: $1"
+  -b | --bypass-password)
+    bypass_password=true
+    shift
+    ;;
+  --)
+    shift
+    break
     ;;
   *)
-    if [[ -n "$gpg_email" ]]; then
-      _lib_fatal "Error: Multiple arguments provided."
-    fi
-    gpg_email="$1"
-    shift
+    break
     ;;
   esac
 done
 
+gpg_email="$1"
 if [[ -z "$gpg_email" ]]; then
   _lib_fatal "email is required."
 fi
@@ -72,11 +75,22 @@ zip_and_upload_key() {
     "$public_key_target_path" \
     "$trust_backup_target_path"
 
+  local bp_passwd="$1"
+  if [[ "$bp_passwd" = false ]]; then
+    echo ""
+    read -sr -p "confirm encryption password: " passw
+    if [[ "$passw" != "$SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD" ]]; then
+      echo -e "\npredefined password and the current one typed do not match." >&2
+      return 1
+    fi
+  fi
+
   openssl enc -aes-256-cbc -pbkdf2 -iter 100000 -salt \
     -in "$zipped_key_target_path" \
     -out "$encrypted_key_target_path" \
     -pass env:SHELL_UTILS_GPG_EXPORT_ENCRYPT_PASSWORD
 
+  echo -e "\nnow copying it to remote..."
   rclone copy -v "$encrypted_key_target_path" \
     "$SHELL_UTILS_GPG_RCLONE_REMOTE:$SHELL_UTILS_GPG_RCLONE_FOLDER"
 }
@@ -85,7 +99,7 @@ main() {
   export_gpg_key "$gpg_email"
 
   if [[ "$remote" = true ]]; then
-    zip_and_upload_key
+    zip_and_upload_key "$bypass_password"
   fi
 }
 

@@ -6,7 +6,9 @@ flag "--to-stdout" help="Displays a help section" global=#true
 flag "-V --version" help="Displays version"
 
 cmd "backup" help="Performs backup related actions" alias="bkp" {
-  cmd "generate" help="Generates an encrypted backup file and uploads it to a rclone remote" alias="gen"
+  cmd "generate" help="Generates an encrypted backup file and uploads it to a rclone remote" alias="gen" {
+    flag "-b --bypass-password" help="Bypasses encryption password confirmation"
+  }
   cmd "remote" help="Offers actions related to the backups uploaded to the rclone remote." {
     cmd "list" help="Lists backups uploaded to the current set rclone remote" alias="ls"
     cmd "unwrap" help="Uses the latest backup" {
@@ -58,6 +60,7 @@ cmd "environment" help="Handles sensible environment variables injection" alias=
 cmd "gpg" help="Performs gpg related actions" {
   cmd "export" help="Exports the public and private gpg keys for an ID" {
     flag "--remote" help="Push the encrypted backup to a rclone remote"
+    flag "-b --bypass-password" help="Bypasses encryption password confirmation"
     arg "<email>" help="Email"
   }
   cmd "generate" help="Generates a new gpg key" alias="gen"
