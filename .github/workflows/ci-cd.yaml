@@ -76,7 +76,7 @@ jobs:
 
   cd-pkgbuild:
     needs: [cd-check]
-    if: ${{ needs.cd-check.outputs.pkgbuild-changed == 'true' && !contains(github.event.head_commit.message, '[skip-cd]') }}
+    if: ${{ needs.cd-check.outputs.pkgbuild-changed == 'true' && github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, '[skip-cd]') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
