@@ -3,6 +3,7 @@ help "An attempt to be a shell-agnostic custom utilities tool."
 
 flag "--help" help="Displays a help section" global=#true
 flag "--to-stdout" help="Displays a help section" global=#true
+flag "-V --version" help="Displays version"
 
 cmd "backup" help="Performs backup related actions" alias="bkp" {
   cmd "generate" help="Generates an encrypted backup file and uploads it to a rclone remote" alias="gen"

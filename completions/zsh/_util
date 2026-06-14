@@ -8,8 +8,8 @@ function _util_backup_generate() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -21,8 +21,8 @@ function _util_backup_remote_list() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -35,8 +35,8 @@ function _util_backup_remote_unwrap() {
 
     _arguments -C \
         --latest'' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -117,8 +117,8 @@ function _util_containers_list() {
 
     _arguments -C \
         '(-h --noheading)'{-h,--noheading}'[Hides heading]' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -130,8 +130,8 @@ function _util_containers_unmount() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:mounted_container:->action_mounted_container' \
         '*:: :->args' && ret=0
 
@@ -152,8 +152,8 @@ function _util_containers_mount() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:Container image file:_files' \
         '2:Destination mountpoint:_files' \
         '*:: :->args' && ret=0
@@ -207,8 +207,8 @@ function _util_distribution_graph() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:Path of the file containing the numbers:_files' \
         '*:: :->args' && ret=0
 
@@ -221,8 +221,8 @@ function _util_distribution_stats() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:Path of the file containing the numbers:_files' \
         '*:: :->args' && ret=0
 
@@ -269,8 +269,8 @@ function _util_docker_stop() {
 
     _arguments -C \
         --all'[Stops all running containers]' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:Container ID:_guard "[0-9]#"' \
         '*:: :->args' && ret=0
 
@@ -283,8 +283,8 @@ function _util_docker_clear-cache-soft() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -330,8 +330,8 @@ function _util_environment_edit() {
 
     _arguments -C \
         '(-f --file)'{-f,--file}'=[Secret file]:file:_files' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -344,8 +344,8 @@ function _util_environment_exec() {
 
     _arguments -C \
         '(-f --file)'{-f,--file}'=[Secret file]:file:_files' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     case $state in
@@ -397,8 +397,8 @@ function _util_gpg_export() {
 
     _arguments -C \
         --remote'[Push the encrypted backup to a rclone remote]' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:email:' \
         '*:: :->args' && ret=0
 
@@ -411,8 +411,8 @@ function _util_gpg_generate() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -427,8 +427,8 @@ function _util_gpg_import() {
         --ownertrust'=[GPG ownertrust data base, exportable via gpg --export-ownertrust]:string:' \
         --public-key'=[GPG public key, exportable via gpg --export ]:string:' \
         --private-key'=[GPG private key, exportable via gpg --export-secret-keys]:string:' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -478,8 +478,8 @@ function _util_jobs_attach() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:string:->action_string' \
         '*:: :->args' && ret=0
 
@@ -501,8 +501,8 @@ function _util_jobs_kill() {
 
     _arguments -C \
         --all'[Kill all jobs]' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:string:->action_string' \
         '*:: :->args' && ret=0
 
@@ -523,8 +523,8 @@ function _util_jobs_list() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -537,8 +537,8 @@ function _util_jobs_log() {
 
     _arguments -C \
         '(-f --follow)'{-f,--follow}'[Follow output on the current prompt]' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:string:->action_string' \
         '*:: :->args' && ret=0
 
@@ -559,8 +559,8 @@ function _util_jobs_restart() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:string:->action_string' \
         '*:: :->args' && ret=0
 
@@ -581,8 +581,8 @@ function _util_jobs_run() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:string:' \
         '*:: :->args' && ret=0
 
@@ -656,8 +656,8 @@ function _util_locale_gettext() {
 
     _arguments -C \
         '(-l --language)'{-l,--language}'=[Language]:string:' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:MO file:_files' \
         '2:Message ID:_guard "[0-9]#"' \
         '*:: :->args' && ret=0
@@ -700,8 +700,8 @@ function _util_nix_clear-cache() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -743,8 +743,8 @@ function _util_pass_cp2l() {
 
     _arguments -C \
         '(-t --first-copy-timeout)'{-t,--first-copy-timeout}'=[Time waited after the user is copied before copying the password to the clipboard]:int:' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -786,8 +786,8 @@ function _util_random_generate() {
 
     _arguments -C \
         '(-l --length)'{-l,--length}'=[Length of the random string being generated]:int:' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -828,8 +828,8 @@ function _util_totp_list() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -841,8 +841,8 @@ function _util_totp_add() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:totp_entity:->action_totp_entity' \
         '*:: :->args' && ret=0
 
@@ -863,8 +863,8 @@ function _util_totp_generate() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:totp_entity:->action_totp_entity' \
         '*:: :->args' && ret=0
 
@@ -925,8 +925,8 @@ function _util_workspaces_list() {
 
     _arguments -C \
         '(-h --noheading)'{-h,--noheading}'[Hides heading]' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -938,8 +938,8 @@ function _util_workspaces_set() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:Container image file:_files' \
         '*:: :->args' && ret=0
 
@@ -952,8 +952,8 @@ function _util_workspaces_unset() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '1:mounted_workspace:->action_mounted_workspace' \
         '*:: :->args' && ret=0
 
@@ -1012,8 +1012,8 @@ function _util_tmux_split() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -1056,8 +1056,8 @@ function _util_git_backup() {
 
     _arguments -C \
         --name'=[Backup name]:string:' \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -1069,8 +1069,8 @@ function _util_git_new-ssh-key() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -1117,8 +1117,8 @@ function _util_yay() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -1130,8 +1130,8 @@ function _util_install-check() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -1143,8 +1143,8 @@ function _util_update() {
     local ret=1
 
     _arguments -C \
-        --to-stdout'[Displays a help section]' \
         --help'[Displays a help section]' \
+        --to-stdout'[Displays a help section]' \
         '*:: :->args' && ret=0
 
     return ret
@@ -1156,6 +1156,7 @@ function _util() {
     local ret=1
 
     _arguments -C \
+        '(-V --version)'{-V,--version}'[Displays version]' \
         '1: :->action' \
         '*:: :->args' && ret=0
 
