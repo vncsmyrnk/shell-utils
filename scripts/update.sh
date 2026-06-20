@@ -16,7 +16,7 @@ main() {
   # shellcheck disable=SC2310
   if exists brew; then brew update && brew upgrade; fi
   # shellcheck disable=SC2310
-  if exists yay; then yay --devel; fi
+  if exists yay; then yay; fi
 
   _lib_log_step_header "Updating shell environments"
 
