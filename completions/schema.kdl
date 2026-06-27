@@ -144,7 +144,9 @@ cmd "workspaces" help="Manages environment files" alias="ws" {
 }
 
 cmd "tmux" help="TMUX wrappers" alias="tmx" {
-  cmd "split" help="Splits the current window both horizontally and vertically" alias="sp"
+  cmd "split" help="Splits the current window both horizontally and vertically" alias="sp" {
+    flag "--select-last-pane" help="Selects the last pane after split"
+  }
 }
 
 cmd "git" help="Git wrappers" {
