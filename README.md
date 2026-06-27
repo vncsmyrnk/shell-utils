@@ -15,6 +15,9 @@ It provides the `util` command, which acts as a router to find and execute each 
 
 For security reasons, the `util` router sets a predefined set of environment variables, including a strict `$PATH`.
 
+> [!NOTE]
+> This project does not package the scripts dependencies, you need to ensure they are installed and available.
+
 ## Usage
 
 
