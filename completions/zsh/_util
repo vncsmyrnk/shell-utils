@@ -1236,7 +1236,7 @@ function _util() {
                 'workspaces:Manages environment files'
                 'ws:Manages environment files'
                 'tmux:TMUX wrappers'
-                'tmx:TMUX wrappers'
+                'tx:TMUX wrappers'
                 'git:Git wrappers'
                 'tee:Tees STDIN to a temporary file'
                 'yay:Defines yay-related actions'
@@ -1286,7 +1286,7 @@ function _util() {
                 workspaces|ws)
                     _util_workspaces "$@" && ret=0
                     ;;
-                tmux|tmx)
+                tmux|tx)
                     _util_tmux "$@" && ret=0
                     ;;
                 git)
