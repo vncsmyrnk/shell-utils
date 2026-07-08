@@ -24,6 +24,7 @@ cmd "containers" help="Manages encrypted containers" alias="cnt" {
     flag "-p --full-path" help="Display full container source path"
   }
   cmd "unmount" help="Unmounts an encrypted container" alias="umnt" {
+    flag "-f --force" help="Kills running processes associated with the container files"
     arg "<mounted_container>" help="Container image file" run="util containers list -n | awk '{ print $1 }'"
   }
   cmd "mount" help="Mounts an encrypted container from a file" alias="mnt" {
