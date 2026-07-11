@@ -71,9 +71,16 @@ uninstall:
 uninstall-local:
 	rm -rf $(SRCDIR)/dist
 
-.PHONY: check
-check:
+.PHONY: shellcheck
+shellcheck:
 	shellcheck $$(rg "^#.*(bash|\/sh).*" $(SCRIPTS_SRC) -l)
+
+.PHONY: test
+test:
+	bats $(SRCDIR)/tests --verbose-run
+
+.PHONY: check
+check: shellcheck test
 
 .PHONY: lint
 lint:

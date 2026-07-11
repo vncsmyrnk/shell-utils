@@ -18,6 +18,9 @@ jobs:
       - name: Check flake
         run: nix flake check
 
+      - name: Run shell checks and tests
+        run: nix develop --command make check
+
       - name: Build flake
         run: make buildflake
 

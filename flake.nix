@@ -23,6 +23,7 @@
             ./go.mod
             ./Makefile
             ./.shellcheckrc
+            ./tests
           ];
         };
         version = "1.0.0";
@@ -30,10 +31,13 @@
 
         doCheck = true;
         nativeCheckInputs = [
+          pkgs.bats
+          pkgs.bashInteractive
           pkgs.shellcheck
           pkgs.golangci-lint
         ];
         checkPhase = ''
+          export PATH=${pkgs.bashInteractive}/bin:$PATH
           make check
         '';
 
@@ -61,7 +65,9 @@
           golangci-lint
           shellcheck
           bash
+          bats
           coreutils
+          ripgrep
         ];
 
         shellHook = ''
