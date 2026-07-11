@@ -107,6 +107,13 @@ run_generate() {
   [[ "$status" -eq 1 ]]
 }
 
+@test "ignores an unexpected positional argument" {
+  run_generate --bypass-password unexpected
+
+  [[ "$status" -eq 0 ]]
+  [[ "$output" == *"backup successfuly done."* ]]
+}
+
 @test "creates an encrypted backup without asking for confirmation when bypassed" {
   run_generate --bypass-password
 

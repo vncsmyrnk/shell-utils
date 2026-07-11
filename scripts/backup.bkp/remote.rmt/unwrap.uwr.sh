@@ -1,9 +1,11 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
 
 # [help]
 # Downloads a backup file, decrypts and unzips it
 #
-# Usage: util backup remote unwrap [FILE] [OPTIONS]
+# Usage: util backup remote unwrap [OPTIONS] [FILE]
 #
 # Options:
 #  -l, --latest   Fetch the latest backup available
@@ -14,10 +16,14 @@
 # shellcheck source=scripts/_lib.sh
 \. "${SHELL_UTILS_SCRIPTS_PATH}/_lib.sh"
 
-SHELL_UTILS_BACKUP_RCLONE_REMOTE=${SHELL_UTILS_BACKUP_RCLONE_REMOTE:-"gdrive"}
-SHELL_UTILS_BACKUP_RCLONE_FOLDER=${SHELL_UTILS_BACKUP_RCLONE_FOLDER:-"bkp"}
-SHELL_UTILS_REMOTE_UNWRAP_DEST=${SHELL_UTILS_REMOTE_UNWRAP_DEST:-/tmp}
-SHELL_UTILS_BACKUP_ENCRYPT_PASSWORD=${SHELL_UTILS_BACKUP_ENCRYPT_PASSWORD:-""}
+: "${SHELL_UTILS_SCRIPT_DIRNAME:=}"
+# shellcheck source=scripts/backup.bkp/_variables.sh
+\. "${SHELL_UTILS_SCRIPT_DIRNAME}/../_variables.sh"
+
+: "${_backup_encrypt_password:=}"
+: "${_backup_rclone_remote:=}"
+: "${_backup_rclone_folder:=}"
+: "${_backup_remote_unwrap_dest:=}"
 
 latest_flag=false
 while [[ $# -gt 0 ]]; do
@@ -26,6 +32,10 @@ while [[ $# -gt 0 ]]; do
     latest_flag=true
     shift
     ;;
+  --)
+    shift
+    break
+    ;;
   *)
     break
     ;;
@@ -33,52 +43,69 @@ while [[ $# -gt 0 ]]; do
 done
 
 check_dependencies() {
-  if ! command -v rclone >/dev/null; then
+  if ! command -v rclone >/dev/null 2>&1; then
     _lib_fatal "dependencies: rclone not found."
   fi
 }
 
 decrypt_backup() {
-  dest_decrypted_file=$(basename "$1" | cut -d '.' -f1)
-  dest_decrypted_file="$dest_decrypted_file.$(cut -d '.' -f2 <<<"$dest_decrypted_file")"
-  dest_backup_file="$SHELL_UTILS_REMOTE_UNWRAP_DEST/$dest_decrypted_file"
+  local encrypted_file="$1"
+  local dest_decrypted_file
+  local dest_backup_file
+  local dest_decrypted_file_noext
+
+  dest_encrypted_file_basename=$(basename "$encrypted_file")
+  dest_decrypted_file_noext=$(cut -d '.' -f1 <<<"$dest_encrypted_file_basename")
+  dest_decrypted_file="$dest_decrypted_file_noext.$(cut -d '.' -f2 <<<"$dest_encrypted_file_basename")"
+  dest_backup_file="$_backup_remote_unwrap_dest/$dest_decrypted_file"
 
   openssl enc -d -aes-256-cbc -pbkdf2 -iter 100000 -salt \
-    -in "$1" \
+    -in "$encrypted_file" \
     -out "$dest_backup_file" \
     -pass env:SHELL_UTILS_BACKUP_ENCRYPT_PASSWORD
 
-  dest_backup_folder=$(cut -d '.' -f1 <<<"$1")
-  unzip -q "$dest_backup_file" -d "$dest_backup_folder"
+  unzip -q "$dest_backup_file" -d "$_backup_remote_unwrap_dest/$dest_decrypted_file_noext"
 }
 
 main() {
-  if [[ -z "$SHELL_UTILS_BACKUP_ENCRYPT_PASSWORD" ]]; then
+  local backup_file=""
+  local files
+  local last_file_output
+
+  check_dependencies
+
+  if [[ $# -gt 1 ]]; then
+    _lib_fatal "A backup file must be the only positional argument."
+  fi
+
+  if [[ -z "$_backup_encrypt_password" ]]; then
     _lib_fatal "unwrap failed: no password was provided"
   fi
 
-  if [[ -n "$1" ]] && [[ "$latest_flag" = true ]]; then
+  if [[ $# -eq 1 ]] && [[ "$latest_flag" = true ]]; then
     _lib_fatal "invalid options. The \033[1m--latest\033[0m implies no other arguments\n"
-  elif [[ -z "$1" ]] && [[ "$latest_flag" = false ]]; then
+  elif [[ $# -eq 0 ]] && [[ "$latest_flag" = false ]]; then
     _lib_fatal "A backup file must be informed."
   fi
 
-  backup_file="$1"
+  if [[ $# -eq 1 ]]; then
+    backup_file="$1"
+  fi
   if [[ "$latest_flag" = true ]]; then
     echo "Fetching latest backup file..."
-    files=$(rclone ls "$SHELL_UTILS_BACKUP_RCLONE_REMOTE:$SHELL_UTILS_BACKUP_RCLONE_FOLDER")
+    files=$(rclone ls "$_backup_rclone_remote:$_backup_rclone_folder")
     last_file_output=$(head -n 1 <<<"$files")
     backup_file=$(awk '{ print $1 }' <<<"$last_file_output")
   fi
 
   echo "Downloading backup file..."
-  rclone copy "$SHELL_UTILS_BACKUP_RCLONE_REMOTE:$SHELL_UTILS_BACKUP_RCLONE_FOLDER/$backup_file" \
-    "$SHELL_UTILS_REMOTE_UNWRAP_DEST"
+  rclone copy "$_backup_rclone_remote:$_backup_rclone_folder/$backup_file" \
+    "$_backup_remote_unwrap_dest"
 
   echo "Decrypting it..."
-  decrypt_backup "$SHELL_UTILS_REMOTE_UNWRAP_DEST/$backup_file"
+  decrypt_backup "$_backup_remote_unwrap_dest/$backup_file"
 
-  echo "Done. Backup unwrapped at $SHELL_UTILS_REMOTE_UNWRAP_DEST"
+  echo "Done. Backup unwrapped at $_backup_remote_unwrap_dest"
 }
 
 main "$@"
