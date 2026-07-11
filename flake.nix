@@ -30,11 +30,12 @@
         vendorHash = null;
 
         doCheck = true;
-        nativeCheckInputs = [
-          pkgs.bats
-          pkgs.bashInteractive
-          pkgs.shellcheck
-          pkgs.golangci-lint
+        nativeCheckInputs = with pkgs; [
+          bats
+          bashInteractive
+          shellcheck
+          golangci-lint
+          util-linux
         ];
         checkPhase = ''
           export PATH=${pkgs.bashInteractive}/bin:$PATH
@@ -50,8 +51,8 @@
         '';
 
         doInstallCheck = true;
-        nativeInstallCheckInputs = [
-          pkgs.ripgrep
+        nativeInstallCheckInputs = with pkgs; [
+          ripgrep
         ];
         installCheckPhase = ''
           make installcheck PREFIX=$out DESTDIR=""
