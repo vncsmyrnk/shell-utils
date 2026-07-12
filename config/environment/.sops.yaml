@@ -1,0 +1,3 @@
+creation_rules:
+  - path_regex: \.*$
+    pgp: "<key>"
