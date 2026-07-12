@@ -109,12 +109,6 @@ cmd "nix" help="Defines Nix-related actions" {
   cmd "clear-cache" help="Invokes Nix garbage collection"
 }
 
-cmd "pass" help="Auxiliary pass wrappers" {
-  cmd "cp2l" help="Copies the second and first lines of a pass password one after the other" {
-    flag "-t --first-copy-timeout <int>" help="Time waited after the user is copied before copying the password to the clipboard"
-  }
-}
-
 cmd "random" help="Random value geneation helpers" alias="rnd" {
   cmd "generate" help="Generates random hex based pseudo-random strings using openssl" {
     flag "-l --length <int>" help="Length of the random string being generated"
