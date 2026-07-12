@@ -628,3 +628,34 @@ fi
 EOF
   } | _install_mock 'whoami' "$bin_dir"
 }
+
+mock_sops() {
+  local bin_dir="$1"
+
+  {
+    cat <<EOF || true
+#!$(command -v bash)
+
+EOF
+
+    cat <<'EOF' || true
+#!/usr/bin/env bash
+
+command_name='sops'
+args_file="${MOCK_ARGS_DIR:?mock_sops: MOCK_ARGS_DIR is required}"
+args_file="$args_file/$command_name.args"
+output_file="${MOCK_OUTPUT_DIR:-}/$command_name"
+status_file="${MOCK_STATUS_DIR:-}/$command_name"
+printf '%s\0' "$@" >>"$args_file"
+
+if [[ -f "$status_file" ]]; then
+  read -r status <"$status_file"
+  exit "${status:-0}"
+fi
+if [[ -s "$output_file" ]]; then
+  output=$(<"$output_file")
+  printf '%s\n' "$output"
+fi
+EOF
+  } | _install_mock 'sops' "$bin_dir"
+}
