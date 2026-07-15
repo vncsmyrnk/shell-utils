@@ -82,12 +82,12 @@ compress_files() {
   IFS=' '
   for file_path in $SHELL_UTILS_BKP_PATHS; do
     if [[ -d "$file_path" ]]; then
-      dir_size_output=$(du -sh "$file_path")
+      dir_size_output=$(du -shL "$file_path")
       dir_size=$(awk '{ print $1 }' <<<"$dir_size_output")
       echo "adding $file_path to be compressed [$dir_size]"
       zip -rq "$SHELL_UTILS_BACKUP_ZIP_FILE_PATH" "$file_path"
     elif [[ -f "$file_path" ]]; then
-      file_size_output=$(du -h "$file_path")
+      file_size_output=$(du -hL "$file_path")
       file_size=$(awk '{ print $1 }' <<<"$file_size_output")
       echo "adding $file_path to be compressed [$file_size]"
       zip -q "$SHELL_UTILS_BACKUP_ZIP_FILE_PATH" "$file_path"
