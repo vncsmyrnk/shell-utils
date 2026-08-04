@@ -16,8 +16,8 @@ import (
 
 var persistentEnvironmentVariables = []string{
 	"HOME", "USER", "EDITOR", "TERM",
-	"PAGER", "XDG_RUNTIME_DIR",
-	"WAYLAND_DISPLAY", "SSH_AUTH_SOCK",
+	"PAGER", "XDG_RUNTIME_DIR", "RBACKUP_RCLONE_REMOTE",
+	"RBACKUP_PATHS", "WAYLAND_DISPLAY", "SSH_AUTH_SOCK",
 }
 
 func main() {
