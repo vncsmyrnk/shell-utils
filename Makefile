@@ -18,7 +18,7 @@ else
 	FINAL_VERSION = $(BASE_VERSION)
 endif
 
-PREFIX ?= /usr
+PREFIX ?= /usr/local
 DESTDIR ?=
 
 DATAROOTDIR = $(PREFIX)/share
